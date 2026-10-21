@@ -1,0 +1,52 @@
+{
+  "run_unix_ts": 1767679272,
+  "test_json": "Index/items/test/test_items.json",
+  "ckpt": "results/SalGAN/intermediate_active/bce_best_model.pt",
+  "run_dir": "results/SalGAN/intermediate_active",
+  "out_dir": "Index/items/test/sbatch_run_test_output_test_bce",
+  "config": {
+    "batch_size": 8,
+    "num_workers": 16,
+    "pin_memory": true,
+    "drop_last": false,
+    "amp": true,
+    "pick_keys": [
+      "target_saliency",
+      "label",
+      "saliency",
+      "target",
+      "gt",
+      "map",
+      "saliency_map"
+    ],
+    "downsample": 1,
+    "image_hw": [
+      512,
+      640
+    ],
+    "label_hw": [
+      128,
+      160
+    ],
+    "gaussian_sigma_px": 5.0,
+    "gaussian_truncate": 3.0,
+    "saliency_normalize": "sum1",
+    "filter_mode": "none",
+    "active_keep": null,
+    "passive_keep": null,
+    "strict_len_match": true,
+    "decoder_cache_size": 16,
+    "save_npy": false,
+    "save_float16": true,
+    "flush_every": 256,
+    "keep_chunks": false,
+    "save_hw": null,
+    "samples_per_video": 10,
+    "sample_seed": 123,
+    "overlay_alpha": 0.5,
+    "overlay_cmap": "turbo"
+  },
+  "ckpt_epoch": null,
+  "ckpt_step": 4633,
+  "pred_is_logits": true
+}

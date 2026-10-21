@@ -1,0 +1,16 @@
+[
+  {
+    "video_path": "/dvss/Active_Data/User1/stimuli/User1_1_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User1/npy/User1_1_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 1,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User1_1_1",
+      "split": "train"
+    }
+  }
+]

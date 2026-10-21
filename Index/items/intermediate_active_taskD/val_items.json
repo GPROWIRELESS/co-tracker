@@ -1,0 +1,30 @@
+[
+  {
+    "video_path": "/dvss/Active_Data/User96/stimuli/User96_12_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User96/npy/User96_12_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 96,
+      "task": 12,
+      "attempt": 1,
+      "task_name": "D",
+      "src_skill": "intermediate",
+      "content_id": "User96_12_1",
+      "split": "val"
+    }
+  },
+  {
+    "video_path": "/dvss/Active_Data/User97/stimuli/User97_9_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User97/npy/User97_9_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 97,
+      "task": 9,
+      "attempt": 1,
+      "task_name": "D",
+      "src_skill": "intermediate",
+      "content_id": "User97_9_1",
+      "split": "val"
+    }
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "video_path": "/dvss/Active_Data/User98/stimuli/User98_8_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User98/npy/User98_8_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 98,
+      "task": 8,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "intermediate",
+      "content_id": "User98_8_1",
+      "split": "val"
+    }
+  }
+]

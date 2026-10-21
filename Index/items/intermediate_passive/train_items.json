@@ -1,0 +1,427 @@
+[
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_18_User1_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_18_User1_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 18,
+      "src_user": 1,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User1_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_21_User2_2_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_21_User2_2_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 21,
+      "src_user": 2,
+      "task": 2,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User2_2_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_19_User2_2_2.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_19_User2_2_2_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 19,
+      "src_user": 2,
+      "task": 2,
+      "attempt": 2,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User2_2_2",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_19_User3_1_2.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_19_User3_1_2_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 19,
+      "src_user": 3,
+      "task": 1,
+      "attempt": 2,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User3_1_2",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_10_User5_1_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_10_User5_1_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 10,
+      "src_user": 5,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "novice",
+      "content_id": "User5_1_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_22_User5_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_22_User5_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 22,
+      "src_user": 5,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User5_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_19_User6_2_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_19_User6_2_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 19,
+      "src_user": 6,
+      "task": 2,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "novice",
+      "content_id": "User6_2_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_4_User6_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_4_User6_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 4,
+      "src_user": 6,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User6_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_22_User6_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_22_User6_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 22,
+      "src_user": 6,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User6_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_18_User7_2_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_18_User7_2_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 18,
+      "src_user": 7,
+      "task": 2,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "novice",
+      "content_id": "User7_2_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_9_User7_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_9_User7_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 9,
+      "src_user": 7,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User7_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_18_User8_1_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_18_User8_1_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 18,
+      "src_user": 8,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "novice",
+      "content_id": "User8_1_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_8_User8_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_8_User8_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 8,
+      "src_user": 8,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User8_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_16_User8_6_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_16_User8_6_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 16,
+      "src_user": 8,
+      "task": 6,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User8_6_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_20_User9_2_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_20_User9_2_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 20,
+      "src_user": 9,
+      "task": 2,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User9_2_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_16_User10_1_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_16_User10_1_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 16,
+      "src_user": 10,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User10_1_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_10_User10_2_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_10_User10_2_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 10,
+      "src_user": 10,
+      "task": 2,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User10_2_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_11_User11_1_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_11_User11_1_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 11,
+      "src_user": 11,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "novice",
+      "content_id": "User11_1_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_6_User11_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_6_User11_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 6,
+      "src_user": 11,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User11_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User98/stimuli/User98_17_User11_3_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User98/npy/User98_17_User11_3_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 98,
+      "observer_skill": "intermediate",
+      "seq": 17,
+      "src_user": 11,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "novice",
+      "content_id": "User11_3_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_15_User96_7_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_15_User96_7_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 15,
+      "src_user": 96,
+      "task": 7,
+      "attempt": 1,
+      "task_name": "B",
+      "src_skill": "intermediate",
+      "content_id": "User96_7_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_1_User98_6_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_1_User98_6_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 1,
+      "src_user": 98,
+      "task": 6,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "intermediate",
+      "content_id": "User98_6_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_11_User98_6_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_11_User98_6_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 11,
+      "src_user": 98,
+      "task": 6,
+      "attempt": 1,
+      "task_name": "C",
+      "src_skill": "intermediate",
+      "content_id": "User98_6_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User96/stimuli/User96_17_User98_10_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User96/npy/User96_17_User98_10_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 96,
+      "observer_skill": "intermediate",
+      "seq": 17,
+      "src_user": 98,
+      "task": 10,
+      "attempt": 1,
+      "task_name": "D",
+      "src_skill": "intermediate",
+      "content_id": "User98_10_1",
+      "split": "train"
+    }
+  },
+  {
+    "video_path": "/dvss/Passive_Data/User97/stimuli/User97_7_User98_10_1.mp4",
+    "gaze_npy_path": "/dvss/Passive_Data/User97/npy/User97_7_User98_10_1_gaze.npy",
+    "domain": "passive",
+    "meta": {
+      "observer": 97,
+      "observer_skill": "intermediate",
+      "seq": 7,
+      "src_user": 98,
+      "task": 10,
+      "attempt": 1,
+      "task_name": "D",
+      "src_skill": "intermediate",
+      "content_id": "User98_10_1",
+      "split": "train"
+    }
+  }
+]

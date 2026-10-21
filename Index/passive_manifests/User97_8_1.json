@@ -1,0 +1,52 @@
+[
+  {
+    "content_id": "User97_8_1",
+    "observer_user": 3,
+    "observer_skill": "novice",
+    "seq": 3,
+    "passive_mp4": "/dvss/Passive_Data/User3/stimuli/User3_3_User97_8_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User3/csv/User3_3_User97_8_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User3/csv/User3_3_User97_8_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User97_8_1",
+    "observer_user": 10,
+    "observer_skill": "novice",
+    "seq": 3,
+    "passive_mp4": "/dvss/Passive_Data/User10/stimuli/User10_3_User97_8_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User10/csv/User10_3_User97_8_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User10/csv/User10_3_User97_8_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User97_8_1",
+    "observer_user": 96,
+    "observer_skill": "intermediate",
+    "seq": 3,
+    "passive_mp4": "/dvss/Passive_Data/User96/stimuli/User96_3_User97_8_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User96/csv/User96_3_User97_8_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User96/csv/User96_3_User97_8_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User97_8_1",
+    "observer_user": 96,
+    "observer_skill": "intermediate",
+    "seq": 8,
+    "passive_mp4": "/dvss/Passive_Data/User96/stimuli/User96_8_User97_8_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User96/csv/User96_8_User97_8_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User96/csv/User96_8_User97_8_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User97_8_1",
+    "observer_user": 98,
+    "observer_skill": "intermediate",
+    "seq": 1,
+    "passive_mp4": "/dvss/Passive_Data/User98/stimuli/User98_1_User97_8_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User98/csv/User98_1_User97_8_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User98/csv/User98_1_User97_8_1_video_ts.csv",
+    "src_skill": "intermediate"
+  }
+]

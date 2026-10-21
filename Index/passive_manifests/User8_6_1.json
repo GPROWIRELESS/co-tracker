@@ -1,0 +1,22 @@
+[
+  {
+    "content_id": "User8_6_1",
+    "observer_user": 9,
+    "observer_skill": "novice",
+    "seq": 2,
+    "passive_mp4": "/dvss/Passive_Data/User9/stimuli/User9_2_User8_6_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User9/csv/User9_2_User8_6_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User9/csv/User9_2_User8_6_1_video_ts.csv",
+    "src_skill": "novice"
+  },
+  {
+    "content_id": "User8_6_1",
+    "observer_user": 96,
+    "observer_skill": "intermediate",
+    "seq": 16,
+    "passive_mp4": "/dvss/Passive_Data/User96/stimuli/User96_16_User8_6_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User96/csv/User96_16_User8_6_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User96/csv/User96_16_User8_6_1_video_ts.csv",
+    "src_skill": "novice"
+  }
+]

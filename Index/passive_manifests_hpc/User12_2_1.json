@@ -1,0 +1,32 @@
+[
+  {
+    "content_id": "User12_2_1",
+    "observer_user": 1,
+    "observer_skill": "novice",
+    "seq": 2,
+    "passive_mp4": "/dvss/Passive_Data/User1/stimuli/User1_2_User12_2_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User1/csv/User1_2_User12_2_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User1/csv/User1_2_User12_2_1_video_ts.csv",
+    "src_skill": "novice"
+  },
+  {
+    "content_id": "User12_2_1",
+    "observer_user": 97,
+    "observer_skill": "intermediate",
+    "seq": 2,
+    "passive_mp4": "/dvss/Passive_Data/User97/stimuli/User97_2_User12_2_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User97/csv/User97_2_User12_2_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User97/csv/User97_2_User12_2_1_video_ts.csv",
+    "src_skill": "novice"
+  },
+  {
+    "content_id": "User12_2_1",
+    "observer_user": 98,
+    "observer_skill": "intermediate",
+    "seq": 13,
+    "passive_mp4": "/dvss/Passive_Data/User98/stimuli/User98_13_User12_2_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User98/csv/User98_13_User12_2_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User98/csv/User98_13_User12_2_1_video_ts.csv",
+    "src_skill": "novice"
+  }
+]

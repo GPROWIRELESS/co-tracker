@@ -1,0 +1,72 @@
+[
+  {
+    "video_path": "/dvss/Active_Data/User1/stimuli/User1_1_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User1/npy/User1_1_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 1,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User1_1_1",
+      "split": "test"
+    }
+  },
+  {
+    "video_path": "/dvss/Active_Data/User7/stimuli/User7_1_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User7/npy/User7_1_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 7,
+      "task": 1,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User7_1_1",
+      "split": "test"
+    }
+  },
+  {
+    "video_path": "/dvss/Active_Data/User9/stimuli/User9_7_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User9/npy/User9_7_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 9,
+      "task": 7,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User9_7_1",
+      "split": "test"
+    }
+  },
+  {
+    "video_path": "/dvss/Active_Data/User11/stimuli/User11_6_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User11/npy/User11_6_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 11,
+      "task": 6,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User11_6_1",
+      "split": "test"
+    }
+  },
+  {
+    "video_path": "/dvss/Active_Data/User12/stimuli/User12_3_1.mp4",
+    "gaze_npy_path": "/dvss/Active_Data/User12/npy/User12_3_1_gaze.npy",
+    "domain": "active",
+    "meta": {
+      "user": 12,
+      "task": 3,
+      "attempt": 1,
+      "task_name": "A",
+      "src_skill": "novice",
+      "content_id": "User12_3_1",
+      "split": "test"
+    }
+  }
+]

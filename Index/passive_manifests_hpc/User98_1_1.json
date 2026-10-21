@@ -1,0 +1,52 @@
+[
+  {
+    "content_id": "User98_1_1",
+    "observer_user": 3,
+    "observer_skill": "novice",
+    "seq": 5,
+    "passive_mp4": "/dvss/Passive_Data/User3/stimuli/User3_5_User98_1_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User3/csv/User3_5_User98_1_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User3/csv/User3_5_User98_1_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User98_1_1",
+    "observer_user": 10,
+    "observer_skill": "novice",
+    "seq": 5,
+    "passive_mp4": "/dvss/Passive_Data/User10/stimuli/User10_5_User98_1_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User10/csv/User10_5_User98_1_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User10/csv/User10_5_User98_1_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User98_1_1",
+    "observer_user": 96,
+    "observer_skill": "intermediate",
+    "seq": 5,
+    "passive_mp4": "/dvss/Passive_Data/User96/stimuli/User96_5_User98_1_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User96/csv/User96_5_User98_1_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User96/csv/User96_5_User98_1_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User98_1_1",
+    "observer_user": 96,
+    "observer_skill": "intermediate",
+    "seq": 15,
+    "passive_mp4": "/dvss/Passive_Data/User96/stimuli/User96_15_User98_1_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User96/csv/User96_15_User98_1_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User96/csv/User96_15_User98_1_1_video_ts.csv",
+    "src_skill": "intermediate"
+  },
+  {
+    "content_id": "User98_1_1",
+    "observer_user": 97,
+    "observer_skill": "intermediate",
+    "seq": 1,
+    "passive_mp4": "/dvss/Passive_Data/User97/stimuli/User97_1_User98_1_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User97/csv/User97_1_User98_1_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User97/csv/User97_1_User98_1_1_video_ts.csv",
+    "src_skill": "intermediate"
+  }
+]

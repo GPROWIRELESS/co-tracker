@@ -1,0 +1,12 @@
+[
+  {
+    "content_id": "User10_3_1",
+    "observer_user": 98,
+    "observer_skill": "intermediate",
+    "seq": 21,
+    "passive_mp4": "/dvss/Passive_Data/User98/stimuli/User98_21_User10_3_1.mp4",
+    "passive_gaze_csv": "/dvss/Passive_Data/User98/csv/User98_21_User10_3_1_gaze.csv",
+    "passive_vts_csv": "/dvss/Passive_Data/User98/csv/User98_21_User10_3_1_video_ts.csv",
+    "src_skill": "novice"
+  }
+]
