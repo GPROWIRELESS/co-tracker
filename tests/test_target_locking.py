@@ -50,7 +50,7 @@ class LabelStagesTests(unittest.TestCase):
         from unittest.mock import Mock, patch
         for mode in ['manual', 'tracked', 'skipped']:
             with self.subTest(mode=mode):
-                app = label.Labeler.__new__(label.Labeler)
+                app = label.SeedLabeler.__new__(label.SeedLabeler)
                 app.args = SimpleNamespace(points=5, frame_offset=None, include_none=False)
                 app.items, app.record, app.cap = [{}], -1, None
                 app.paths = Mock(return_value=(Path('video.mp4'), Path('gaze.csv')))
@@ -68,7 +68,7 @@ class LabelStagesTests(unittest.TestCase):
 
     def test_video_shortcuts_and_queue_boundaries(self):
         from unittest.mock import Mock
-        app = label.Labeler.__new__(label.Labeler)
+        app = label.SeedLabeler.__new__(label.SeedLabeler)
         app.items = [{}, {}, {}]
         app.next_record = Mock()
         app.record = 1
@@ -228,7 +228,7 @@ class TrackingTests(unittest.TestCase):
         self.assertTrue(label.is_skipped(rows, 0, 3))
         self.assertTrue(all(r['point_1_x'] == '' for r in rows[:3]))
         self.assertNotIn('point_label_mode', rows[3])
-        app = label.Labeler.__new__(label.Labeler)
+        app = label.SeedLabeler.__new__(label.SeedLabeler)
         app.args = SimpleNamespace(points=5)
         app.segments, app.rows = [(0, 3)], rows
         with patch.object(tracker, 'track_stage') as run:

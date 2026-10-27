@@ -1,9 +1,22 @@
+Frame-by-frame review is now the default:
+
+```bash
+conda activate sam3
+python tools/label_target_locking.py
+```
+
+The viewer draws saved point coordinates on every video frame, including `tracked_inherited` rows. Space toggles playback. `<` / `>` (also comma / period) step one frame; J / L jump backward / forward 60 frames. The slider seeks anywhere in the video. Choose a numbered point slot and click to place it, or drag an existing point to move it. Delete removes the selected point without renumbering others. Clear frame removes all points on the current frame.
+
+Use `[` to mark the start and `]` to mark the end of an inclusive frame range, then click **Clear ALL points in range**. Reversed endpoints are accepted. Changes remain in memory until **Save** or Ctrl+S. Switching videos or closing prompts to save/discard/cancel. Point corrections use `point_label_mode=edited`; cleared rows use `cleared`. These are review edits, not new CoTracker seeds: the batch tracker does not use arbitrary edited frames as seeds. Review after tracking, and avoid rerunning tracking over reviewed data unless you intend to regenerate predictions. Opening the viewer alone does not modify CSVs. Existing backup and atomic-save behavior is preserved.
+
+The original stage endpoint seed interface is available with `--seed-mode`. Commands and UI details in the legacy seed workflow below refer to that mode.
+
 Target-locking annotation and tracking use two separate scripts. Both default to novice active Task A only, one to five points per stage, and the dataset root `/mnt/nas/Users/yxl3527/Dataset/dvss`.
 
 1. Manually annotate all stages on a desktop with a display:
 
    ```bash
-   python tools/label_target_locking.py
+   python tools/label_target_locking.py --seed-mode
    ```
 
    The UI shows the first frame on the left and the last frame on the right for each consecutive run of the `stage` column (`event` is also supported). Choose **First frame (left)** or **Last frame (right)** above the images, then click one to five target pixels in a consistent order on the selected green view. The other view is reference-only and ignores clicks. Switching views discards unsaved clicks and loads any saved manual points on the chosen endpoint. Right Arrow or Enter saves only these manual points, then opens the next stage. No model or PyTorch is loaded by the UI. Right click or Backspace undoes a point; R clears points; Left Arrow revisits the previous stage in the current recording; N opens the next video; P opens the previous video; Esc exits. N/P also accept uppercase keys, open the video at its first stage, and discard unsaved clicks. At the first or last video, P or N respectively does nothing. Navigation backwards or exiting discards unsaved clicks. After the last stage the next recording opens. Every launch opens each recording from its first stage, including recordings that are fully labeled. Saved points are loaded for editing. Manual points are stored on the corresponding first or last CSV row, marked `manual`. Each stage has one seed endpoint; saving replaces the other endpoint and clears old predictions.
@@ -22,7 +35,7 @@ Target-locking annotation and tracking use two separate scripts. Both default to
    python tools/track_target_locking.py
    ```
 
-   Run in the CUDA-enabled `dvss-pytorch` environment. The script validates every selected recording and stage seed before loading the model or writing files. Each stage starts with a fresh online tracking state. First-frame seeds track forward; last-frame seeds track through reversed video frames, and predictions map back to the original chronological CSV rows. Tracking stays within the stage. It uses the notebook's support grid and overlapping `2 * model.step` windows, keeping only decoded windows in CPU memory. It preserves exact manual seed coordinates and saves the other frames’ predicted coordinates into that same gaze CSV. Already completed stages are skipped; `--overwrite` recomputes them. Each stage is saved immediately so interrupted runs can resume. A one-frame stage needs no inference. No visualization video is generated.
+   Run in the CUDA-enabled `sam3` environment. The script validates every selected recording and stage seed before loading the model or writing files. Each stage starts with a fresh online tracking state. First-frame seeds track forward; last-frame seeds track through reversed video frames, and predictions map back to the original chronological CSV rows. Tracking continues through following skipped stages until the next manually seeded stage; inherited rows are marked `tracked_inherited`. It uses the notebook's support grid and overlapping `2 * model.step` windows, keeping only decoded windows in CPU memory. It preserves exact manual seed coordinates and saves the other frames’ predicted coordinates into that same gaze CSV. Already completed stages are skipped; `--overwrite` recomputes them. Each stage is saved immediately so interrupted runs can resume. A one-frame stage needs no inference. No visualization video is generated.
 
 Common options for both scripts:
 
@@ -49,7 +62,7 @@ python -m unittest discover -s tests -p test_target_locking.py -v
 
 Each stage accepts **1–5 points**. Press Right Arrow or Enter after any valid count; five is the maximum, not a required count. The tracker automatically reads the number of complete coordinate pairs in that stage’s manual seed. Unused point columns remain blank. `--points` optionally lowers the maximum (range 1–5). Relabeling with fewer points clears old unused coordinates.
 
-The UI lists all stage types found across the novice Task A recordings, each with a checkbox in **Skip stage types throughout the labeling queue**. Check types such as `reach ring` or `grab ring` once to skip every occurrence in this and following recordings. Press Right Arrow or Enter to save the choices with the current annotation and advance; selected stage types are passed automatically without point clicks. Their rows are recorded as `point_label_mode=skipped` and coordinates are cleared. The batch tracker ignores these stages, including with `--overwrite`.
+The UI lists all stage types found across the novice Task A recordings, each with a checkbox in **Skip stage types throughout the labeling queue**. Check types such as `reach ring` or `grab ring` once to skip every occurrence in this and following recordings. Press Right Arrow or Enter to save the choices with the current annotation and advance; selected stage types are passed automatically without point clicks. Their rows are recorded as `point_label_mode=skipped` and coordinates are cleared. The batch tracker continues the preceding seeded stage through these stages. Initial skipped stages without a preceding seed remain unchanged.
 
 Choices remain active across recordings during the current UI session. Skipped decisions already saved in CSV persist across restarts; checkbox selections themselves are session-only. Unchecking a type enables future annotation for that type. Use Left Arrow to revisit a previously skipped occurrence in the current recording, then label and save to restore it. Stage types excluded by the default `none` filter appear when using `--include-none`.
 

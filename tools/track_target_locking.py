@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Propagate manually annotated target-locking seeds within each event stage."""
+"""Track manual target-locking seeds through their stage and following skipped stages."""
 import argparse
 import csv
 import math
@@ -67,7 +67,7 @@ def is_tracked(rows, start, end, count):
         if index != seed)
 
 
-def propagate_stage(rows, frames, start, end, count, model, cap, device):
+def propagate_stage(rows, frames, start, end, count, model, cap, device, tracking_end=None):
     """Return updated rows, preserving the exact human seed and other stages."""
     if is_skipped(rows, start, end):
         return [dict(row) for row in rows]
@@ -76,15 +76,22 @@ def propagate_stage(rows, frames, start, end, count, model, cap, device):
         raise ValueError('Missing manual endpoint seed')
     points = seed_points(rows[seed], count)
     candidate = [dict(row) for row in rows]
+    seed_end = end
+    end = tracking_end if tracking_end is not None else end
     if end == start+1:
         return candidate
     reverse = seed != start
+    if reverse and end > seed_end:
+        candidate = propagate_stage(rows, frames, start, seed_end, count, model, cap, device)
+        # Continue forward from the same manual endpoint, preserving backward stage results.
+        return propagate_stage(candidate, frames, seed, seed+1, count, model, cap, device,
+                               tracking_end=end)
     tracks, visibility = track_stage(model, cap, frames[start], frames[end-1], points, device, reverse=reverse)
     for index in range(start, end):
         if index == seed:
             continue
         offset = frames[end-1] - frames[index] if reverse else frames[index] - frames[start]
-        candidate[index]['point_label_mode'] = 'tracked'
+        candidate[index]['point_label_mode'] = 'tracked' if index < seed_end else 'tracked_inherited'
         for i in range(1, len(points)+1):
             if not visibility[offset][i-1]:
                 candidate[index].update({f'point_{i}_x': '', f'point_{i}_y': ''})
@@ -96,11 +103,65 @@ def propagate_stage(rows, frames, start, end, count, model, cap, device):
     return candidate
 
 
+def is_continuation(rows, start, end):
+    return all(row.get('point_label_mode') in {'skipped', 'tracked_inherited'}
+               for row in rows[start:end])
+
+
+def continuation_groups(rows, segments):
+    """Attach unseeded skipped stages to the preceding manually seeded stage."""
+    groups = []
+    for start, end in segments:
+        if is_continuation(rows, start, end):
+            if groups:
+                groups[-1][2] = end
+            else:
+                print(f'No preceding seed for initial skipped stage at row {start}; leaving unchanged.', flush=True)
+        else:
+            groups.append([start, end, end])
+    return groups
+
+
+def run_jobs(jobs, args):
+    """Process whole recordings sequentially on one device."""
+    from cotracker.predictor import CoTrackerOnlinePredictor
+    import cv2
+    model = None
+    for video, allocation, fields, rows, frames, segments in jobs:
+        ensure_columns(fields, args.points)
+        cap = cv2.VideoCapture(str(video))
+        try:
+            groups = continuation_groups(rows, segments)
+            for start, end, tracking_end in groups:
+                inherited_done = all(row.get('point_label_mode') == 'tracked_inherited'
+                                     for row in rows[end:tracking_end])
+                if not args.overwrite and is_tracked(rows, start, end, args.points) and inherited_done:
+                    continue
+                if model is None and tracking_end > start+1:
+                    model = CoTrackerOnlinePredictor(checkpoint=str(args.checkpoint)).to(args.device).eval()
+                print(f'[{args.device}] {video.stem}: {stage_name(rows[start])}, frames {frames[start]}–{frames[tracking_end-1]}', flush=True)
+                candidate = propagate_stage(rows, frames, start, end, args.points, model, cap, args.device, tracking_end=tracking_end)
+                save_csv(allocation, fields, candidate)
+                rows = candidate
+            if any(field.startswith('point_') and field.endswith('_visible') for field in fields):
+                save_csv(allocation, fields, rows)
+        finally:
+            cap.release()
+
+
+def gpu_worker(rank, partitions, devices, args):
+    import torch
+    args.device = devices[rank]
+    torch.cuda.set_device(args.device)
+    run_jobs(partitions[rank], args)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     add_data_arguments(parser)
     parser.add_argument('--checkpoint', type=Path, default=ROOT/'checkpoints/scaled_online.pth')
-    parser.add_argument('--device', default='cuda')
+    parser.add_argument('--device', default='cuda', help='Device for single-worker execution')
+    parser.add_argument('--devices', nargs='+', help='One worker per GPU, e.g. cuda:0 cuda:1; overrides --device')
     parser.add_argument('--overwrite', action='store_true', help='Recompute already tracked stages')
     parser.add_argument('--check-only', action='store_true', help='Validate all inputs and seeds without inference or writes')
     args = parser.parse_args()
@@ -127,7 +188,7 @@ def main():
                 cap.release()
             segments = stages(rows, args.include_none)
             for start, end in segments:
-                if is_skipped(rows, start, end):
+                if is_continuation(rows, start, end):
                     continue
                 seed = seed_index(rows, start, end, args.points)
                 if seed is None:
@@ -144,28 +205,34 @@ def main():
     print(f'Validated {len(jobs)} recordings, {sum(len(j[-1]) for j in jobs)} stages.', flush=True)
     if args.check_only:
         return
-    import torch
-    from cotracker.predictor import CoTrackerOnlinePredictor
-    model = None
-    for video, allocation, fields, rows, frames, segments in jobs:
-        ensure_columns(fields, args.points)
-        cap = cv2.VideoCapture(str(video))
-        try:
-            for start, end in segments:
-                if is_skipped(rows, start, end):
-                    continue
-                if not args.overwrite and is_tracked(rows, start, end, args.points):
-                    continue
-                if model is None and end > start+1:
-                    model = CoTrackerOnlinePredictor(checkpoint=str(args.checkpoint)).to(args.device).eval()
-                print(f'{video.stem}: {stage_name(rows[start])}, frames {frames[start]}–{frames[end-1]}', flush=True)
-                candidate = propagate_stage(rows, frames, start, end, args.points, model, cap, args.device)
-                save_csv(allocation, fields, candidate)
-                rows = candidate
-            if any(field.startswith('point_') and field.endswith('_visible') for field in fields):
-                save_csv(allocation, fields, rows)
-        finally:
-            cap.release()
+    if args.devices:
+        import torch
+        devices = []
+        for value in args.devices:
+            try:
+                device = torch.device(value)
+            except (RuntimeError, ValueError) as exc:
+                parser.error(str(exc))
+            if device.type != 'cuda' or device.index is None:
+                parser.error('--devices requires explicit CUDA devices, e.g. cuda:0 cuda:1')
+            if device.index >= torch.cuda.device_count():
+                parser.error(f'Unavailable GPU: {device}')
+            devices.append(str(device))
+        if len(set(devices)) != len(devices):
+            parser.error('--devices must not contain duplicates')
+        # Keep each CSV in exactly one worker, even if multiple input items alias it.
+        allocations = [job[1].resolve() for job in jobs]
+        if len(set(allocations)) != len(allocations):
+            parser.error('Multiple recordings reference the same allocation CSV; remove duplicates')
+        devices = devices[:len(jobs)]
+        partitions = [jobs[index::len(devices)] for index in range(len(devices))]
+        print('Recordings per GPU: ' + ', '.join(
+            f'{device}: {len(part)}' for device, part in zip(devices, partitions)), flush=True)
+        # Spawn independent processes: CUDA state must never be inherited with fork.
+        torch.multiprocessing.spawn(
+            gpu_worker, args=(partitions, devices, args), nprocs=len(devices), join=True)
+    else:
+        run_jobs(jobs, args)
     print('Tracking complete.')
 
 

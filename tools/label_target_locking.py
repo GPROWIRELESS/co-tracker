@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Manually annotate target-locking points on the first or last frame of each event stage."""
+"""Review and edit target-locking points on every video frame, or annotate stage seeds."""
 import argparse
 import csv
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -220,7 +221,7 @@ def add_data_arguments(parser):
     parser.add_argument('--include-none', action='store_true')
 
 
-class Labeler:
+class SeedLabeler:
     def __init__(self, args, items):
         import tkinter as tk
         from tkinter import messagebox, font as tkfont
@@ -467,9 +468,282 @@ class Labeler:
             self.show()
 
 
+class Labeler:
+    """Frame-by-frame review of saved predictions; edits remain pending until Save."""
+
+    def __init__(self, args, items):
+        import tkinter as tk
+        from tkinter import messagebox
+        from PIL import Image, ImageTk
+        import cv2
+        self.tk, self.messagebox = tk, messagebox
+        self.Image, self.ImageTk, self.cv2 = Image, ImageTk, cv2
+        self.args, self.items = args, items
+        self.cap = None
+        self.record = -1
+        self.dirty = False
+        self.playing = False
+        self.timer = None
+        self.dragging = False
+        self.window = tk.Tk()
+        self.window.title('DVSS tracking review')
+        self.status = tk.Label(self.window, justify='left')
+        self.status.pack(fill='x')
+        self.canvas = tk.Canvas(self.window, highlightthickness=0, bg='black')
+        self.canvas.pack()
+        self.slider = tk.Scale(self.window, orient='horizontal', showvalue=True,
+                               command=self.scrub)
+        self.slider.pack(fill='x')
+        controls = tk.Frame(self.window)
+        controls.pack()
+        for text, command in [('<', lambda: self.move(-1)), ('Play / Pause', self.toggle_play),
+                              ('>', lambda: self.move(1)), ('J: -60', lambda: self.move(-60)),
+                              ('L: +60', lambda: self.move(60)), ('Save', self.save),
+                              ('Previous video', lambda: self.open_record(self.record-1)),
+                              ('Next video', lambda: self.open_record(self.record+1))]:
+            tk.Button(controls, text=text, command=command).pack(side='left')
+        points = tk.Frame(self.window)
+        points.pack()
+        self.selected = tk.IntVar(value=1)
+        tk.Label(points, text='Edit point:').pack(side='left')
+        for i in range(1, args.points+1):
+            tk.Radiobutton(points, text=str(i), variable=self.selected, value=i).pack(side='left')
+        tk.Button(points, text='Delete selected point', command=self.delete_point).pack(side='left')
+        tk.Button(points, text='Clear frame', command=self.clear_frame).pack(side='left')
+        ranges = tk.Frame(self.window)
+        ranges.pack()
+        tk.Button(ranges, text='[ Set start', command=self.mark_start).pack(side='left')
+        tk.Button(ranges, text='] Set end', command=self.mark_end).pack(side='left')
+        tk.Button(ranges, text='Clear ALL points in range', command=self.clear_range).pack(side='left')
+        tk.Label(self.window, text='Space: play/pause | < / > (or , / .): one frame | J / L: 60 frames\n'
+                 '[ / ]: inclusive range | Click: place selected point | Drag a point: move | Delete: remove selected\n'
+                 'Ctrl+S: save | Edits affect the current frame only; Save writes pending changes.').pack()
+        self.canvas.bind('<Button-1>', self.click)
+        self.canvas.bind('<B1-Motion>', self.drag)
+        self.canvas.bind('<ButtonRelease-1>', lambda e: setattr(self, 'dragging', False))
+        self.window.bind('<space>', self.toggle_play)
+        for key, delta in [('comma', -1), ('less', -1), ('period', 1), ('greater', 1),
+                           ('j', -60), ('J', -60), ('l', 60), ('L', 60)]:
+            self.window.bind(f'<{key}>', lambda e, d=delta: self.move(d))
+        self.window.bind('<bracketleft>', self.mark_start)
+        self.window.bind('<bracketright>', self.mark_end)
+        self.window.bind('<Delete>', self.delete_point)
+        self.window.bind('<Control-s>', self.save)
+        self.window.protocol('WM_DELETE_WINDOW', self.close)
+        self.open_record(0)
+
+    def pause(self):
+        self.playing = False
+        if self.timer is not None:
+            self.window.after_cancel(self.timer)
+            self.timer = None
+
+    def confirm_leave(self):
+        self.pause()
+        if not self.dirty:
+            return True
+        answer = self.messagebox.askyesnocancel('Unsaved edits', 'Save changes before leaving this video?')
+        if answer is None:
+            return False
+        return self.save() if answer else True
+
+    def open_record(self, index):
+        if not 0 <= index < len(self.items) or not self.confirm_leave():
+            return
+        if self.cap is not None:
+            self.cap.release()
+        video, self.csv_path = record_paths(self.items[index], self.args.data_root)
+        self.fields, self.rows = read_allocation(self.csv_path)
+        ensure_columns(self.fields, self.args.points)
+        self.cap = self.cv2.VideoCapture(str(video))
+        if not self.cap.isOpened():
+            raise ValueError(f'Cannot open {video}')
+        self.count = int(self.cap.get(self.cv2.CAP_PROP_FRAME_COUNT))
+        frames = frame_indices(self.rows, self.count, self.args.frame_offset)
+        self.offset = int(self.rows[0]['Frame_Number']) if self.args.frame_offset is None else self.args.frame_offset
+        self.by_frame = dict(zip(frames, self.rows))
+        fps = self.cap.get(self.cv2.CAP_PROP_FPS)
+        self.delay = max(1, round(1000/fps)) if math.isfinite(fps) and fps > 0 else 33
+        self.record, self.dirty = index, False
+        self.range_start = self.range_end = None
+        self.slider.config(to=self.count-1)
+        self.frame = -1
+        self.show_frame(0)
+
+    def show_frame(self, frame):
+        frame = min(self.count-1, max(0, int(frame)))
+        if frame != self.frame:
+            # Sequential playback avoids an expensive decoder seek on every frame.
+            if frame != self.frame+1:
+                self.cap.set(self.cv2.CAP_PROP_POS_FRAMES, frame)
+            ok, image = self.cap.read()
+            if not ok:
+                self.pause()
+                self.messagebox.showerror('Video error', f'Cannot decode frame {frame}')
+                return
+            self.frame = frame
+            self.height, self.width = image.shape[:2]
+            scale = min(1, (self.window.winfo_screenwidth()-100)/self.width,
+                        max(120, self.window.winfo_screenheight()-360)/self.height)
+            self.dw, self.dh = max(1, int(self.width*scale)), max(1, int(self.height*scale))
+            rgb = self.cv2.cvtColor(image, self.cv2.COLOR_BGR2RGB)
+            self.picture = self.ImageTk.PhotoImage(self.Image.fromarray(rgb).resize((self.dw, self.dh)))
+            self.canvas.config(width=self.dw, height=self.dh)
+            self.slider.set(frame)
+        self.redraw()
+
+    def redraw(self):
+        self.canvas.delete('all')
+        self.canvas.create_image(0, 0, image=self.picture, anchor='nw')
+        row = self.by_frame.get(self.frame, {})
+        for i in range(1, self.args.points+1):
+            try:
+                x, y = float(row.get(f'point_{i}_x', '')), float(row.get(f'point_{i}_y', ''))
+            except (ValueError, TypeError):
+                continue
+            if not math.isfinite(x) or not math.isfinite(y):
+                continue
+            x, y = x*self.dw/self.width, y*self.dh/self.height
+            self.canvas.create_oval(x-5, y-5, x+5, y+5, fill='red', outline='white', width=2)
+            self.canvas.create_text(x+10, y-10, text=str(i), fill='yellow', anchor='sw')
+        self.status.config(text=f'{self.record+1}/{len(self.items)}: {self.csv_path.stem} | '
+                           f'Frame {self.frame}/{self.count-1} | {row.get("stage", row.get("event", "No allocation row"))} | '
+                           f'{row.get("point_label_mode", "")} | {"Playing" if self.playing else "Paused"}\n'
+                           f'Selected range (inclusive): {self.range_start} to {self.range_end}'
+                           f' | {"UNSAVED EDITS" if self.dirty else "Saved"}')
+
+    def scrub(self, value):
+        if hasattr(self, 'frame') and int(float(value)) != self.frame:
+            self.pause()
+            self.show_frame(int(float(value)))
+
+    def move(self, delta):
+        self.pause()
+        self.show_frame(self.frame+delta)
+        return 'break'
+
+    def toggle_play(self, event=None):
+        if self.playing:
+            self.pause()
+            self.redraw()
+        else:
+            self.playing = True
+            self.tick()
+        return 'break'
+
+    def tick(self):
+        self.timer = None
+        if not self.playing:
+            return
+        if self.frame >= self.count-1:
+            self.pause()
+            self.redraw()
+            return
+        self.show_frame(self.frame+1)
+        if self.playing:
+            self.timer = self.window.after(self.delay, self.tick)
+
+    def editable_row(self):
+        if self.frame not in self.by_frame:
+            row = {field: '' for field in self.fields}
+            row['Frame_Number'] = str(self.frame+self.offset)
+            self.by_frame[self.frame] = row
+        return self.by_frame[self.frame]
+
+    def place(self, event):
+        row = self.editable_row()
+        i = self.selected.get()
+        row[f'point_{i}_x'] = float(min(self.width-1, max(0, event.x*self.width/self.dw)))
+        row[f'point_{i}_y'] = float(min(self.height-1, max(0, event.y*self.height/self.dh)))
+        row['point_label_mode'] = 'edited'
+        self.dirty = True
+        self.redraw()
+
+    def click(self, event):
+        self.pause()
+        row = self.by_frame.get(self.frame, {})
+        nearest, distance = None, 15**2
+        for i in range(1, self.args.points+1):
+            try:
+                x, y = float(row.get(f'point_{i}_x', '')), float(row.get(f'point_{i}_y', ''))
+            except (ValueError, TypeError):
+                continue
+            d = (event.x-x*self.dw/self.width)**2+(event.y-y*self.dh/self.height)**2
+            if d < distance:
+                nearest, distance = i, d
+        if nearest is not None:
+            self.selected.set(nearest)
+        self.dragging = True
+        self.place(event)
+
+    def drag(self, event):
+        if self.dragging:
+            self.place(event)
+
+    def delete_point(self, event=None):
+        self.pause()
+        row = self.editable_row()
+        for axis in ('x', 'y'):
+            row[f'point_{self.selected.get()}_{axis}'] = ''
+        row['point_label_mode'] = 'edited'
+        self.dirty = True
+        self.redraw()
+
+    def clear_frame(self):
+        self.pause()
+        self.clear_rows([self.editable_row()])
+
+    def clear_rows(self, rows):
+        for row in rows:
+            # Clear all point columns, even when --points displays fewer slots.
+            for key in row:
+                if re.fullmatch(r'point_\d+_(x|y|visible)', key):
+                    row[key] = ''
+            row['point_label_mode'] = 'cleared'
+        self.dirty = True
+        self.redraw()
+
+    def mark_start(self, event=None):
+        self.pause()
+        self.range_start = self.frame
+        self.redraw()
+
+    def mark_end(self, event=None):
+        self.pause()
+        self.range_end = self.frame
+        self.redraw()
+
+    def clear_range(self):
+        self.pause()
+        if self.range_start is None or self.range_end is None:
+            self.messagebox.showwarning('Select a range', 'Use [ and ] to set both range endpoints first.')
+            return
+        start, end = sorted((self.range_start, self.range_end))
+        self.clear_rows([row for frame, row in self.by_frame.items() if start <= frame <= end])
+
+    def save(self, event=None):
+        self.pause()
+        try:
+            rows = [row for frame, row in sorted(self.by_frame.items())]
+            save_csv(self.csv_path, self.fields, rows)
+        except Exception as exc:
+            self.messagebox.showerror('Save failed', str(exc))
+            return False
+        self.rows, self.dirty = rows, False
+        self.redraw()
+        return True
+
+    def close(self):
+        if self.confirm_leave():
+            if self.cap is not None:
+                self.cap.release()
+            self.window.destroy()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     add_data_arguments(parser)
+    parser.add_argument('--seed-mode', action='store_true', help='Use the original first/last-frame stage seed editor')
     parser.add_argument('--list', action='store_true', help='Print local video paths without opening UI')
     args = parser.parse_args()
     if not 1 <= args.points <= 5:
@@ -490,7 +764,7 @@ def main():
     if not items:
         parser.exit(1, 'No recordings with valid stage allocations are available. No files changed.\n')
     print(f'Opening labeling queue: {len(items)} recordings ready; {len(unavailable)} excluded.', flush=True)
-    app = Labeler(args, items)
+    app = (SeedLabeler if args.seed_mode else Labeler)(args, items)
     try:
         app.window.mainloop()
     finally:
