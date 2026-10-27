@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 
 from label_target_locking import (
-    ROOT, add_data_arguments, ensure_columns, frame_indices,
+    ROOT, add_data_arguments, ensure_columns, frame_indices, stage_name,
     load_items, record_paths, save_csv, stages, seed_index, seed_points, is_skipped, read_allocation,
 )
 
@@ -48,18 +48,22 @@ def track_stage(model, cap, first, last, points, device, reverse=False):
             if (reverse and cursor < first) or (not reverse and cursor > last):
                 break
             buffer = buffer[model.step:]
-    return tracks[0, :last-first+1].cpu().numpy(), visibility[0, :last-first+1].cpu().numpy()
+    tracks = tracks[0, :last-first+1].cpu().numpy()
+    visibility = visibility[0, :last-first+1].cpu().numpy()
+    height, width = buffer[0].shape[:2]
+    visibility &= (np.isfinite(tracks).all(axis=-1)
+                   & (tracks[..., 0] >= 0) & (tracks[..., 0] < width)
+                   & (tracks[..., 1] >= 0) & (tracks[..., 1] < height))
+    return tracks, visibility
 
 
 def is_tracked(rows, start, end, count):
     seed = seed_index(rows, start, end, count)
     if seed is None:
         return False
-    actual_count = len(seed_points(rows[seed], count))
     return all(
-        row.get('point_label_mode') == 'tracked' and all(
-            row.get(f'point_{i}_{axis}', '') != '' for i in range(1, actual_count+1)
-            for axis in ('x', 'y')) for index, row in enumerate(rows[start:end], start)
+        row.get('point_label_mode') == 'tracked'
+        for index, row in enumerate(rows[start:end], start)
         if index != seed)
 
 
@@ -75,13 +79,16 @@ def propagate_stage(rows, frames, start, end, count, model, cap, device):
     if end == start+1:
         return candidate
     reverse = seed != start
-    tracks, _ = track_stage(model, cap, frames[start], frames[end-1], points, device, reverse=reverse)
+    tracks, visibility = track_stage(model, cap, frames[start], frames[end-1], points, device, reverse=reverse)
     for index in range(start, end):
         if index == seed:
             continue
         offset = frames[end-1] - frames[index] if reverse else frames[index] - frames[start]
         candidate[index]['point_label_mode'] = 'tracked'
         for i in range(1, len(points)+1):
+            if not visibility[offset][i-1]:
+                candidate[index].update({f'point_{i}_x': '', f'point_{i}_y': ''})
+                continue
             x, y = tracks[offset][i-1]
             if not math.isfinite(float(x)) or not math.isfinite(float(y)):
                 raise ValueError(f'Nonfinite prediction at allocation row {index}')
@@ -101,7 +108,7 @@ def main():
         parser.error('--points must be between 1 and 5')
     items = load_items(args.items)
     if not items:
-        parser.error('No novice active task A recordings found')
+        parser.error('No active recordings found in the supplied JSON lists')
     import cv2
     jobs = []
     errors = []
@@ -151,7 +158,7 @@ def main():
                     continue
                 if model is None and end > start+1:
                     model = CoTrackerOnlinePredictor(checkpoint=str(args.checkpoint)).to(args.device).eval()
-                print(f'{video.stem}: {rows[start]["event"]}, frames {frames[start]}–{frames[end-1]}', flush=True)
+                print(f'{video.stem}: {stage_name(rows[start])}, frames {frames[start]}–{frames[end-1]}', flush=True)
                 candidate = propagate_stage(rows, frames, start, end, args.points, model, cap, args.device)
                 save_csv(allocation, fields, candidate)
                 rows = candidate

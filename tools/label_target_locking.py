@@ -24,22 +24,23 @@ def load_items(inputs):
             if not isinstance(data, list):  # summary.json
                 continue
             for item in data:
-                meta = item.get('meta', {})
-                if (meta.get('src_skill', '').lower() == 'novice'
-                        and meta.get('task_name', '').upper() == 'A'
-                        and item.get('domain', 'active') == 'active'):
+                if item.get('domain', 'active') == 'active':
                     records[item['video_path']] = item
     return list(records.values())
 
 
+def stage_name(row):
+    return row['stage'] if 'stage' in row else row['event']
+
+
 def stages(rows, include_none=False):
-    if any('event' not in row for row in rows):
-        raise ValueError('Allocation CSV has no event column; stage annotations are required')
+    if any('event' not in row and 'stage' not in row for row in rows):
+        raise ValueError('CSV has no stage or event column; stage annotations are required')
     result = []
     start = 0
     for end in range(1, len(rows) + 1):
-        if end == len(rows) or rows[end]['event'] != rows[start]['event']:
-            if include_none or rows[start]['event'].strip().lower() not in {'', 'none', 'nan'}:
+        if end == len(rows) or stage_name(rows[end]) != stage_name(rows[start]):
+            if include_none or stage_name(rows[start]).strip().lower() not in {'', 'none', 'nan'}:
                 result.append((start, end))
             start = end
     return result
@@ -75,13 +76,13 @@ def record_paths(item, data_root):
     if '..' in relative.parts:
         raise ValueError('Dataset paths cannot contain parent traversal')
     video = Path(data_root) / relative
-    allocation = video.parent.parent / 'sam' / video.stem / (video.stem + '_allocation.csv')
+    allocation = video.parent.parent / 'npy' / (video.stem + '_gaze.csv')
     return video, allocation
 
 
 def frame_indices(rows, count, offset=None):
-    if not rows or not all('event' in r and 'Frame_Number' in r for r in rows):
-        raise ValueError('Allocation requires rows with event and Frame_Number columns')
+    if not rows or not all(('stage' in r or 'event' in r) and 'Frame_Number' in r for r in rows):
+        raise ValueError('CSV requires rows with stage (or event) and Frame_Number columns')
     numbers = [int(r['Frame_Number']) for r in rows]
     offset = numbers[0] if offset is None else offset
     frames = [n - offset for n in numbers]
@@ -149,8 +150,10 @@ def read_allocation(path):
     with path.open(encoding='utf-8-sig', newline='') as stream:
         reader = csv.DictReader(stream)
         fields = list(reader.fieldnames or [])
-        if not {'event', 'Frame_Number'} <= set(fields):
-            missing = sorted({'event', 'Frame_Number'} - set(fields))
+        missing = [] if 'Frame_Number' in fields else ['Frame_Number']
+        if 'stage' not in fields and 'event' not in fields:
+            missing.append('stage (or event)')
+        if missing:
             raise ValueError(f'{path}: missing required columns: {", ".join(missing)}')
         rows = list(reader)
     if not rows:
@@ -175,14 +178,14 @@ def stage_types(items, data_root, include_none=False):
     for item in items:
         _, allocation = record_paths(item, data_root)
         _, rows = read_allocation(allocation)
-        names.update(rows[start]['event'] for start, _ in stages(rows, include_none))
+        names.update(stage_name(rows[start]) for start, _ in stages(rows, include_none))
     return sorted(names)
 
 
 def skip_selected_stages(rows, segments, selected):
     candidate = [dict(row) for row in rows]
     for start, end in segments:
-        if rows[start]['event'] in selected:
+        if stage_name(rows[start]) in selected:
             set_stage_skipped(candidate, start, end)
     return candidate
 
@@ -207,7 +210,8 @@ def set_manual_seed(rows, start, end, points, seed=None):
 
 def add_data_arguments(parser):
     parser.add_argument('--items', nargs='+', type=Path, default=[
-        ROOT/'Index/items/novice_active_taskA'])
+        ROOT/'Index/items/novice_active_taskA'],
+        help='Index JSON files or directories; selects active recordings of any task or skill level')
     parser.add_argument('--data-root', type=Path,
                         default=Path('/mnt/nas/Users/yxl3527/Dataset/dvss'),
                         help='Local dvss directory containing Active_Data')
@@ -275,7 +279,8 @@ class Labeler:
         self.last_canvas = tk.Canvas(last_panel, highlightthickness=0)
         self.last_canvas.pack()
         tk.Label(self.window, text='Choose FIRST or LAST above, then click the selected view | Right click / Backspace: undo | R: clear\n'
-                 'Right / Enter: save + next | Left: previous | Esc: quit (unsaved clicks discarded)',
+                 'Right / Enter: save + next stage | Left: previous stage | N / P: next / previous video\n'
+                 'Esc: quit | Video switching / quit discards unsaved clicks',
                  wraplength=max(300, self.window.winfo_screenwidth()-100)).pack()
         self.canvas.bind('<Button-1>', lambda event: self.add(event, 'first'))
         self.last_canvas.bind('<Button-1>', lambda event: self.add(event, 'last'))
@@ -286,16 +291,31 @@ class Labeler:
         self.window.bind('<Right>', self.advance)
         self.window.bind('<Return>', self.advance)
         self.window.bind('<Left>', self.previous)
+        for key in ('<n>', '<N>'):
+            self.window.bind(key, self.next_video)
+        for key in ('<p>', '<P>'):
+            self.window.bind(key, self.previous_video)
         self.window.bind('<Escape>', lambda e: self.window.destroy())
         self.next_record()
 
     def paths(self, item):
         return record_paths(item, self.args.data_root)
 
-    def next_record(self):
+    def next_video(self, event=None):
+        if self.record + 1 < len(self.items):
+            self.next_record()
+
+    def previous_video(self, event=None):
+        if self.record > 0:
+            self.next_record(direction=-1)
+
+    def next_record(self, direction=1):
+        target = self.record + direction
+        if target < 0:
+            return
         if self.cap is not None:
             self.cap.release()
-        self.record += 1
+        self.record = target
         if self.record == len(self.items):
             self.messagebox.showinfo('Finished', 'All selected recordings are labeled.')
             self.window.destroy()
@@ -314,15 +334,8 @@ class Labeler:
             save_csv(self.csv_path, self.fields, candidate)
             self.rows = candidate
         self.stage = 0
-        while self.stage < len(self.segments) and self.complete(self.stage):
-            self.stage += 1
-        while self.stage < len(self.segments):
-            start, end = self.segments[self.stage]
-            if not is_skipped(self.rows, start, end):
-                break
-            self.stage += 1
         if self.stage == len(self.segments):
-            self.next_record()
+            self.next_record(direction=direction)
         else:
             self.show()
 
@@ -331,21 +344,12 @@ class Labeler:
 
     def update_skip_selection(self):
         start, _ = self.segments[self.stage]
-        self.skip_stage.set(self.rows[start]['event'] in self.selected_skip_types())
+        self.skip_stage.set(stage_name(self.rows[start]) in self.selected_skip_types())
         self.redraw()
-
-    def complete(self, index):
-        start, end = self.segments[index]
-        if is_skipped(self.rows, start, end):
-            return True
-        try:
-            return seed_index(self.rows, start, end, self.args.points) is not None
-        except ValueError:
-            return False
 
     def show(self):
         start, end = self.segments[self.stage]
-        self.skip_stage.set(self.rows[start]['event'] in self.selected_skip_types())
+        self.skip_stage.set(stage_name(self.rows[start]) in self.selected_skip_types())
         self.cap.set(self.cv2.CAP_PROP_POS_FRAMES, self.frames[start])
         ok, frame = self.cap.read()
         if not ok:
@@ -405,7 +409,7 @@ class Labeler:
                 bg='#775500' if self.skip_stage.get() else ('#146b26' if selected else '#b00020'), fg='white',
                 wraplength=self.dw)
         self.status.config(text=f'{self.record+1}/{len(self.items)}: {self.csv_path.stem}\n'
-                           f'Stage {self.stage+1}/{len(self.segments)}: {self.rows[start]["event"]} | ' +
+                           f'Stage {self.stage+1}/{len(self.segments)}: {stage_name(self.rows[start])} | ' +
                            ('STAGE TYPE SKIPPED — press Right / Enter to continue' if self.skip_stage.get() else
                             f'Labeling {self.seed_side.get()} frame | {len(self.points)}/{self.args.points} points (minimum 1)'))
 
@@ -472,7 +476,7 @@ def main():
         parser.error('--points must be between 1 and 5')
     items = load_items(args.items)
     if not items:
-        parser.error('No novice active task A recordings found in the supplied JSON lists')
+        parser.error('No active recordings found in the supplied JSON lists')
     if args.list:
         for item in items:
             print(record_paths(item, args.data_root)[0])

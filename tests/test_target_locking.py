@@ -24,9 +24,12 @@ class LabelStagesTests(unittest.TestCase):
                          meta=dict(src_skill=skill, task_name=task))
                     for skill in ['novice', 'intermediate'] for task in ['A', 'B', 'C']]
             (root/'train.json').write_text(json.dumps(data))
-            (root/'test.json').write_text(json.dumps(data))
+            (root/'test.json').write_text(json.dumps(data + [
+                dict(video_path='passive', domain='passive', meta={})]))
             (root/'summary.json').write_text('{"train": 6}')
-            self.assertEqual([x['video_path'] for x in label.load_items([root])], ['noviceA'])
+            expected = [item['video_path'] for item in data]
+            self.assertEqual([x['video_path'] for x in label.load_items([root])], expected)
+            self.assertEqual([x['video_path'] for x in label.load_items([root/'train.json'])], expected)
 
     def test_save_preserves_original_and_first_backup(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -43,14 +46,43 @@ class LabelStagesTests(unittest.TestCase):
                 saved = list(csv.DictReader(stream))
             self.assertEqual(saved[0], dict(Frame_Number='9275', event='reach', point_1_x='43'))
 
-    def test_resume_uses_manual_seed_only(self):
+    def test_open_fully_labeled_record_for_editing(self):
+        from unittest.mock import Mock, patch
+        for mode in ['manual', 'tracked', 'skipped']:
+            with self.subTest(mode=mode):
+                app = label.Labeler.__new__(label.Labeler)
+                app.args = SimpleNamespace(points=5, frame_offset=None, include_none=False)
+                app.items, app.record, app.cap = [{}], -1, None
+                app.paths = Mock(return_value=(Path('video.mp4'), Path('gaze.csv')))
+                app.cv2 = Mock()
+                app.cv2.VideoCapture.return_value.get.return_value = 2
+                app.selected_skip_types = Mock(return_value=set())
+                app.show = Mock()
+                rows = [dict(Frame_Number=str(i), event='reach', point_label_mode=mode,
+                             point_1_x='10', point_1_y='20') for i in range(2)]
+                with patch.object(label, 'read_allocation', return_value=([], rows)):
+                    app.next_record()
+                app.show.assert_called_once_with()
+                self.assertEqual(app.stage, 0)
+                self.assertEqual(app.rows, rows)
+
+    def test_video_shortcuts_and_queue_boundaries(self):
+        from unittest.mock import Mock
         app = label.Labeler.__new__(label.Labeler)
-        app.args = SimpleNamespace(points=1)
-        app.segments = [(0, 2)]
-        app.rows = [dict(point_label_mode='manual', point_1_x='10', point_1_y='20'), {}]
-        self.assertTrue(app.complete(0))
-        app.rows[0]['point_label_mode'] = 'tracked'
-        self.assertFalse(app.complete(0))
+        app.items = [{}, {}, {}]
+        app.next_record = Mock()
+        app.record = 1
+        app.next_video()
+        app.next_record.assert_called_once_with()
+        app.next_record.reset_mock()
+        app.previous_video()
+        app.next_record.assert_called_once_with(direction=-1)
+        app.next_record.reset_mock()
+        app.record = 0
+        app.previous_video()
+        app.record = 2
+        app.next_video()
+        app.next_record.assert_not_called()
 
     def test_local_dataset_path_resolution(self):
         root = Path('/local/dvss')
@@ -60,7 +92,17 @@ class LabelStagesTests(unittest.TestCase):
                      '/scratch/old/dvss/Active_Data/User1/stimuli/User1_1_1.mp4']:
             video, allocation = label.record_paths({'video_path': path}, root)
             self.assertEqual(video, root/'Active_Data/User1/stimuli/User1_1_1.mp4')
-            self.assertEqual(allocation, root/'Active_Data/User1/sam/User1_1_1/User1_1_1_allocation.csv')
+            self.assertEqual(allocation, root/'Active_Data/User1/npy/User1_1_1_gaze.csv')
+
+    def test_gaze_stage_column(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'record_gaze.csv'
+            path.write_text('Frame_Number,stage,gaze_x\n10,reach,0.5\n11,reach,0.6\n12,grab,0.7\n')
+            fields, rows = label.read_allocation(path)
+            self.assertEqual(label.stages(rows), [(0, 2), (2, 3)])
+            self.assertEqual(label.frame_indices(rows, 3), [0, 1, 2])
+            label.save_csv(path, fields, rows)
+            self.assertEqual(label.read_allocation(path), (fields, rows))
 
     def test_relabel_clears_only_current_stage_predictions(self):
         rows = [dict(event='reach', point_label_mode='tracked', point_1_x=3, point_1_y=4,
@@ -94,7 +136,8 @@ class TrackingTests(unittest.TestCase):
             result = tracker.propagate_stage(rows, [0, 2, 3, 4], 0, 3, 1, 'model', 'cap', 'cpu')
         run.assert_called_once_with('model', 'cap', 0, 3, [(10.0, 20.0)], 'cpu', reverse=False)
         self.assertEqual(result[0], rows[0])
-        self.assertEqual(result[1]['point_1_x'], 12)
+        self.assertEqual(result[1]['point_1_x'], '')
+        self.assertEqual(result[1]['point_1_y'], '')
         self.assertNotIn('point_1_visible', result[1])
         self.assertEqual(result[2]['point_1_x'], 13)
         self.assertEqual(result[3], rows[3])
@@ -110,7 +153,7 @@ class TrackingTests(unittest.TestCase):
         rows = [dict(event='reach', Frame_Number=n) for n in [100, 102, 103, 104]]
         label.set_manual_seed(rows, 0, 3, [(10, 20)], seed=2)
         predictions = [[[99, 99]], [[11, 21]], [[12, 22]], [[13, 23]]]
-        with patch.object(tracker, 'track_stage', return_value=(predictions, None)) as run:
+        with patch.object(tracker, 'track_stage', return_value=(predictions, [[True] * len(frame) for frame in predictions])) as run:
             result = tracker.propagate_stage(rows, [0, 2, 3, 4], 0, 3, 1, 'model', 'cap', 'cpu')
         run.assert_called_once_with('model', 'cap', 0, 3, [(10.0, 20.0)], 'cpu', reverse=True)
         self.assertEqual(result[2], rows[2])
@@ -155,7 +198,7 @@ class TrackingTests(unittest.TestCase):
                 self.assertTrue(label.has_seed(rows[2], 5))
                 predictions = [points, [(x+1, y+1) for x, y in points],
                                [(x+2, y+2) for x, y in points]]
-                with patch.object(tracker, 'track_stage', return_value=(predictions, None)):
+                with patch.object(tracker, 'track_stage', return_value=(predictions, [[True] * len(frame) for frame in predictions])):
                     result = tracker.propagate_stage(rows, [0, 1, 2], 0, 3, 5, None, None, 'cpu')
                 self.assertTrue(tracker.is_tracked(result, 0, 3, 5))
                 self.assertEqual(result[0][f'point_{count}_x'], count+1)
@@ -188,7 +231,6 @@ class TrackingTests(unittest.TestCase):
         app = label.Labeler.__new__(label.Labeler)
         app.args = SimpleNamespace(points=5)
         app.segments, app.rows = [(0, 3)], rows
-        self.assertTrue(app.complete(0))
         with patch.object(tracker, 'track_stage') as run:
             result = tracker.propagate_stage(rows, [0, 1, 2, 3], 0, 3, 5, None, None, 'cpu')
         run.assert_not_called()
@@ -231,7 +273,7 @@ class TrackingTests(unittest.TestCase):
                                    ('User1_2_1', ['reach', 'transport'])]:
                 item = dict(video_path=f'/dvss/Active_Data/User1/stimuli/{record}.mp4')
                 _, allocation = label.record_paths(item, root)
-                allocation.parent.mkdir(parents=True)
+                allocation.parent.mkdir(parents=True, exist_ok=True)
                 allocation.write_text('Frame_Number,event\n' + ''.join(f'{i},{event}\n' for i, event in enumerate(events)))
                 items.append(item)
             self.assertEqual(label.stage_types(items, root), ['grab', 'reach', 'transport'])
@@ -245,13 +287,13 @@ class TrackingTests(unittest.TestCase):
                                  ('empty', 'Frame_Number,event\n')]:
                 item = dict(video_path=f'/dvss/Active_Data/User1/stimuli/{record}.mp4')
                 _, allocation = label.record_paths(item, root)
-                allocation.parent.mkdir(parents=True)
-                allocation.write_text(text)
+                allocation.parent.mkdir(parents=True, exist_ok=True)
+                allocation.write_text(text, encoding='utf-8')
                 items.append(item)
             ready, unavailable = label.labelable_items(items, root)
             self.assertEqual(ready, items[:1])
             self.assertEqual(len(unavailable), 2)
-            self.assertIn('missing required columns: event', unavailable[0])
+            self.assertIn('missing required columns: stage (or event)', unavailable[0])
             self.assertEqual(label.stage_types(ready, root), ['reach'])
             with self.assertRaisesRegex(ValueError, 'event column'):
                 label.stages([{'Frame_Number': '0'}])
