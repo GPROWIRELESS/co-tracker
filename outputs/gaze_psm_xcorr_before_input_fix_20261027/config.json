@@ -1,0 +1,52 @@
+{
+  "index": "Index/content_index.csv",
+  "data_root": "/mnt/nas/Users/yxl3527/Dataset/dvss/Active_Data",
+  "output": "outputs/gaze_psm_xcorr",
+  "phase": "all",
+  "reuse_cache": true,
+  "tasks": [
+    "A",
+    "C"
+  ],
+  "skill": "novice",
+  "records": null,
+  "hz": 41.0,
+  "max_lag": 2.0,
+  "max_gap": 0.1,
+  "min_overlap": 5.0,
+  "stage_min_overlap": 2.0,
+  "stages": true,
+  "within_stage": true,
+  "signals": [
+    "position",
+    "velocity"
+  ],
+  "smooth_ms": 80.0,
+  "threshold": 127,
+  "min_area": 10,
+  "spatial_tolerance": 50.0,
+  "min_gaze_rms": 1.0,
+  "min_psm_rms": 1.0,
+  "min_velocity_rms": 1.0,
+  "gaze_source": "raw",
+  "gaze_units": "normalized",
+  "gaze_x_column": null,
+  "gaze_y_column": null,
+  "gaze_valid_values": [
+    "2"
+  ],
+  "flip_gaze_y": false,
+  "jump_px": 100.0,
+  "area_ratio": 3.0,
+  "bootstrap": 1000,
+  "shuffles": 100,
+  "seed": 42,
+  "min_users": 3,
+  "max_frames": null,
+  "opencv_threads": 1,
+  "no_plots": false,
+  "cache_version": 3,
+  "primary_signal": "position",
+  "stage_anchor": "psm_time",
+  "partial_record": false
+}

@@ -1,0 +1,699 @@
+Window: 24 frames, step: 12
+Validated 51 recordings, 697 stages.
+Recordings per GPU: cuda:0: 26, cuda:1: 25
+[cuda:0] User1_3_1: wrap around psm, frames 670–3239
+[cuda:1] User1_5_1: wrap around psm, frames 573–2890
+[cuda:1] User1_5_1: reach string, frames 2891–3033
+[cuda:0] User1_3_1: reach string, frames 3240–3419
+[cuda:1] User1_5_1: wrap around psm, frames 3034–3101
+[cuda:1] User1_5_1: reach string, frames 3102–3264
+[cuda:0] User1_3_1: wrap around psm, frames 3420–4351
+[cuda:1] User1_5_1: threading string through tower, frames 3265–3432
+[cuda:1] User1_5_1: reach string, frames 3433–3700
+[cuda:1] User1_5_1: wrap around psm, frames 3701–4320
+[cuda:0] User1_3_1: reach string, frames 4352–5525
+[cuda:1] User1_5_1: reach string, frames 4321–5051
+[cuda:1] User1_5_1: pull through and cinch, frames 5052–5446
+[cuda:0] User1_3_1: threading string through tower, frames 5526–6007
+[cuda:1] User1_5_1: reach string, frames 5447–5529
+[cuda:1] User1_5_1: pull through and cinch, frames 5530–5599
+[cuda:1] User1_5_1: wrap around psm, frames 5600–6184
+[cuda:0] User1_3_1: wrap around psm, frames 6008–6196
+[cuda:0] User1_3_1: reach string, frames 6197–6462
+[cuda:1] User1_5_1: reach string, frames 6185–7098
+[cuda:0] User1_3_1: wrap around psm, frames 6463–7226
+[cuda:0] User1_3_1: reach string, frames 7227–7505
+[cuda:1] User1_5_1: threading string through tower, frames 7099–7430
+[cuda:0] User1_3_1: wrap around psm, frames 7506–7584
+[cuda:0] User1_3_1: reach string, frames 7585–7789
+[cuda:1] User1_5_1: reach string, frames 7431–7614
+[cuda:0] User1_3_1: threading string through tower, frames 7790–8282
+[cuda:1] User1_5_1: threading string through tower, frames 7615–7859
+[cuda:1] User1_5_1: reach string, frames 7860–7998
+[cuda:1] User1_5_1: wrap around psm, frames 7999–9618
+[cuda:0] User1_3_1: wrap around psm, frames 8283–9238
+[cuda:0] User1_3_1: reach string, frames 9239–9445
+[cuda:0] User1_3_1: wrap around psm, frames 9446–10060
+[cuda:1] User1_5_1: reach string, frames 9619–9929
+[cuda:0] User1_3_1: reach string, frames 10061–10155
+[cuda:0] User1_3_1: threading string through tower, frames 10156–11302
+[cuda:1] User1_5_1: pull through and cinch, frames 9930–11403
+[cuda:0] User1_3_1: reach string, frames 11303–11917
+[cuda:1] User1_5_1: reach string, frames 11404–12116
+[cuda:0] User1_3_1: wrap around psm, frames 11918–13055
+[cuda:1] User1_5_1: pull through and cinch, frames 12117–12243
+[cuda:1] User1_5_1: reach string, frames 12244–12320
+[cuda:1] User1_5_1: wrap around psm, frames 12321–13437
+[cuda:0] User1_3_1: pull through and cinch, frames 13056–13199
+[cuda:0] User1_3_1: reach string, frames 13200–13459
+[cuda:0] User1_3_1: threading string through tower, frames 13460–14458
+[cuda:1] User1_5_1: reach string, frames 13438–13571
+[cuda:1] User1_5_3: reach string, frames 0–538
+[cuda:1] User1_5_3: wrap around psm, frames 539–1722
+[cuda:0] User1_3_1: reach string, frames 14459–14512
+[cuda:0] User1_3_1: wrap around psm, frames 14513–15072
+[cuda:0] User1_3_1: pull through and cinch, frames 15073–16031
+[cuda:1] User1_5_3: reach string, frames 1723–1993
+[cuda:1] User1_5_3: threading string through tower, frames 1994–2136
+[cuda:1] User1_5_3: reach string, frames 2137–2332
+[cuda:0] User1_3_1: reach string, frames 16032–16833
+[cuda:1] User1_5_3: wrap around psm, frames 2333–3251
+[cuda:0] User1_3_1: pull through and cinch, frames 16834–17853
+[cuda:1] User1_5_3: reach string, frames 3252–4017
+[cuda:0] User1_5_2: reach string, frames 41–232
+[cuda:1] User1_5_3: pull through and cinch, frames 4018–5116
+[cuda:0] User1_5_2: threading string through tower, frames 233–616
+[cuda:0] User1_5_2: reach string, frames 617–856
+[cuda:0] User1_5_2: wrap around psm, frames 857–2180
+[cuda:1] User1_5_3: reach string, frames 5117–5452
+[cuda:1] User1_5_3: wrap around psm, frames 5453–6746
+[cuda:0] User1_5_2: reach string, frames 2181–2494
+[cuda:0] User1_5_2: pull through and cinch, frames 2495–3551
+[cuda:1] User1_5_3: reach string, frames 6747–7263
+[cuda:1] User1_5_3: pull through and cinch, frames 7264–7590
+[cuda:0] User1_7_1: wrap around psm, frames 0–111
+[cuda:0] User1_7_1: reach string, frames 112–729
+[cuda:1] User1_5_3: wrap around psm, frames 7591–7801
+[cuda:1] User1_5_3: reach string, frames 7802–7963
+[cuda:1] User1_5_3: pull through and cinch, frames 7964–8455
+[cuda:0] User1_7_1: wrap around psm, frames 730–3170
+[cuda:1] User1_5_3: reach string, frames 8456–8719
+[cuda:1] User1_5_3: pull through and cinch, frames 8720–8837
+[cuda:1] User1_5_3: reach string, frames 8838–8963
+[cuda:1] User1_5_3: pull through and cinch, frames 8964–9124
+[cuda:1] User1_5_3: reach string, frames 9125–9423
+[cuda:1] User1_5_3: pull through and cinch, frames 9424–9546
+[cuda:1] User1_5_3: reach string, frames 9547–9600
+[cuda:1] User1_5_3: wrap around psm, frames 9601–10027
+[cuda:1] User1_5_3: reach string, frames 10028–10257
+[cuda:1] User1_5_3: wrap around psm, frames 10258–10311
+[cuda:1] User1_5_3: reach string, frames 10312–11014
+[cuda:0] User1_7_1: reach string, frames 3171–3440
+[cuda:0] User1_7_1: wrap around psm, frames 3441–4709
+[cuda:1] User1_5_3: wrap around psm, frames 11015–11258
+[cuda:1] User1_5_3: reach string, frames 11259–11473
+[cuda:1] User1_5_3: wrap around psm, frames 11474–11639
+[cuda:1] User1_5_3: reach string, frames 11640–11795
+[cuda:1] User1_5_3: wrap around psm, frames 11796–12006
+[cuda:1] User1_5_3: reach string, frames 12007–12943
+[cuda:0] User1_7_1: reach string, frames 4710–5214
+[cuda:0] User1_7_1: pull through and cinch, frames 5215–6017
+[cuda:1] User1_5_3: wrap around psm, frames 12944–12994
+[cuda:1] User1_5_3: reach string, frames 12995–13595
+[cuda:0] User1_7_1: reach string, frames 6018–6361
+[cuda:1] User1_5_3: wrap around psm, frames 13596–13939
+[cuda:0] User1_7_1: wrap around psm, frames 6362–6909
+[cuda:1] User1_5_3: reach string, frames 13940–14077
+[cuda:1] User1_5_3: wrap around psm, frames 14078–14129
+[cuda:1] User1_5_3: reach string, frames 14130–14748
+[cuda:0] User1_7_1: reach string, frames 6910–7212
+[cuda:0] User1_7_1: pull through and cinch, frames 7213–7398
+[cuda:1] User1_5_3: wrap around psm, frames 14749–15140
+[cuda:0] User2_2_2: reach string, frames 141–993
+[cuda:1] User1_5_3: reach string, frames 15141–15515
+[cuda:1] User1_5_3: pull through and cinch, frames 15516–15921
+[cuda:0] User2_2_2: wrap around psm, frames 994–2047
+[cuda:1] User2_2_1: reach string, frames 85–1235
+[cuda:0] User2_2_2: reach string, frames 2048–2260
+[cuda:0] User2_2_2: pull through and cinch, frames 2261–2714
+[cuda:1] User2_2_1: wrap around psm, frames 1236–2867
+[cuda:0] User2_2_2: reach string, frames 2715–3808
+[cuda:0] User2_9_1: reach string, frames 0–412
+[cuda:1] User2_2_1: reach string, frames 2868–3279
+[cuda:0] User2_9_1: wrap around psm, frames 413–2017
+[cuda:1] User2_2_1: wrap around psm, frames 3280–4343
+[cuda:1] User2_2_1: reach string, frames 4344–4593
+[cuda:1] User2_2_1: threading string through tower, frames 4594–4759
+[cuda:0] User2_9_1: reach string, frames 2018–2343
+[cuda:1] User2_2_1: reach string, frames 4760–5113
+[cuda:0] User2_9_1: threading string through tower, frames 2344–2475
+[cuda:0] User2_9_1: reach string, frames 2476–2907
+[cuda:1] User2_2_1: wrap around psm, frames 5114–5825
+[cuda:0] User2_9_1: threading string through tower, frames 2908–3102
+[cuda:0] User2_9_1: reach string, frames 3103–3614
+[cuda:1] User2_2_1: reach string, frames 5826–6732
+[cuda:0] User2_9_1: wrap around psm, frames 3615–4592
+[cuda:1] User2_4_1: reach string, frames 0–591
+[cuda:0] User2_9_1: reach string, frames 4593–4808
+[cuda:1] User2_4_1: wrap around psm, frames 592–1693
+[cuda:0] User3_1_1: reach string, frames 181–790
+[cuda:0] User3_1_1: wrap around psm, frames 791–5473
+[cuda:1] User2_4_1: reach string, frames 1694–1950
+[cuda:1] User2_4_1: pull through and cinch, frames 1951–2495
+[cuda:1] User2_4_1: reach string, frames 2496–3053
+[cuda:1] User2_4_1: wrap around psm, frames 3054–3667
+[cuda:1] User2_4_1: reach string, frames 3668–4091
+[cuda:1] User2_4_1: wrap around psm, frames 4092–4454
+[cuda:1] User2_4_1: reach string, frames 4455–4717
+[cuda:1] User2_4_1: pull through and cinch, frames 4718–4912
+[cuda:1] User2_4_1: reach string, frames 4913–5158
+[cuda:1] User2_4_1: pull through and cinch, frames 5159–5476
+[cuda:1] User2_4_1: reach string, frames 5477–5668
+[cuda:1] User2_4_1: pull through and cinch, frames 5669–5926
+[cuda:1] User2_4_1: reach string, frames 5927–6167
+[cuda:1] User2_4_1: wrap around psm, frames 6168–6510
+[cuda:0] User3_1_1: reach string, frames 5474–5829
+[cuda:1] User2_4_1: reach string, frames 6511–7125
+[cuda:0] User3_1_1: threading string through tower, frames 5830–6219
+[cuda:0] User3_1_1: reach string, frames 6220–6610
+[cuda:1] User2_4_1: wrap around psm, frames 7126–7842
+[cuda:0] User3_1_1: threading string through tower, frames 6611–6858
+[cuda:0] User3_1_1: wrap around psm, frames 6859–7603
+[cuda:1] User2_4_1: reach string, frames 7843–8047
+[cuda:1] User2_4_1: wrap around psm, frames 8048–8443
+[cuda:1] User2_4_1: reach string, frames 8444–8789
+[cuda:0] User3_1_1: reach string, frames 7604–7805
+[cuda:0] User3_1_1: threading string through tower, frames 7806–8376
+[cuda:1] User2_4_1: pull through and cinch, frames 8790–9658
+[cuda:0] User3_1_1: wrap around psm, frames 8377–9466
+[cuda:1] User2_9_2: reach string, frames 0–508
+[cuda:1] User2_9_2: wrap around psm, frames 509–1563
+[cuda:0] User3_1_1: reach string, frames 9467–9887
+[cuda:0] User3_1_1: wrap around psm, frames 9888–11779
+[cuda:1] User2_9_2: reach string, frames 1564–1781
+[cuda:1] User2_9_2: threading string through tower, frames 1782–1933
+[cuda:1] User2_9_2: reach string, frames 1934–2504
+[cuda:1] User2_9_2: wrap around psm, frames 2505–3229
+[cuda:0] User3_1_1: reach string, frames 11780–12152
+[cuda:1] User2_9_2: reach string, frames 3230–3627
+[cuda:0] User3_1_1: threading string through tower, frames 12153–12331
+[cuda:1] User3_1_2: reach string, frames 0–182
+[cuda:0] User3_1_1: reach string, frames 12332–12453
+[cuda:0] User3_1_1: threading string through tower, frames 12454–12682
+[cuda:1] User3_1_2: threading string through tower, frames 183–343
+[cuda:1] User3_1_2: reach string, frames 344–835
+[cuda:0] User3_1_1: reach string, frames 12683–12771
+[cuda:0] User3_1_1: threading string through tower, frames 12772–12874
+[cuda:0] User3_1_1: wrap around psm, frames 12875–13082
+[cuda:1] User3_1_2: wrap around psm, frames 836–2698
+[cuda:0] User3_1_1: reach string, frames 13083–13656
+[cuda:0] User3_1_1: wrap around psm, frames 13657–15579
+[cuda:1] User3_1_2: reach string, frames 2699–3125
+[cuda:1] User3_1_2: threading string through tower, frames 3126–3310
+[cuda:0] User3_1_1: reach string, frames 15580–15896
+[cuda:1] User3_1_2: wrap around psm, frames 3311–3670
+[cuda:0] User3_1_1: wrap around psm, frames 15897–16400
+[cuda:1] User3_1_2: reach string, frames 3671–3873
+[cuda:1] User3_1_2: threading string through tower, frames 3874–4064
+[cuda:1] User3_1_2: reach string, frames 4065–4292
+[cuda:0] User3_1_1: reach string, frames 16401–16998
+[cuda:1] User3_1_2: threading string through tower, frames 4293–4462
+[cuda:1] User3_1_2: reach string, frames 4463–4630
+[cuda:1] User3_1_2: threading string through tower, frames 4631–4753
+[cuda:0] User3_6_1: reach string, frames 0–1635
+[cuda:1] User3_1_2: reach string, frames 4754–5723
+[cuda:1] User3_1_2: wrap around psm, frames 5724–7232
+[cuda:0] User3_6_1: wrap around psm, frames 1636–1661
+[cuda:0] User3_6_1: reach string, frames 1662–2159
+[cuda:0] User3_6_1: wrap around psm, frames 2160–5430
+[cuda:1] User3_1_2: reach string, frames 7233–7404
+[cuda:1] User3_1_2: wrap around psm, frames 7405–7795
+[cuda:1] User3_1_2: reach string, frames 7796–8126
+[cuda:1] User3_1_2: pull through and cinch, frames 8127–9856
+[cuda:1] User3_1_2: reach string, frames 9857–10031
+[cuda:1] User3_1_2: pull through and cinch, frames 10032–11614
+[cuda:0] User3_6_1: reach string, frames 5431–6297
+[cuda:0] User3_6_1: pull through and cinch, frames 6298–10589
+[cuda:1] User3_6_2: reach string, frames 0–636
+[cuda:1] User3_6_2: wrap around psm, frames 637–3096
+[cuda:1] User3_6_2: reach string, frames 3097–3615
+[cuda:1] User3_6_2: pull through and cinch, frames 3616–6046
+[cuda:0] User3_6_1: reach string, frames 10590–10817
+[cuda:0] User3_6_1: pull through and cinch, frames 10818–10874
+[cuda:0] User3_6_1: reach string, frames 10875–10950
+[cuda:0] User3_6_1: pull through and cinch, frames 10951–13563
+[cuda:1] User3_6_2: reach string, frames 6047–6538
+[cuda:1] User3_6_2: wrap around psm, frames 6539–7096
+[cuda:0] User3_6_1: reach string, frames 13564–14653
+[cuda:1] User3_6_2: reach string, frames 7097–7885
+[cuda:1] User3_6_2: pull through and cinch, frames 7886–9152
+[cuda:0] User3_8_1: reach string, frames 0–602
+[cuda:0] User3_8_1: threading string through tower, frames 603–956
+[cuda:0] User3_8_1: wrap around psm, frames 957–3376
+[cuda:1] User3_6_2: reach string, frames 9153–9580
+[cuda:1] User3_6_2: wrap around psm, frames 9581–10650
+[cuda:1] User3_6_2: reach string, frames 10651–11264
+[cuda:1] User3_6_2: pull through and cinch, frames 11265–12112
+[cuda:0] User3_8_1: reach string, frames 3377–3792
+[cuda:0] User3_8_1: pull through and cinch, frames 3793–6955
+[cuda:1] User3_6_2: reach string, frames 12113–12519
+[cuda:1] User3_6_2: pull through and cinch, frames 12520–12878
+[cuda:1] User3_8_2: reach string, frames 0–732
+[cuda:1] User3_8_2: wrap around psm, frames 733–2532
+[cuda:0] User3_8_1: reach string, frames 6956–7546
+[cuda:1] User3_8_2: reach string, frames 2533–3481
+[cuda:0] User3_8_1: wrap around psm, frames 7547–8001
+[cuda:0] User3_8_1: reach string, frames 8002–8638
+[cuda:1] User3_8_2: pull through and cinch, frames 3482–5229
+[cuda:0] User5_3_1: reach string, frames 282–725
+[cuda:0] User5_3_1: wrap around psm, frames 726–1670
+[cuda:1] User3_8_2: reach string, frames 5230–5837
+[cuda:0] User5_3_1: reach string, frames 1671–2167
+[cuda:1] User3_8_2: wrap around psm, frames 5838–6644
+[cuda:0] User5_3_1: pull through and cinch, frames 2168–2616
+[cuda:0] User5_5_1: reach string, frames 0–231
+[cuda:0] User5_5_1: wrap around psm, frames 232–1639
+[cuda:1] User3_8_2: reach string, frames 6645–7110
+[cuda:1] User3_8_2: pull through and cinch, frames 7111–9041
+[cuda:0] User5_5_1: reach string, frames 1640–1827
+[cuda:0] User5_5_1: threading string through tower, frames 1828–1998
+[cuda:0] User5_5_1: reach string, frames 1999–2214
+[cuda:0] User5_5_1: wrap around psm, frames 2215–3004
+[cuda:1] User3_8_2: reach string, frames 9042–9737
+[cuda:0] User5_5_1: reach string, frames 3005–3143
+[cuda:0] User5_5_1: threading string through tower, frames 3144–3223
+[cuda:0] User5_5_1: reach string, frames 3224–3399
+[cuda:1] User3_8_2: wrap around psm, frames 9738–10233
+[cuda:0] User5_5_1: wrap around psm, frames 3400–4664
+[cuda:1] User3_8_2: reach string, frames 10234–10894
+[cuda:1] User3_8_2: pull through and cinch, frames 10895–11799
+[cuda:0] User5_5_1: reach string, frames 4665–5771
+[cuda:1] User3_8_2: reach string, frames 11800–12172
+[cuda:1] User3_8_2: wrap around psm, frames 12173–12947
+[cuda:0] User5_5_1: threading string through tower, frames 5772–5962
+[cuda:0] User5_5_1: reach string, frames 5963–6177
+[cuda:0] User5_5_1: pull through and cinch, frames 6178–6986
+[cuda:1] User3_8_2: reach string, frames 12948–13404
+[cuda:0] User5_5_1: reach string, frames 6987–7660
+[cuda:1] User3_8_2: pull through and cinch, frames 13405–13996
+[cuda:1] User3_8_2: reach string, frames 13997–14408
+[cuda:0] User5_5_1: wrap around psm, frames 7661–8120
+[cuda:1] User3_8_2: pull through and cinch, frames 14409–14998
+[cuda:0] User5_5_1: reach string, frames 8121–8532
+[cuda:0] User5_5_1: pull through and cinch, frames 8533–8718
+[cuda:1] User5_3_2: reach string, frames 0–384
+[cuda:0] User5_7_1: reach string, frames 0–659
+[cuda:1] User5_3_2: wrap around psm, frames 385–1201
+[cuda:0] User5_7_1: wrap around psm, frames 660–2040
+[cuda:1] User5_3_2: reach string, frames 1202–1475
+[cuda:1] User5_3_2: wrap around psm, frames 1476–2652
+[cuda:0] User5_7_1: reach string, frames 2041–2330
+[cuda:0] User5_7_1: pull through and cinch, frames 2331–2858
+[cuda:1] User5_3_2: reach string, frames 2653–2919
+[cuda:1] User5_3_2: threading string through tower, frames 2920–3082
+[cuda:0] User6_1_1: reach string, frames 0–537
+[cuda:1] User5_3_2: wrap around psm, frames 3083–4303
+[cuda:0] User6_1_1: wrap around psm, frames 538–1307
+[cuda:1] User5_3_2: reach string, frames 4304–4828
+[cuda:0] User6_1_1: reach string, frames 1308–1731
+[cuda:0] User6_1_1: wrap around psm, frames 1732–3386
+[cuda:1] User5_5_2: reach string, frames 0–457
+[cuda:1] User5_5_2: wrap around psm, frames 458–899
+[cuda:1] User5_5_2: reach string, frames 900–1045
+[cuda:1] User5_5_2: threading string through tower, frames 1046–1148
+[cuda:1] User5_5_2: reach string, frames 1149–1487
+[cuda:1] User5_5_2: wrap around psm, frames 1488–2398
+[cuda:0] User6_6_1: reach string, frames 0–818
+[cuda:1] User5_5_2: reach string, frames 2399–2519
+[cuda:0] User6_6_1: wrap around psm, frames 819–3335
+[cuda:1] User5_5_2: pull through and cinch, frames 2520–3076
+[cuda:1] User5_5_2: reach string, frames 3077–3202
+[cuda:1] User5_5_2: wrap around psm, frames 3203–3494
+[cuda:1] User5_5_2: reach string, frames 3495–3683
+[cuda:1] User5_5_2: pull through and cinch, frames 3684–4303
+[cuda:1] User5_5_2: reach string, frames 4304–4721
+[cuda:1] User5_5_2: pull through and cinch, frames 4722–4919
+[cuda:1] User5_5_2: reach string, frames 4920–5286
+[cuda:0] User6_6_1: reach string, frames 3336–3415
+[cuda:0] User6_6_1: wrap around psm, frames 3416–3695
+[cuda:1] User5_5_2: wrap around psm, frames 5287–5599
+[cuda:0] User6_6_1: reach string, frames 3696–3938
+[cuda:0] User6_6_1: threading string through tower, frames 3939–4066
+[cuda:1] User5_5_2: reach string, frames 5600–5930
+[cuda:0] User6_6_1: wrap around psm, frames 4067–5938
+[cuda:1] User5_5_2: pull through and cinch, frames 5931–6163
+[cuda:1] User5_5_2: wrap around psm, frames 6164–6736
+[cuda:1] User5_5_2: reach string, frames 6737–7079
+[cuda:1] User5_5_2: pull through and cinch, frames 7080–7418
+[cuda:1] User5_7_2: reach string, frames 0–547
+[cuda:0] User6_6_1: reach string, frames 5939–6144
+[cuda:0] User6_6_1: wrap around psm, frames 6145–6175
+[cuda:0] User6_6_1: reach string, frames 6176–6352
+[cuda:1] User5_7_2: wrap around psm, frames 548–1274
+[cuda:0] User6_6_1: threading string through tower, frames 6353–6416
+[cuda:0] User6_6_1: reach string, frames 6417–6473
+[cuda:0] User6_6_1: threading string through tower, frames 6474–6578
+[cuda:0] User6_6_1: reach string, frames 6579–6951
+[cuda:0] User6_6_1: wrap around psm, frames 6952–7167
+[cuda:1] User5_7_2: reach string, frames 1275–1465
+[cuda:0] User6_6_1: reach string, frames 7168–7269
+[cuda:1] User5_7_2: pull through and cinch, frames 1466–2287
+[cuda:0] User6_6_1: wrap around psm, frames 7270–8918
+[cuda:1] User5_7_2: reach string, frames 2288–2676
+[cuda:1] User5_7_2: wrap around psm, frames 2677–3221
+[cuda:1] User5_7_2: reach string, frames 3222–3556
+[cuda:0] User6_6_1: reach string, frames 8919–9109
+[cuda:0] User6_6_1: threading string through tower, frames 9110–9201
+[cuda:0] User6_6_1: wrap around psm, frames 9202–9600
+[cuda:1] User5_7_2: wrap around psm, frames 3557–4042
+[cuda:0] User6_6_1: reach string, frames 9601–9753
+[cuda:1] User5_7_2: reach string, frames 4043–4342
+[cuda:0] User6_6_1: wrap around psm, frames 9754–10430
+[cuda:1] User5_7_2: pull through and cinch, frames 4343–4785
+[cuda:1] User5_7_2: reach string, frames 4786–4952
+[cuda:0] User6_6_1: reach string, frames 10431–10642
+[cuda:1] User5_7_2: wrap around psm, frames 4953–5224
+[cuda:0] User6_6_1: pull through and cinch, frames 10643–11391
+[cuda:1] User5_7_2: reach string, frames 5225–6272
+[cuda:0] User6_6_1: reach string, frames 11392–11923
+[cuda:1] User5_7_2: pull through and cinch, frames 6273–6638
+[cuda:0] User6_6_1: wrap around psm, frames 11924–12292
+[cuda:1] User6_1_2: reach string, frames 0–566
+[cuda:0] User6_6_1: reach string, frames 12293–12529
+[cuda:0] User6_6_1: pull through and cinch, frames 12530–13295
+[cuda:1] User6_1_2: wrap around psm, frames 567–1830
+[cuda:0] User6_6_1: reach string, frames 13296–13723
+[cuda:0] User6_6_1: wrap around psm, frames 13724–13948
+[cuda:0] User6_6_1: reach string, frames 13949–14045
+[cuda:0] User6_6_1: wrap around psm, frames 14046–14981
+[cuda:1] User6_1_2: reach string, frames 1831–2358
+[cuda:1] User6_1_2: pull through and cinch, frames 2359–3381
+[cuda:0] User6_6_1: reach string, frames 14982–15310
+[cuda:0] User6_6_1: pull through and cinch, frames 15311–15798
+[cuda:1] User6_1_2: reach string, frames 3382–4298
+[cuda:0] User7_3_1: reach string, frames 2594–3958
+[cuda:1] User6_1_2: pull through and cinch, frames 4299–4778
+[cuda:1] User6_1_2: reach string, frames 4779–5049
+[cuda:0] User7_3_1: wrap around psm, frames 3959–6576
+[cuda:1] User6_1_2: wrap around psm, frames 5050–6380
+[cuda:1] User6_1_2: reach string, frames 6381–7790
+[cuda:0] User7_3_1: pull through and cinch, frames 6577–8418
+[cuda:1] User6_1_2: wrap around psm, frames 7791–8630
+[cuda:1] User6_1_2: reach string, frames 8631–8737
+[cuda:1] User6_1_2: wrap around psm, frames 8738–9178
+[cuda:1] User6_1_2: reach string, frames 9179–9628
+[cuda:0] User7_3_1: reach string, frames 8419–9084
+[cuda:1] User6_1_2: pull through and cinch, frames 9629–10279
+[cuda:0] User7_3_1: wrap around psm, frames 9085–11455
+[cuda:1] User6_1_2: reach string, frames 10280–10817
+[cuda:1] User6_1_2: wrap around psm, frames 10818–11283
+[cuda:1] User6_1_2: reach string, frames 11284–11578
+[cuda:1] User6_1_2: pull through and cinch, frames 11579–13250
+[cuda:0] User7_3_1: reach string, frames 11456–12316
+[cuda:1] User6_1_2: reach string, frames 13251–13657
+[cuda:0] User7_3_1: wrap around psm, frames 12317–14459
+[cuda:1] User6_1_2: pull through and cinch, frames 13658–13772
+[cuda:1] User6_8_1: reach string, frames 0–511
+[cuda:1] User6_8_1: wrap around psm, frames 512–1689
+[cuda:0] User7_3_1: reach string, frames 14460–15197
+[cuda:1] User6_8_1: reach string, frames 1690–1815
+[cuda:1] User6_8_1: wrap around psm, frames 1816–2004
+[cuda:1] User6_8_1: reach string, frames 2005–2517
+[cuda:0] User7_3_1: wrap around psm, frames 15198–16992
+[cuda:1] User6_8_1: threading string through tower, frames 2518–2582
+[cuda:1] User6_8_1: wrap around psm, frames 2583–3432
+[cuda:1] User6_8_1: reach string, frames 3433–3628
+[cuda:1] User6_8_1: pull through and cinch, frames 3629–4454
+[cuda:0] User7_3_1: pull through and cinch, frames 16993–18233
+[cuda:1] User6_8_1: reach string, frames 4455–4813
+[cuda:1] User6_8_1: wrap around psm, frames 4814–5560
+[cuda:0] User7_3_1: reach string, frames 18234–19742
+[cuda:1] User6_8_1: reach string, frames 5561–5731
+[cuda:1] User6_8_1: pull through and cinch, frames 5732–6512
+[cuda:1] User6_8_1: reach string, frames 6513–6966
+[cuda:0] User7_3_1: pull through and cinch, frames 19743–20825
+[cuda:1] User6_8_1: wrap around psm, frames 6967–7817
+[cuda:1] User6_8_1: reach string, frames 7818–8179
+[cuda:0] User7_3_1: reach string, frames 20826–21350
+[cuda:1] User6_8_1: pull through and cinch, frames 8180–8769
+[cuda:0] User7_3_1: wrap around psm, frames 21351–23324
+[cuda:1] User6_8_1: reach string, frames 8770–8886
+[cuda:1] User6_8_1: pull through and cinch, frames 8887–9198
+[cuda:1] User7_4_1: reach string, frames 0–380
+[cuda:1] User7_4_1: wrap around psm, frames 381–2747
+[cuda:0] User7_3_1: pull through and cinch, frames 23325–24704
+[cuda:1] User7_4_1: reach string, frames 2748–3028
+[cuda:0] User7_4_2: reach string, frames 0–525
+[cuda:1] User7_4_1: threading string through tower, frames 3029–3136
+[cuda:1] User7_4_1: wrap around psm, frames 3137–5208
+[cuda:0] User7_4_2: wrap around psm, frames 526–2794
+[cuda:1] User7_4_1: reach string, frames 5209–5352
+[cuda:1] User7_4_1: threading string through tower, frames 5353–5527
+[cuda:1] User7_4_1: wrap around psm, frames 5528–5877
+[cuda:0] User7_4_2: reach string, frames 2795–3260
+[cuda:1] User7_4_1: reach string, frames 5878–6221
+[cuda:0] User7_4_2: pull through and cinch, frames 3261–4673
+[cuda:1] User7_4_1: wrap around psm, frames 6222–7866
+[cuda:0] User7_4_2: reach string, frames 4674–5723
+[cuda:1] User7_4_1: reach string, frames 7867–8172
+[cuda:1] User7_4_1: pull through and cinch, frames 8173–9624
+[cuda:0] User7_4_2: wrap around psm, frames 5724–6799
+[cuda:0] User7_4_2: reach string, frames 6800–7260
+[cuda:1] User7_4_1: reach string, frames 9625–10757
+[cuda:0] User7_4_2: pull through and cinch, frames 7261–8676
+[cuda:1] User7_4_1: wrap around psm, frames 10758–12192
+[cuda:0] User7_4_2: reach string, frames 8677–9723
+[cuda:1] User7_4_1: reach string, frames 12193–12978
+[cuda:0] User7_4_2: wrap around psm, frames 9724–10822
+[cuda:1] User7_8_1: reach string, frames 0–426
+[cuda:1] User7_8_1: wrap around psm, frames 427–3154
+[cuda:0] User7_4_2: reach string, frames 10823–11251
+[cuda:0] User7_4_2: pull through and cinch, frames 11252–12438
+[cuda:0] User8_2_1: reach string, frames 0–469
+[cuda:0] User8_2_1: wrap around psm, frames 470–8640
+[cuda:1] User7_8_1: reach string, frames 3155–3398
+[cuda:1] User7_8_1: pull through and cinch, frames 3399–4407
+[cuda:1] User7_8_1: reach string, frames 4408–5179
+[cuda:1] User7_8_1: wrap around psm, frames 5180–5912
+[cuda:1] User7_8_1: reach string, frames 5913–6155
+[cuda:1] User7_8_1: pull through and cinch, frames 6156–6513
+[cuda:1] User7_8_1: reach string, frames 6514–6670
+[cuda:1] User7_8_1: pull through and cinch, frames 6671–7110
+[cuda:1] User7_8_1: reach string, frames 7111–8230
+[cuda:1] User7_8_1: wrap around psm, frames 8231–9156
+[cuda:1] User7_8_1: reach string, frames 9157–9400
+[cuda:1] User7_8_1: pull through and cinch, frames 9401–10498
+[cuda:1] User8_2_2: reach string, frames 0–2975
+[cuda:0] User8_2_1: reach string, frames 8641–8899
+[cuda:0] User8_6_1: reach string, frames 289–2422
+[cuda:1] User8_2_2: wrap around psm, frames 2976–5878
+[cuda:0] User8_6_1: wrap around psm, frames 2423–7142
+[cuda:1] User8_2_2: reach string, frames 5879–6218
+[cuda:1] User8_7_1: reach string, frames 0–774
+[cuda:1] User8_7_1: wrap around psm, frames 775–3458
+[cuda:0] User8_6_1: reach string, frames 7143–7820
+[cuda:0] User8_6_1: pull through and cinch, frames 7821–9098
+[cuda:1] User8_7_1: reach string, frames 3459–3935
+[cuda:1] User8_7_1: pull through and cinch, frames 3936–4553
+[cuda:0] User8_6_1: reach string, frames 9099–9465
+[cuda:0] User8_6_1: wrap around psm, frames 9466–11919
+[cuda:1] User8_7_1: reach string, frames 4554–4918
+[cuda:1] User8_7_1: wrap around psm, frames 4919–5491
+[cuda:1] User8_7_1: reach string, frames 5492–5586
+[cuda:1] User8_7_1: wrap around psm, frames 5587–5869
+[cuda:1] User8_7_1: reach string, frames 5870–6718
+[cuda:1] User9_1_1: reach string, frames 0–320
+[cuda:0] User8_6_1: reach string, frames 11920–14127
+[cuda:1] User9_1_1: wrap around psm, frames 321–3729
+[cuda:0] User8_6_1: pull through and cinch, frames 14128–14771
+[cuda:0] User8_6_1: reach string, frames 14772–15040
+[cuda:0] User8_6_1: wrap around psm, frames 15041–19306
+[cuda:1] User9_1_1: reach string, frames 3730–4369
+[cuda:1] User9_5_1: reach string, frames 0–515
+[cuda:1] User9_5_1: wrap around psm, frames 516–3232
+[cuda:0] User8_6_1: pull through and cinch, frames 19307–19946
+[cuda:1] User9_5_1: reach string, frames 3233–3278
+[cuda:1] User9_5_1: wrap around psm, frames 3279–3438
+[cuda:1] User9_5_1: reach string, frames 3439–3883
+[cuda:0] User8_7_2: reach string, frames 0–816
+[cuda:1] User9_5_1: wrap around psm, frames 3884–3912
+[cuda:1] User9_5_1: reach string, frames 3913–4651
+[cuda:0] User8_7_2: wrap around psm, frames 817–3752
+[cuda:1] User9_9_1: reach string, frames 0–442
+[cuda:1] User9_9_1: wrap around psm, frames 443–1831
+[cuda:1] User9_9_1: reach string, frames 1832–1978
+[cuda:1] User9_9_1: threading string through tower, frames 1979–2192
+[cuda:1] User9_9_1: reach string, frames 2193–2509
+[cuda:1] User9_9_1: wrap around psm, frames 2510–3442
+[cuda:0] User8_7_2: reach string, frames 3753–3937
+[cuda:0] User8_7_2: pull through and cinch, frames 3938–4883
+[cuda:1] User9_9_1: reach string, frames 3443–3711
+[cuda:1] User9_9_1: pull through and cinch, frames 3712–4997
+[cuda:0] User8_7_2: reach string, frames 4884–5378
+[cuda:0] User8_7_2: wrap around psm, frames 5379–6051
+[cuda:1] User9_9_1: reach string, frames 4998–5403
+[cuda:0] User8_7_2: reach string, frames 6052–6283
+[cuda:0] User8_7_2: wrap around psm, frames 6284–6524
+[cuda:1] User9_9_1: wrap around psm, frames 5404–6287
+[cuda:0] User8_7_2: reach string, frames 6525–7464
+[cuda:1] User9_9_1: reach string, frames 6288–6879
+[cuda:0] User8_7_2: pull through and cinch, frames 7465–7978
+[cuda:1] User9_9_1: pull through and cinch, frames 6880–7545
+[cuda:0] User9_1_2: reach string, frames 0–489
+[cuda:0] User9_1_2: wrap around psm, frames 490–1355
+[cuda:1] User9_9_1: reach string, frames 7546–7877
+[cuda:1] User9_9_1: wrap around psm, frames 7878–8328
+[cuda:1] User9_9_1: reach string, frames 8329–9311
+[cuda:0] User9_1_2: reach string, frames 1356–1589
+[cuda:0] User9_1_2: wrap around psm, frames 1590–2598
+[cuda:1] User9_9_1: wrap around psm, frames 9312–9711
+[cuda:0] User9_1_2: reach string, frames 2599–2983
+[cuda:1] User9_9_1: reach string, frames 9712–11448
+[cuda:0] User9_1_2: wrap around psm, frames 2984–3140
+[cuda:0] User9_1_2: reach string, frames 3141–3284
+[cuda:0] User9_1_2: threading string through tower, frames 3285–3465
+[cuda:0] User9_1_2: reach string, frames 3466–3626
+[cuda:0] User9_1_2: threading string through tower, frames 3627–3691
+[cuda:0] User9_1_2: reach string, frames 3692–3979
+[cuda:0] User9_1_2: wrap around psm, frames 3980–5289
+[cuda:1] User9_9_1: wrap around psm, frames 11449–12044
+[cuda:1] User9_9_1: reach string, frames 12045–12174
+[cuda:1] User9_9_1: pull through and cinch, frames 12175–12534
+[cuda:0] User9_1_2: reach string, frames 5290–5986
+[cuda:1] User10_2_2: reach string, frames 0–395
+[cuda:1] User10_2_2: wrap around psm, frames 396–1263
+[cuda:0] User9_1_2: threading string through tower, frames 5987–6201
+[cuda:0] User9_1_2: reach string, frames 6202–7262
+[cuda:1] User10_2_2: reach string, frames 1264–1439
+[cuda:1] User10_2_2: wrap around psm, frames 1440–1491
+[cuda:1] User10_2_2: reach string, frames 1492–1525
+[cuda:1] User10_2_2: wrap around psm, frames 1526–1620
+[cuda:1] User10_2_2: reach string, frames 1621–1779
+[cuda:1] User10_2_2: threading string through tower, frames 1780–1925
+[cuda:0] User9_1_2: wrap around psm, frames 7263–8887
+[cuda:1] User10_2_2: wrap around psm, frames 1926–2783
+[cuda:1] User10_2_2: reach string, frames 2784–3799
+[cuda:0] User9_1_2: reach string, frames 8888–8987
+[cuda:0] User9_1_2: threading string through tower, frames 8988–9029
+[cuda:0] User9_1_2: reach string, frames 9030–9129
+[cuda:0] User9_1_2: wrap around psm, frames 9130–10197
+[cuda:1] User10_7_1: reach string, frames 0–433
+[cuda:1] User10_7_1: wrap around psm, frames 434–909
+[cuda:1] User10_7_1: reach string, frames 910–1042
+[cuda:0] User9_1_2: reach string, frames 10198–11091
+[cuda:1] User10_7_1: pull through and cinch, frames 1043–1609
+[cuda:1] User10_7_1: reach string, frames 1610–1866
+[cuda:1] User10_7_1: wrap around psm, frames 1867–2232
+[cuda:0] User9_5_2: reach string, frames 235–749
+[cuda:1] User10_7_1: reach string, frames 2233–2542
+[cuda:0] User9_5_2: wrap around psm, frames 750–2526
+[cuda:1] User10_7_1: pull through and cinch, frames 2543–2977
+[cuda:1] User10_7_1: reach string, frames 2978–3345
+[cuda:1] User10_7_1: wrap around psm, frames 3346–3582
+[cuda:1] User10_7_1: reach string, frames 3583–3892
+[cuda:1] User10_7_1: pull through and cinch, frames 3893–5801
+[cuda:0] User9_5_2: reach string, frames 2527–3224
+[cuda:0] User9_5_2: wrap around psm, frames 3225–5216
+[cuda:1] User10_7_1: reach string, frames 5802–7404
+[cuda:0] User9_5_2: reach string, frames 5217–5434
+[cuda:0] User10_2_1: reach string, frames 0–804
+[cuda:1] User10_7_1: pull through and cinch, frames 7405–7590
+[cuda:1] User11_4_1: reach string, frames 0–308
+[cuda:1] User11_4_1: wrap around psm, frames 309–1498
+[cuda:0] User10_2_1: wrap around psm, frames 805–1982
+[cuda:1] User11_4_1: reach string, frames 1499–2007
+[cuda:0] User10_2_1: reach string, frames 1983–2286
+[cuda:0] User10_2_1: wrap around psm, frames 2287–2415
+[cuda:0] User10_2_1: reach string, frames 2416–2736
+[cuda:1] User11_4_1: pull through and cinch, frames 2008–2799
+[cuda:0] User10_2_1: pull through and cinch, frames 2737–3295
+[cuda:1] User11_4_1: reach string, frames 2800–3245
+[cuda:0] User10_2_1: reach string, frames 3296–3567
+[cuda:0] User10_2_1: wrap around psm, frames 3568–3820
+[cuda:1] User11_4_1: wrap around psm, frames 3246–3413
+[cuda:0] User10_2_1: reach string, frames 3821–4000
+[cuda:1] User11_4_1: reach string, frames 3414–3912
+[cuda:0] User10_2_1: wrap around psm, frames 4001–5133
+[cuda:1] User11_4_1: wrap around psm, frames 3913–5545
+[cuda:0] User10_6_1: reach string, frames 0–338
+[cuda:0] User10_6_1: wrap around psm, frames 339–1063
+[cuda:1] User11_4_1: reach string, frames 5546–6045
+[cuda:0] User10_6_1: reach string, frames 1064–1194
+[cuda:0] User10_6_1: pull through and cinch, frames 1195–1681
+[cuda:1] User11_4_1: pull through and cinch, frames 6046–6782
+[cuda:0] User10_6_1: reach string, frames 1682–2011
+[cuda:0] User10_6_1: wrap around psm, frames 2012–2899
+[cuda:1] User11_4_1: reach string, frames 6783–7389
+[cuda:1] User11_4_1: wrap around psm, frames 7390–7908
+[cuda:0] User10_6_1: reach string, frames 2900–3836
+[cuda:1] User11_4_1: reach string, frames 7909–8323
+[cuda:1] User11_4_1: pull through and cinch, frames 8324–8993
+[cuda:0] User10_6_1: pull through and cinch, frames 3837–4167
+[cuda:0] User10_6_1: reach string, frames 4168–4468
+[cuda:1] User11_4_1: reach string, frames 8994–9192
+[cuda:0] User10_6_1: wrap around psm, frames 4469–4681
+[cuda:1] User11_4_1: wrap around psm, frames 9193–9755
+[cuda:0] User10_6_1: reach string, frames 4682–5145
+[cuda:1] User11_4_1: reach string, frames 9756–9887
+[cuda:0] User10_6_1: pull through and cinch, frames 5146–5384
+[cuda:1] User11_4_1: pull through and cinch, frames 9888–10500
+[cuda:0] User11_3_1: reach string, frames 300–896
+[cuda:1] User12_1_1: reach string, frames 0–289
+[cuda:0] User11_3_1: wrap around psm, frames 897–3108
+[cuda:1] User12_1_1: wrap around psm, frames 290–2149
+[cuda:1] User12_1_1: reach string, frames 2150–2451
+[cuda:0] User11_3_1: reach string, frames 3109–3546
+[cuda:1] User12_1_1: wrap around psm, frames 2452–2928
+[cuda:0] User11_3_1: wrap around psm, frames 3547–4282
+[cuda:1] User12_1_1: reach string, frames 2929–3018
+[cuda:1] User12_1_1: wrap around psm, frames 3019–3263
+[cuda:1] User12_1_1: reach string, frames 3264–3740
+[cuda:0] User11_3_1: reach string, frames 4283–4904
+[cuda:1] User12_1_1: pull through and cinch, frames 3741–4785
+[cuda:0] User11_3_1: pull through and cinch, frames 4905–6366
+[cuda:1] User12_1_1: reach string, frames 4786–5088
+[cuda:1] User12_1_1: wrap around psm, frames 5089–6132
+[cuda:0] User11_3_1: reach string, frames 6367–7000
+[cuda:1] User12_1_1: reach string, frames 6133–6382
+[cuda:0] User11_3_1: wrap around psm, frames 7001–7567
+[cuda:1] User12_1_1: pull through and cinch, frames 6383–11306
+[cuda:0] User11_3_1: reach string, frames 7568–8020
+[cuda:0] User11_3_1: pull through and cinch, frames 8021–8755
+[cuda:0] User11_3_1: reach string, frames 8756–9235
+[cuda:0] User11_3_1: wrap around psm, frames 9236–9535
+[cuda:0] User11_3_1: reach string, frames 9536–9677
+[cuda:0] User11_3_1: pull through and cinch, frames 9678–10239
+[cuda:0] User11_8_1: reach string, frames 0–726
+[cuda:0] User11_8_1: wrap around psm, frames 727–2552
+[cuda:1] User12_5_2: reach string, frames 374–814
+[cuda:0] User11_8_1: reach string, frames 2553–2978
+[cuda:1] User12_5_2: wrap around psm, frames 815–3086
+[cuda:0] User11_8_1: pull through and cinch, frames 2979–3922
+[cuda:0] User11_8_1: reach string, frames 3923–4710
+[cuda:0] User11_8_1: wrap around psm, frames 4711–5535
+[cuda:1] User12_5_2: reach string, frames 3087–4306
+[cuda:0] User11_8_1: reach string, frames 5536–5787
+[cuda:0] User11_8_1: pull through and cinch, frames 5788–6404
+[cuda:1] User12_5_2: wrap around psm, frames 4307–5241
+[cuda:0] User11_8_1: reach string, frames 6405–6587
+[cuda:0] User11_8_1: wrap around psm, frames 6588–7007
+[cuda:0] User11_8_1: reach string, frames 7008–7151
+[cuda:0] User11_8_1: pull through and cinch, frames 7152–7791
+[cuda:1] User12_5_2: reach string, frames 5242–5548
+[cuda:1] User12_5_2: pull through and cinch, frames 5549–6390
+[cuda:0] User11_8_1: reach string, frames 7792–8325
+[cuda:0] User11_8_1: pull through and cinch, frames 8326–8686
+[cuda:1] User12_5_2: reach string, frames 6391–6712
+[cuda:0] User12_5_1: reach string, frames 0–606
+[cuda:1] User12_5_2: wrap around psm, frames 6713–7432
+[cuda:0] User12_5_1: wrap around psm, frames 607–3156
+[cuda:1] User12_5_2: reach string, frames 7433–7789
+[cuda:1] User12_5_2: wrap around psm, frames 7790–7808
+[cuda:1] User12_5_2: reach string, frames 7809–7882
+[cuda:1] User12_5_2: wrap around psm, frames 7883–8237
+[cuda:1] User12_5_2: reach string, frames 8238–8748
+[cuda:1] User12_5_2: pull through and cinch, frames 8749–9221
+[cuda:1] User12_5_2: reach string, frames 9222–9417
+[cuda:1] User12_5_2: wrap around psm, frames 9418–9820
+[cuda:0] User12_5_1: reach string, frames 3157–3821
+[cuda:1] User12_5_2: reach string, frames 9821–9881
+[cuda:1] User12_5_2: wrap around psm, frames 9882–10210
+[cuda:1] User12_5_2: reach string, frames 10211–10691
+[cuda:0] User12_9_1: reach string, frames 0–830
+[cuda:1] User12_5_2: pull through and cinch, frames 10692–11549
+[cuda:0] User12_9_1: wrap around psm, frames 831–2060
+[cuda:0] User12_9_1: reach string, frames 2061–2378
+[cuda:0] User12_9_1: pull through and cinch, frames 2379–3059
+[cuda:0] User12_9_1: reach string, frames 3060–3386
+[cuda:0] User12_9_1: wrap around psm, frames 3387–3751
+[cuda:0] User12_9_1: reach string, frames 3752–4515
+[cuda:0] User12_9_1: pull through and cinch, frames 4516–5004
+[cuda:0] User12_9_1: reach string, frames 5005–5152
+[cuda:0] User12_9_1: pull through and cinch, frames 5153–5334
+[cuda:0] User12_9_1: reach string, frames 5335–5441
+[cuda:0] User12_9_1: wrap around psm, frames 5442–6214
+[cuda:0] User12_9_1: reach string, frames 6215–6381
+[cuda:0] User12_9_1: pull through and cinch, frames 6382–6841
+[cuda:0] User12_9_1: reach string, frames 6842–7110
+[cuda:0] User12_9_1: pull through and cinch, frames 7111–7479
+Tracking complete.

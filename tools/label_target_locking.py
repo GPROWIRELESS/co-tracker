@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Review and edit target-locking points on every video frame, or annotate stage seeds."""
 import argparse
+from bisect import bisect_right
 import csv
 import json
 import math
@@ -27,7 +28,10 @@ def load_items(inputs):
             for item in data:
                 if item.get('domain', 'active') == 'active':
                     records[item['video_path']] = item
-    return list(records.values())
+    # Merge dataset splits into one recording sequence (User2 before User10).
+    return sorted(records.values(), key=lambda item: tuple(
+        (1, int(part)) if part.isdigit() else (0, part.lower())
+        for part in re.split(r'(\d+)', Path(item['video_path']).stem)))
 
 
 def stage_name(row):
@@ -119,7 +123,9 @@ def seed_points(row, maximum=5):
 
 
 def has_seed(row, count):
-    if row.get('point_label_mode') != 'manual':
+    # Frame-review edits are human annotations too. Only endpoint rows are
+    # considered by seed_index; predicted tracking points remain ineligible.
+    if row.get('point_label_mode') not in {'manual', 'edited'}:
         return False
     try:
         seed_points(row, count)
@@ -487,14 +493,42 @@ class Labeler:
         self.dragging = False
         self.window = tk.Tk()
         self.window.title('DVSS tracking review')
-        self.status = tk.Label(self.window, justify='left')
+        self.status = tk.Label(self.window, justify='left',
+                               wraplength=max(1, self.window.winfo_screenwidth()-100))
         self.status.pack(fill='x')
-        self.canvas = tk.Canvas(self.window, highlightthickness=0, bg='black')
-        self.canvas.pack()
+        import tkinter.font as tkfont
+        self.detail_font = tkfont.nametofont('TkDefaultFont').copy()
+        self.detail_font.configure(size=16, weight='bold')
+        details = tk.Frame(self.window)
+        details.pack(fill='x')
+        self.stage_status = tk.Label(details, font=self.detail_font, padx=8, pady=4)
+        self.stage_status.pack(side='left', padx=4)
+        self.range_status = tk.Label(details, font=self.detail_font, padx=8, pady=4)
+        self.range_status.pack(side='right', padx=4)
+        views = self.views = tk.Frame(self.window)
+        views.pack()
+        self.view_captions = []
+        self.view_canvases = []
+        for title in ('Stage first frame', 'Current frame', 'Stage last frame'):
+            panel = tk.Frame(views)
+            panel.pack(side='left', padx=4)
+            caption = tk.Label(panel, text=title, font=self.detail_font)
+            caption.pack()
+            canvas = tk.Canvas(panel, width=1, height=1, highlightthickness=0, bg='black')
+            canvas.pack()
+            self.view_captions.append(caption)
+            self.view_canvases.append(canvas)
+        self.first_canvas, self.canvas, self.last_canvas = self.view_canvases
         self.slider = tk.Scale(self.window, orient='horizontal', showvalue=True,
                                command=self.scrub)
         self.slider.pack(fill='x')
-        controls = tk.Frame(self.window)
+        footer = tk.Frame(self.window)
+        footer.pack(side='bottom', fill='x', pady=8)
+        footer.columnconfigure(0, weight=1, uniform='sides')
+        footer.columnconfigure(2, weight=1, uniform='sides')
+        button_area = tk.Frame(footer)
+        button_area.grid(row=0, column=1, sticky='s')
+        controls = tk.Frame(button_area)
         controls.pack()
         for text, command in [('<', lambda: self.move(-1)), ('Play / Pause', self.toggle_play),
                               ('>', lambda: self.move(1)), ('J: -60', lambda: self.move(-60)),
@@ -502,7 +536,7 @@ class Labeler:
                               ('Previous video', lambda: self.open_record(self.record-1)),
                               ('Next video', lambda: self.open_record(self.record+1))]:
             tk.Button(controls, text=text, command=command).pack(side='left')
-        points = tk.Frame(self.window)
+        points = tk.Frame(button_area)
         points.pack()
         self.selected = tk.IntVar(value=1)
         tk.Label(points, text='Edit point:').pack(side='left')
@@ -510,27 +544,51 @@ class Labeler:
             tk.Radiobutton(points, text=str(i), variable=self.selected, value=i).pack(side='left')
         tk.Button(points, text='Delete selected point', command=self.delete_point).pack(side='left')
         tk.Button(points, text='Clear frame', command=self.clear_frame).pack(side='left')
-        ranges = tk.Frame(self.window)
+        ranges = tk.Frame(button_area)
         ranges.pack()
         tk.Button(ranges, text='[ Set start', command=self.mark_start).pack(side='left')
         tk.Button(ranges, text='] Set end', command=self.mark_end).pack(side='left')
         tk.Button(ranges, text='Clear ALL points in range', command=self.clear_range).pack(side='left')
-        tk.Label(self.window, text='Space: play/pause | < / > (or , / .): one frame | J / L: 60 frames\n'
-                 '[ / ]: inclusive range | Click: place selected point | Drag a point: move | Delete: remove selected\n'
-                 'Ctrl+S: save | Edits affect the current frame only; Save writes pending changes.').pack()
-        self.canvas.bind('<Button-1>', self.click)
-        self.canvas.bind('<B1-Motion>', self.drag)
-        self.canvas.bind('<ButtonRelease-1>', lambda e: setattr(self, 'dragging', False))
+        help_area = tk.Frame(footer)
+        help_area.grid(row=0, column=0, sticky='sw', padx=8)
+        tk.Label(help_area, justify='left', anchor='sw',
+                 text='Space: play/pause | Left/Right: stage\n'
+                 ', / .: frame | J/L: 60 frames | [ / ]: range\n'
+                 'Right-click: delete | Ctrl+S: save').pack(side='left')
+        tk.Button(help_area, text='Help', command=self.show_help).pack(side='left', padx=6)
+        tk.Frame(footer, width=1).grid(row=0, column=2)
+        for canvas in self.view_canvases:
+            canvas.bind('<Button-1>', self.click)
+            canvas.bind('<Button-3>', self.delete_clicked_point)
+            canvas.bind('<B1-Motion>', self.drag)
+            canvas.bind('<ButtonRelease-1>', lambda e: setattr(self, 'dragging', False))
         self.window.bind('<space>', self.toggle_play)
         for key, delta in [('comma', -1), ('less', -1), ('period', 1), ('greater', 1),
                            ('j', -60), ('J', -60), ('l', 60), ('L', 60)]:
             self.window.bind(f'<{key}>', lambda e, d=delta: self.move(d))
+        for key, direction in [('Left', -1), ('Right', 1)]:
+            self.window.bind(f'<{key}>', lambda e, d=direction: self.move_stage(d))
+            # Override the slider's default arrow action before it changes frames.
+            self.slider.bind(f'<{key}>', lambda e, d=direction: self.move_stage(d))
         self.window.bind('<bracketleft>', self.mark_start)
         self.window.bind('<bracketright>', self.mark_end)
         self.window.bind('<Delete>', self.delete_point)
         self.window.bind('<Control-s>', self.save)
         self.window.protocol('WM_DELETE_WINDOW', self.close)
         self.open_record(0)
+        self.window.update_idletasks()
+        self.window.geometry(f'{self.window.winfo_reqwidth()}x{self.window.winfo_reqheight()}+20+20')
+
+    def show_help(self):
+        self.messagebox.showinfo('Labeling controls',
+            'Space: play/pause\nLeft / Right: previous / next stage\n'
+            ', / . or < / >: previous / next frame\nJ / L: back / forward 60 frames\n'
+            '[ / ]: set inclusive range start / end\n\n'
+            'All three views are editable.\n'
+            'Left-click: add the lowest missing point; when full, edit the selected point.\n'
+            'Drag: move the placed point.\nRight-click near a point: delete it.\n'
+            'Delete: remove the selected point in the current frame.\n'
+            'Ctrl+S / Save: write pending changes.', parent=self.window)
 
     def pause(self):
         self.playing = False
@@ -552,6 +610,8 @@ class Labeler:
             return
         if self.cap is not None:
             self.cap.release()
+        if getattr(self, 'reference_cap', None) is not None:
+            self.reference_cap.release()
         video, self.csv_path = record_paths(self.items[index], self.args.data_root)
         self.fields, self.rows = read_allocation(self.csv_path)
         ensure_columns(self.fields, self.args.points)
@@ -562,6 +622,16 @@ class Labeler:
         frames = frame_indices(self.rows, self.count, self.args.frame_offset)
         self.offset = int(self.rows[0]['Frame_Number']) if self.args.frame_offset is None else self.args.frame_offset
         self.by_frame = dict(zip(frames, self.rows))
+        # Include none/skipped stages in review, and preserve repeated stage occurrences.
+        self.stage_bounds = [(frames[start], frames[end-1])
+                             for start, end in stages(self.rows, include_none=True)]
+        self.stage_starts = [first for first, last in self.stage_bounds]
+        self.active_stage = None
+        self.reference_cap = self.cv2.VideoCapture(str(video))
+        if not self.reference_cap.isOpened():
+            raise ValueError(f'Cannot open stage reference decoder for {video}')
+        self.first_picture = self.last_picture = None
+        self.reference_frames = (None, None)
         fps = self.cap.get(self.cv2.CAP_PROP_FPS)
         self.delay = max(1, round(1000/fps)) if math.isfinite(fps) and fps > 0 else 33
         self.record, self.dirty = index, False
@@ -581,21 +651,59 @@ class Labeler:
                 self.pause()
                 self.messagebox.showerror('Video error', f'Cannot decode frame {frame}')
                 return
+            first_frame = self.frame == -1
             self.frame = frame
             self.height, self.width = image.shape[:2]
-            scale = min(1, (self.window.winfo_screenwidth()-100)/self.width,
-                        max(120, self.window.winfo_screenheight()-360)/self.height)
-            self.dw, self.dh = max(1, int(self.width*scale)), max(1, int(self.height*scale))
+            # Measure the controls instead of reserving a fixed height: font and
+            # display scaling can otherwise push the previews off the screen.
+            if first_frame:
+                self.window.update_idletasks()
+                chrome_height = (self.window.winfo_reqheight()-self.views.winfo_reqheight()
+                                 + max(caption.winfo_reqheight() for caption in self.view_captions))
+                scale = min(1, max(1, self.window.winfo_screenwidth()-100)/(3*self.width),
+                            max(1, self.window.winfo_screenheight()-chrome_height-120)/self.height)
+                self.dw, self.dh = max(1, int(self.width*scale)), max(1, int(self.height*scale))
             rgb = self.cv2.cvtColor(image, self.cv2.COLOR_BGR2RGB)
             self.picture = self.ImageTk.PhotoImage(self.Image.fromarray(rgb).resize((self.dw, self.dh)))
-            self.canvas.config(width=self.dw, height=self.dh)
+            for canvas in self.view_canvases:
+                canvas.config(width=self.dw, height=self.dh)
+            for caption in self.view_captions:
+                caption.config(wraplength=self.dw)
+            self.update_stage_views()
             self.slider.set(frame)
         self.redraw()
 
-    def redraw(self):
-        self.canvas.delete('all')
-        self.canvas.create_image(0, 0, image=self.picture, anchor='nw')
-        row = self.by_frame.get(self.frame, {})
+    def update_stage_views(self):
+        stage = bisect_right(self.stage_starts, self.frame)-1
+        if stage < 0 or self.frame > self.stage_bounds[-1][1]:
+            stage = None
+        if stage == self.active_stage:
+            return
+        self.active_stage = stage
+        if stage is None:
+            self.reference_frames = (None, None)
+            self.first_picture = self.last_picture = None
+            return
+        self.reference_frames = self.stage_bounds[stage]
+        pictures = []
+        for frame in self.reference_frames:
+            # A separate decoder leaves the playback decoder at its next frame.
+            self.reference_cap.set(self.cv2.CAP_PROP_POS_FRAMES, frame)
+            ok, image = self.reference_cap.read()
+            if not ok:
+                raise RuntimeError(f'Cannot decode stage reference frame {frame}')
+            rgb = self.cv2.cvtColor(image, self.cv2.COLOR_BGR2RGB)
+            pictures.append(self.ImageTk.PhotoImage(
+                self.Image.fromarray(rgb).resize((self.dw, self.dh))))
+        self.first_picture, self.last_picture = pictures
+
+    def draw_view(self, canvas, picture, frame):
+        canvas.delete('all')
+        if picture is None:
+            canvas.create_text(self.dw/2, self.dh/2, text='No stage', fill='white')
+            return
+        canvas.create_image(0, 0, image=picture, anchor='nw')
+        row = self.by_frame.get(frame, {})
         for i in range(1, self.args.points+1):
             try:
                 x, y = float(row.get(f'point_{i}_x', '')), float(row.get(f'point_{i}_y', ''))
@@ -604,13 +712,44 @@ class Labeler:
             if not math.isfinite(x) or not math.isfinite(y):
                 continue
             x, y = x*self.dw/self.width, y*self.dh/self.height
-            self.canvas.create_oval(x-5, y-5, x+5, y+5, fill='red', outline='white', width=2)
-            self.canvas.create_text(x+10, y-10, text=str(i), fill='yellow', anchor='sw')
+            canvas.create_oval(x-5, y-5, x+5, y+5, fill='red', outline='white', width=2)
+            canvas.create_text(x+10, y-10, text=str(i), fill='yellow', anchor='sw')
+
+    def redraw(self):
+        first, last = self.reference_frames
+        row = self.by_frame.get(self.frame, {})
+        stage_row = self.by_frame.get(first, {})
+        name = stage_row.get('stage', stage_row.get('event', 'No stage'))
+        for canvas, picture, frame, caption, title in zip(
+                self.view_canvases, (self.first_picture, self.picture, self.last_picture),
+                (first, self.frame, last), self.view_captions,
+                ('Stage first frame', 'Current frame (editable)', 'Stage last frame')):
+            self.draw_view(canvas, picture, frame)
+            has_points = self.frame_has_points(frame)
+            caption.config(text=f'{title}: {frame if frame is not None else "—"}\n'
+                           f'{"Has points" if has_points else "No points"}',
+                           bg='#b7e4c7' if has_points else '#f5b7b1', fg='black')
+        stage_has_points = first is not None and any(
+            self.frame_has_points(frame) for frame in range(first, last+1))
+        self.stage_status.config(text=f'Current stage: {name} | '
+                                 f'{"Has points" if stage_has_points else "No points"}',
+                                 bg='#b7e4c7' if stage_has_points else '#f5b7b1', fg='black')
+        self.range_status.config(text=f'Selected range: {self.range_start} to {self.range_end}')
         self.status.config(text=f'{self.record+1}/{len(self.items)}: {self.csv_path.stem} | '
                            f'Frame {self.frame}/{self.count-1} | {row.get("stage", row.get("event", "No allocation row"))} | '
-                           f'{row.get("point_label_mode", "")} | {"Playing" if self.playing else "Paused"}\n'
-                           f'Selected range (inclusive): {self.range_start} to {self.range_end}'
+                           f'{row.get("point_label_mode", "")} | {"Playing" if self.playing else "Paused"}'
                            f' | {"UNSAVED EDITS" if self.dirty else "Saved"}')
+
+    def frame_has_points(self, frame):
+        row = self.by_frame.get(frame, {})
+        for i in range(1, self.args.points+1):
+            try:
+                if all(math.isfinite(float(row.get(f'point_{i}_{axis}', '')))
+                       for axis in ('x', 'y')):
+                    return True
+            except (ValueError, TypeError):
+                continue
+        return False
 
     def scrub(self, value):
         if hasattr(self, 'frame') and int(float(value)) != self.frame:
@@ -620,6 +759,14 @@ class Labeler:
     def move(self, delta):
         self.pause()
         self.show_frame(self.frame+delta)
+        return 'break'
+
+    def move_stage(self, direction):
+        self.pause()
+        current = bisect_right(self.stage_starts, self.frame)-1
+        target = current+direction
+        if 0 <= target < len(self.stage_starts):
+            self.show_frame(self.stage_starts[target])
         return 'break'
 
     def toggle_play(self, event=None):
@@ -643,15 +790,23 @@ class Labeler:
         if self.playing:
             self.timer = self.window.after(self.delay, self.tick)
 
-    def editable_row(self):
-        if self.frame not in self.by_frame:
-            row = {field: '' for field in self.fields}
-            row['Frame_Number'] = str(self.frame+self.offset)
-            self.by_frame[self.frame] = row
-        return self.by_frame[self.frame]
+    def event_frame(self, event):
+        if event.widget is self.first_canvas:
+            return self.reference_frames[0]
+        if event.widget is self.last_canvas:
+            return self.reference_frames[1]
+        return self.frame
 
-    def place(self, event):
-        row = self.editable_row()
+    def editable_row(self, frame=None):
+        frame = self.frame if frame is None else frame
+        if frame not in self.by_frame:
+            row = {field: '' for field in self.fields}
+            row['Frame_Number'] = str(frame+self.offset)
+            self.by_frame[frame] = row
+        return self.by_frame[frame]
+
+    def place(self, event, frame=None):
+        row = self.editable_row(frame)
         i = self.selected.get()
         row[f'point_{i}_x'] = float(min(self.width-1, max(0, event.x*self.width/self.dw)))
         row[f'point_{i}_y'] = float(min(self.height-1, max(0, event.y*self.height/self.dh)))
@@ -661,28 +816,55 @@ class Labeler:
 
     def click(self, event):
         self.pause()
-        row = self.by_frame.get(self.frame, {})
+        self.dragging = False
+        frame = self.event_frame(event)
+        if frame is None:
+            return
+        row = self.by_frame.get(frame, {})
+        # Fill empty slots in numeric order, regardless of the UI selection.
+        # Once full, preserve the explicit selection for replacement and dragging.
+        for i in range(1, self.args.points+1):
+            try:
+                x, y = float(row.get(f'point_{i}_x', '')), float(row.get(f'point_{i}_y', ''))
+            except (ValueError, TypeError):
+                x = y = math.nan
+            if not math.isfinite(x) or not math.isfinite(y):
+                self.selected.set(i)
+                break
+        self.dragging = True
+        self.drag_frame = frame
+        self.place(event, frame)
+
+    def drag(self, event):
+        if self.dragging:
+            self.place(event, self.drag_frame)
+
+    def delete_clicked_point(self, event):
+        self.pause()
+        self.dragging = False
+        frame = self.event_frame(event)
+        if frame is None:
+            return 'break'
+        row = self.by_frame.get(frame, {})
         nearest, distance = None, 15**2
         for i in range(1, self.args.points+1):
             try:
                 x, y = float(row.get(f'point_{i}_x', '')), float(row.get(f'point_{i}_y', ''))
             except (ValueError, TypeError):
                 continue
+            if not math.isfinite(x) or not math.isfinite(y):
+                continue
             d = (event.x-x*self.dw/self.width)**2+(event.y-y*self.dh/self.height)**2
             if d < distance:
                 nearest, distance = i, d
         if nearest is not None:
             self.selected.set(nearest)
-        self.dragging = True
-        self.place(event)
+            self.delete_point(frame=frame)
+        return 'break'
 
-    def drag(self, event):
-        if self.dragging:
-            self.place(event)
-
-    def delete_point(self, event=None):
+    def delete_point(self, event=None, frame=None):
         self.pause()
-        row = self.editable_row()
+        row = self.editable_row(frame)
         for axis in ('x', 'y'):
             row[f'point_{self.selected.get()}_{axis}'] = ''
         row['point_label_mode'] = 'edited'
@@ -737,6 +919,8 @@ class Labeler:
         if self.confirm_leave():
             if self.cap is not None:
                 self.cap.release()
+            if getattr(self, 'reference_cap', None) is not None:
+                self.reference_cap.release()
             self.window.destroy()
 
 
@@ -770,6 +954,8 @@ def main():
     finally:
         if app.cap is not None:
             app.cap.release()
+        if getattr(app, 'reference_cap', None) is not None:
+            app.reference_cap.release()
 
 
 if __name__ == '__main__':

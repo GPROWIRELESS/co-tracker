@@ -2,7 +2,6 @@
 """Track manual target-locking seeds through their stage and following skipped stages."""
 import argparse
 import csv
-import math
 from pathlib import Path
 
 from label_target_locking import (
@@ -50,10 +49,6 @@ def track_stage(model, cap, first, last, points, device, reverse=False):
             buffer = buffer[model.step:]
     tracks = tracks[0, :last-first+1].cpu().numpy()
     visibility = visibility[0, :last-first+1].cpu().numpy()
-    height, width = buffer[0].shape[:2]
-    visibility &= (np.isfinite(tracks).all(axis=-1)
-                   & (tracks[..., 0] >= 0) & (tracks[..., 0] < width)
-                   & (tracks[..., 1] >= 0) & (tracks[..., 1] < height))
     return tracks, visibility
 
 
@@ -86,19 +81,15 @@ def propagate_stage(rows, frames, start, end, count, model, cap, device, trackin
         # Continue forward from the same manual endpoint, preserving backward stage results.
         return propagate_stage(candidate, frames, seed, seed+1, count, model, cap, device,
                                tracking_end=end)
-    tracks, visibility = track_stage(model, cap, frames[start], frames[end-1], points, device, reverse=reverse)
+    tracks, _visibility = track_stage(model, cap, frames[start], frames[end-1], points, device, reverse=reverse)
     for index in range(start, end):
         if index == seed:
             continue
         offset = frames[end-1] - frames[index] if reverse else frames[index] - frames[start]
         candidate[index]['point_label_mode'] = 'tracked' if index < seed_end else 'tracked_inherited'
         for i in range(1, len(points)+1):
-            if not visibility[offset][i-1]:
-                candidate[index].update({f'point_{i}_x': '', f'point_{i}_y': ''})
-                continue
+            # Save raw coordinates for every prediction, regardless of visibility or bounds.
             x, y = tracks[offset][i-1]
-            if not math.isfinite(float(x)) or not math.isfinite(float(y)):
-                raise ValueError(f'Nonfinite prediction at allocation row {index}')
             candidate[index].update({f'point_{i}_x': float(x), f'point_{i}_y': float(y)})
     return candidate
 
@@ -122,9 +113,18 @@ def continuation_groups(rows, segments):
     return groups
 
 
+def load_tracking_model(checkpoint, device, window_len):
+    from cotracker.predictor import CoTrackerOnlinePredictor
+    # Load the native 16-frame checkpoint before changing the inference window.
+    # Its saved time embedding is interpolated by the model during forward().
+    model = CoTrackerOnlinePredictor(checkpoint=str(checkpoint)).to(device).eval()
+    model.model.window_len = window_len
+    model.step = window_len // 2
+    return model
+
+
 def run_jobs(jobs, args):
     """Process whole recordings sequentially on one device."""
-    from cotracker.predictor import CoTrackerOnlinePredictor
     import cv2
     model = None
     for video, allocation, fields, rows, frames, segments in jobs:
@@ -138,7 +138,7 @@ def run_jobs(jobs, args):
                 if not args.overwrite and is_tracked(rows, start, end, args.points) and inherited_done:
                     continue
                 if model is None and tracking_end > start+1:
-                    model = CoTrackerOnlinePredictor(checkpoint=str(args.checkpoint)).to(args.device).eval()
+                    model = load_tracking_model(args.checkpoint, args.device, args.window_len)
                 print(f'[{args.device}] {video.stem}: {stage_name(rows[start])}, frames {frames[start]}–{frames[tracking_end-1]}', flush=True)
                 candidate = propagate_stage(rows, frames, start, end, args.points, model, cap, args.device, tracking_end=tracking_end)
                 save_csv(allocation, fields, candidate)
@@ -162,11 +162,16 @@ def main():
     parser.add_argument('--checkpoint', type=Path, default=ROOT/'checkpoints/scaled_online.pth')
     parser.add_argument('--device', default='cuda', help='Device for single-worker execution')
     parser.add_argument('--devices', nargs='+', help='One worker per GPU, e.g. cuda:0 cuda:1; overrides --device')
+    parser.add_argument('--window-len', type=int, default=24,
+                        help='Even inference window size (default: 24; original: 16); overlap is half')
     parser.add_argument('--overwrite', action='store_true', help='Recompute already tracked stages')
     parser.add_argument('--check-only', action='store_true', help='Validate all inputs and seeds without inference or writes')
     args = parser.parse_args()
     if not 1 <= args.points <= 5:
         parser.error('--points must be between 1 and 5')
+    if args.window_len < 2 or args.window_len % 2:
+        parser.error('--window-len must be an even integer of at least 2')
+    print(f'Window: {args.window_len} frames, step: {args.window_len // 2}', flush=True)
     items = load_items(args.items)
     if not items:
         parser.error('No active recordings found in the supplied JSON lists')

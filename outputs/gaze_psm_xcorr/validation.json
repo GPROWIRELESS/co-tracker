@@ -1,0 +1,38 @@
+{
+  "records": 84,
+  "task_counts": {
+    "A": 33,
+    "C": 51
+  },
+  "paired_novices": 11,
+  "quality_errors": 0,
+  "usable_position_records_per_side": 84,
+  "cache_fingerprints_verified": 84,
+  "restored_records": [
+    "User3_4_1",
+    "User3_8_2",
+    "User5_3_1",
+    "User5_5_1",
+    "User5_7_1",
+    "User6_1_1",
+    "User6_3_1",
+    "User6_8_1",
+    "User7_3_1",
+    "User7_5_1",
+    "User7_8_1",
+    "User7_9_1",
+    "User8_7_1",
+    "User8_8_1",
+    "User9_1_1",
+    "User9_2_1",
+    "User9_5_1",
+    "User9_5_2"
+  ],
+  "prior_usable_records": 66,
+  "unchanged_prior_records_max_peak_r_difference": 0.0,
+  "unchanged_prior_records_max_lag_difference_s": 0.0,
+  "regression_tests_passed": 39,
+  "bootstrap": 1000,
+  "shuffles": 100,
+  "all_assertions_passed": true
+}

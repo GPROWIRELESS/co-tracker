@@ -12,6 +12,18 @@ spec.loader.exec_module(label)
 
 
 class LabelStagesTests(unittest.TestCase):
+    def test_edited_endpoint_is_a_seed_but_predictions_and_interior_edits_are_not(self):
+        for endpoint in (0, 2):
+            with self.subTest(endpoint=endpoint):
+                rows = [{} for _ in range(3)]
+                rows[endpoint].update(point_label_mode='edited', point_1_x=10, point_1_y=20)
+                self.assertEqual(label.seed_index(rows, 0, 3, 5), endpoint)
+                rows[endpoint]['point_label_mode'] = 'tracked'
+                self.assertIsNone(label.seed_index(rows, 0, 3, 5))
+        rows = [{}, dict(point_label_mode='edited', point_1_x=10, point_1_y=20), {}]
+        self.assertIsNone(label.seed_index(rows, 0, 3, 5))
+        self.assertFalse(label.has_seed(dict(point_label_mode='edited', point_1_x=10), 5))
+
     def test_repeated_events_are_separate_stages(self):
         rows = [{'event': e} for e in ['none', 'reach', 'reach', 'grab', 'none', 'reach']]
         self.assertEqual(label.stages(rows), [(1, 3), (3, 4), (5, 6)])
@@ -27,7 +39,7 @@ class LabelStagesTests(unittest.TestCase):
             (root/'test.json').write_text(json.dumps(data + [
                 dict(video_path='passive', domain='passive', meta={})]))
             (root/'summary.json').write_text('{"train": 6}')
-            expected = [item['video_path'] for item in data]
+            expected = sorted(item['video_path'] for item in data)
             self.assertEqual([x['video_path'] for x in label.load_items([root])], expected)
             self.assertEqual([x['video_path'] for x in label.load_items([root/'train.json'])], expected)
 
@@ -136,8 +148,8 @@ class TrackingTests(unittest.TestCase):
             result = tracker.propagate_stage(rows, [0, 2, 3, 4], 0, 3, 1, 'model', 'cap', 'cpu')
         run.assert_called_once_with('model', 'cap', 0, 3, [(10.0, 20.0)], 'cpu', reverse=False)
         self.assertEqual(result[0], rows[0])
-        self.assertEqual(result[1]['point_1_x'], '')
-        self.assertEqual(result[1]['point_1_y'], '')
+        self.assertEqual(result[1]['point_1_x'], 12)
+        self.assertEqual(result[1]['point_1_y'], 22)
         self.assertNotIn('point_1_visible', result[1])
         self.assertEqual(result[2]['point_1_x'], 13)
         self.assertEqual(result[3], rows[3])
@@ -152,13 +164,14 @@ class TrackingTests(unittest.TestCase):
         import track_target_locking as tracker
         rows = [dict(event='reach', Frame_Number=n) for n in [100, 102, 103, 104]]
         label.set_manual_seed(rows, 0, 3, [(10, 20)], seed=2)
-        predictions = [[[99, 99]], [[11, 21]], [[12, 22]], [[13, 23]]]
+        predictions = [[[99, 99]], [[-11, 100000]], [[12, 22]], [[13, 23]]]
         with patch.object(tracker, 'track_stage', return_value=(predictions, [[True] * len(frame) for frame in predictions])) as run:
             result = tracker.propagate_stage(rows, [0, 2, 3, 4], 0, 3, 1, 'model', 'cap', 'cpu')
         run.assert_called_once_with('model', 'cap', 0, 3, [(10.0, 20.0)], 'cpu', reverse=True)
         self.assertEqual(result[2], rows[2])
         self.assertEqual(result[0]['point_1_x'], 13)
-        self.assertEqual(result[1]['point_1_x'], 11)
+        self.assertEqual(result[1]['point_1_x'], -11)
+        self.assertEqual(result[1]['point_1_y'], 100000)
         self.assertEqual(result[3], rows[3])
         self.assertTrue(tracker.is_tracked(result, 0, 3, 1))
         self.assertEqual(label.seed_index(result, 0, 3, 1), 2)

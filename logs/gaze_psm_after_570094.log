@@ -1,0 +1,203 @@
+[2026-10-27T22:31:35+00:00] Waiting for PID 570094; watcher PID 594706
+[2026-10-27T22:56:10+00:00] PID 570094 exited
+[2026-10-27T22:56:10+00:00] Starting in /home/erie_lab/Documents/yxl3527/co-tracker: ['/usr/bin/python', '-u', 'tools/gaze_psm_xcorr.py', '--within-stage']
+Uniform rate: 41 Hz; 84 records; 11 novices
+[1/84] User1_1_1: extract/cache
+[2/84] User1_3_1: extract/cache
+[3/84] User1_5_1: extract/cache
+[4/84] User1_5_2: extract/cache
+[5/84] User1_5_3: extract/cache
+[6/84] User1_6_1: extract/cache
+[7/84] User1_7_1: extract/cache
+[8/84] User1_8_1: extract/cache
+[9/84] User2_2_1: extract/cache
+[10/84] User2_2_2: extract/cache
+[11/84] User2_3_1: extract/cache
+[12/84] User2_4_1: extract/cache
+[13/84] User2_5_1: extract/cache
+[14/84] User2_7_1: extract/cache
+[15/84] User2_9_1: extract/cache
+[16/84] User2_9_2: extract/cache
+[17/84] User3_1_1: extract/cache
+[18/84] User3_1_2: extract/cache
+[19/84] User3_2_1: extract/cache
+[20/84] User3_4_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7514710988026337e+18'
+[21/84] User3_6_1: extract/cache
+[22/84] User3_6_2: extract/cache
+[23/84] User3_8_1: extract/cache
+[24/84] User3_8_2: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7514748945945375e+18'
+[25/84] User3_9_1: extract/cache
+[26/84] User5_2_1: extract/cache
+[27/84] User5_3_1: extract/cache
+[28/84] User5_3_2: extract/cache
+[29/84] User5_4_1: extract/cache
+[30/84] User5_5_1: extract/cache
+[31/84] User5_5_2: extract/cache
+[32/84] User5_7_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7519050280527944e+18'
+[33/84] User5_7_2: extract/cache
+[34/84] User5_9_1: extract/cache
+[35/84] User6_1_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7520722534019366e+18'
+[36/84] User6_1_2: extract/cache
+[37/84] User6_3_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.752073533267085e+18'
+[38/84] User6_5_1: extract/cache
+[39/84] User6_6_1: extract/cache
+[40/84] User6_7_1: extract/cache
+[41/84] User6_8_1: extract/cache
+[42/84] User7_1_1: extract/cache
+[43/84] User7_3_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7525161880114017e+18'
+[44/84] User7_4_1: extract/cache
+[45/84] User7_4_2: extract/cache
+[46/84] User7_5_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7525183573514117e+18'
+[47/84] User7_8_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7525198536794573e+18'
+[48/84] User7_9_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7525202267264274e+18'
+[49/84] User8_2_1: extract/cache
+[50/84] User8_2_2: extract/cache
+[51/84] User8_3_1: extract/cache
+[52/84] User8_4_1: extract/cache
+[53/84] User8_6_1: extract/cache
+[54/84] User8_7_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7518244835873876e+18'
+[55/84] User8_7_2: extract/cache
+[56/84] User8_8_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.751825085545185e+18'
+[57/84] User9_1_1: extract/cache
+[58/84] User9_1_2: extract/cache
+[59/84] User9_2_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7523317233592036e+18'
+[60/84] User9_5_1: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.752334249880934e+18'
+[61/84] User9_5_2: extract/cache
+  ERROR: invalid literal for int() with base 10: '1.7523344452950218e+18'
+[62/84] User9_6_1: extract/cache
+[63/84] User9_7_1: extract/cache
+[64/84] User9_9_1: extract/cache
+[65/84] User10_1_1: extract/cache
+[66/84] User10_2_1: extract/cache
+[67/84] User10_2_2: extract/cache
+[68/84] User10_5_1: extract/cache
+[69/84] User10_6_1: extract/cache
+[70/84] User10_7_1: extract/cache
+[71/84] User10_9_1: extract/cache
+[72/84] User11_2_1: extract/cache
+[73/84] User11_3_1: extract/cache
+[74/84] User11_4_1: extract/cache
+[75/84] User11_6_1: extract/cache
+[76/84] User11_7_1: extract/cache
+[77/84] User11_8_1: extract/cache
+[78/84] User12_1_1: extract/cache
+[79/84] User12_3_1: extract/cache
+[80/84] User12_4_1: extract/cache
+[81/84] User12_5_1: extract/cache
+[82/84] User12_5_2: extract/cache
+[83/84] User12_8_1: extract/cache
+[84/84] User12_9_1: extract/cache
+Unpaired reference [1/100]
+Unpaired reference [2/100]
+Unpaired reference [3/100]
+Unpaired reference [4/100]
+Unpaired reference [5/100]
+Unpaired reference [6/100]
+Unpaired reference [7/100]
+Unpaired reference [8/100]
+Unpaired reference [9/100]
+Unpaired reference [10/100]
+Unpaired reference [11/100]
+Unpaired reference [12/100]
+Unpaired reference [13/100]
+Unpaired reference [14/100]
+Unpaired reference [15/100]
+Unpaired reference [16/100]
+Unpaired reference [17/100]
+Unpaired reference [18/100]
+Unpaired reference [19/100]
+Unpaired reference [20/100]
+Unpaired reference [21/100]
+Unpaired reference [22/100]
+Unpaired reference [23/100]
+Unpaired reference [24/100]
+Unpaired reference [25/100]
+Unpaired reference [26/100]
+Unpaired reference [27/100]
+Unpaired reference [28/100]
+Unpaired reference [29/100]
+Unpaired reference [30/100]
+Unpaired reference [31/100]
+Unpaired reference [32/100]
+Unpaired reference [33/100]
+Unpaired reference [34/100]
+Unpaired reference [35/100]
+Unpaired reference [36/100]
+Unpaired reference [37/100]
+Unpaired reference [38/100]
+Unpaired reference [39/100]
+Unpaired reference [40/100]
+Unpaired reference [41/100]
+Unpaired reference [42/100]
+Unpaired reference [43/100]
+Unpaired reference [44/100]
+Unpaired reference [45/100]
+Unpaired reference [46/100]
+Unpaired reference [47/100]
+Unpaired reference [48/100]
+Unpaired reference [49/100]
+Unpaired reference [50/100]
+Unpaired reference [51/100]
+Unpaired reference [52/100]
+Unpaired reference [53/100]
+Unpaired reference [54/100]
+Unpaired reference [55/100]
+Unpaired reference [56/100]
+Unpaired reference [57/100]
+Unpaired reference [58/100]
+Unpaired reference [59/100]
+Unpaired reference [60/100]
+Unpaired reference [61/100]
+Unpaired reference [62/100]
+Unpaired reference [63/100]
+Unpaired reference [64/100]
+Unpaired reference [65/100]
+Unpaired reference [66/100]
+Unpaired reference [67/100]
+Unpaired reference [68/100]
+Unpaired reference [69/100]
+Unpaired reference [70/100]
+Unpaired reference [71/100]
+Unpaired reference [72/100]
+Unpaired reference [73/100]
+Unpaired reference [74/100]
+Unpaired reference [75/100]
+Unpaired reference [76/100]
+Unpaired reference [77/100]
+Unpaired reference [78/100]
+Unpaired reference [79/100]
+Unpaired reference [80/100]
+Unpaired reference [81/100]
+Unpaired reference [82/100]
+Unpaired reference [83/100]
+Unpaired reference [84/100]
+Unpaired reference [85/100]
+Unpaired reference [86/100]
+Unpaired reference [87/100]
+Unpaired reference [88/100]
+Unpaired reference [89/100]
+Unpaired reference [90/100]
+Unpaired reference [91/100]
+Unpaired reference [92/100]
+Unpaired reference [93/100]
+Unpaired reference [94/100]
+Unpaired reference [95/100]
+Unpaired reference [96/100]
+Unpaired reference [97/100]
+Unpaired reference [98/100]
+Unpaired reference [99/100]
+Unpaired reference [100/100]
+Saved 2248 recording curves and 80 groups to outputs/gaze_psm_xcorr

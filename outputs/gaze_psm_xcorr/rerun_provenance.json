@@ -1,0 +1,17 @@
+{
+  "created_utc": "2026-10-28T01:41:00.705213+00:00",
+  "previous_output": "/home/erie_lab/Documents/yxl3527/co-tracker/outputs/gaze_psm_xcorr_before_input_fix_20261027",
+  "fixes": [
+    "Exact Decimal parsing of scientific-notation nanosecond timestamps",
+    "Numerically equivalent status codes 2 and 2.0 accepted",
+    "Version 3 gaze caches invalidated; source-verified native masks reused only"
+  ],
+  "code_sha256": {
+    "gaze_psm_xcorr.py": "e67887445323623d47dcea57560bcca16fc7582fa5572d638c05d14fbe24b139",
+    "gaze_psm_pipeline.py": "671625dc3a002ed3d4c685787cb17ad36c9301c562d41dadf8c07252510cc736",
+    "gaze_psm_core.py": "e85eb90ece9c31ada6f35e41378f35e44668e054895f60d758befebaeeb8f5af",
+    "gaze_psm_group.py": "76c6c23fcd5485c6c6f2c4123f0cfc09066ad49ae693c796c59383377c555ef6",
+    "gaze_psm_report.py": "fec773bf210fea50292745414533ad7223c379f7ad6a566d1ae1b7b5e32e2c28"
+  },
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -u tools/gaze_psm_xcorr.py --within-stage --hz 41 --workers 8"
+}
