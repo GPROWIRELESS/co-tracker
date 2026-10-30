@@ -93,7 +93,8 @@ class SyntheticDatasetTests(unittest.TestCase):
         self.index = self.root/"index.csv"
         write_rows(self.index, list(self.record), [self.record])
         self.ns_origin = 1_750_427_084_986_753_000
-        self.times = np.arange(80)*100_000_000+self.ns_origin
+        # Explicit int64 also prevents intermediate int32 overflow on Windows.
+        self.times = np.arange(80, dtype=np.int64)*100_000_000+self.ns_origin
         self.frame_numbers = np.arange(80)+9000
         self.centers = np.c_[30+np.rint(12*np.sin(np.arange(80)*.3)),
                              23+np.rint(8*np.cos(np.arange(80)*.2))]

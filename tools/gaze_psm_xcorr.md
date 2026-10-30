@@ -1,5 +1,9 @@
 # Gaze versus PSM position cross-correlation
 
+中文详细说明：[代码、公式和全部输出字段](../docs/gaze_psm_code_and_formulas_zh.md)；
+[2026-10-30 结果复核报告](../docs/gaze_psm_results_audit_zh.md)。
+[图片可读性与结论图选择](../docs/gaze_psm_figures_guide_zh.md)。
+
 The primary analysis estimates whether gaze positions precede corresponding
 left/right PSM mask-centroid positions. It uses normalized 2-D **position xcorr**,
 spatial-distance checks, and novice-level inference. Velocity xcorr is secondary.
@@ -215,14 +219,27 @@ require a prespecified testing family and correction.
 | `cache/<id>.npz` | Fingerprinted aligned trajectories and native centroids |
 | `figures/` | Whole-task/stage curves, spatial checks, record peaks, paired novice plots, bootstrap peak-lag histograms |
 
-Figures show faint novice curves, equal-novice group curves, pointwise bootstrap
-bands, and unpaired envelopes when available. Boundary record peaks use hollow
+Main correlation figures show equal-novice group curves, pointwise bootstrap
+bands, and unpaired envelopes. Whole-task panels share a data-derived y range
+per signal; stage panels share a y range within each stage row. Individual
+curves are retained separately in `novice_curves_*.png`. Proximity axes use
+percentages; numerical tables retain fractions. Boundary record peaks use hollow
 markers. Paired novice plots include boundary estimates in orange for visibility;
 these are diagnostic, not reliable delays. Insufficient-data panels remain
 explicitly labeled instead of being filled with zero estimates. Bootstrap
 peak-lag histograms expose broad or multimodal timing estimates. Every figure
 from a run marked `partial_record` in `config.json` is watermarked
 `PARTIAL RECORD / SMOKE TEST`.
+
+The readability revision adds `conclusion_position.png` for group peak intervals,
+paired task contrasts and spatial proximity, `stage_peak_lags_position.png` for
+exploratory stage intervals, and `spatial_changes.png` for changes from zero lag.
+PNG and vector PDF versions are saved together. Replot saved results without
+the original NAS inputs or rewriting statistical tables using:
+
+```bash
+python tools/replot_gaze_psm_outputs.py --output outputs/gaze_psm_xcorr
+```
 
 ## Reproducibility and sensitivity checks
 

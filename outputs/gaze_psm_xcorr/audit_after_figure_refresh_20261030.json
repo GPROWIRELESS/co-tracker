@@ -1,0 +1,45 @@
+{
+  "created_utc": "2026-10-30T06:06:07.939793+00:00",
+  "all_checks_passed": true,
+  "scope": "cached trajectories onward; original NAS source verification unavailable",
+  "code_sha256_after_lf_normalization": {
+    "gaze_psm_xcorr.py": "e67887445323623d47dcea57560bcca16fc7582fa5572d638c05d14fbe24b139",
+    "gaze_psm_pipeline.py": "671625dc3a002ed3d4c685787cb17ad36c9301c562d41dadf8c07252510cc736",
+    "gaze_psm_core.py": "e85eb90ece9c31ada6f35e41378f35e44668e054895f60d758befebaeeb8f5af",
+    "gaze_psm_group.py": "76c6c23fcd5485c6c6f2c4123f0cfc09066ad49ae693c796c59383377c555ef6",
+    "gaze_psm_report.py": "10d1db5d543b2b65b64055618def3e8191de7a07c447a2acad00652f854409e8"
+  },
+  "cache_records_checked": 84,
+  "plotting_changes_with_numerical_exports_verified": {
+    "gaze_psm_report.py": "CSV functions and fields match snapshot AST; plotting may differ"
+  },
+  "record_curves_replayed": 2664,
+  "independent_direct_lag_checks": 6600,
+  "novice_curves_replayed": 776,
+  "group_curves_replayed": 80,
+  "contrasts_replayed": 132,
+  "bootstrap_per_supported_group": 1000,
+  "unpaired_replicates_replayed": 0,
+  "csv_rows_checked": {
+    "record_curves.csv": 439560,
+    "record_summary.csv": 2664,
+    "novice_curves.csv": 128040,
+    "novice_summary.csv": 776,
+    "group_curves.csv": 13200,
+    "group_summary.csv": 80,
+    "contrasts.csv": 132,
+    "quality.csv": 84,
+    "bootstrap_peaks.csv": 72000,
+    "unpaired_peaks.csv": 6680,
+    "bootstrap_contrasts.csv": 100000
+  },
+  "task_record_counts": {
+    "A": 33,
+    "C": 51
+  },
+  "group_status_counts": {
+    "ok": 67,
+    "no_valid_curve": 8,
+    "boundary_peak": 5
+  }
+}

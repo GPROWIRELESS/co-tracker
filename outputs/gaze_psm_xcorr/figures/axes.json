@@ -1,0 +1,1275 @@
+{
+  "whole_task_position.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.10459218495009648,
+        0.656121968522413
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "whole:position"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.10459218495009648,
+        0.656121968522413
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "whole:position"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.10459218495009648,
+        0.656121968522413
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "whole:position"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.10459218495009648,
+        0.656121968522413
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "whole:position"
+    }
+  ],
+  "whole_task_velocity.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.019629880986259462,
+        0.05938868032402529
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "whole:velocity"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.019629880986259462,
+        0.05938868032402529
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "whole:velocity"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.019629880986259462,
+        0.05938868032402529
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "whole:velocity"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.019629880986259462,
+        0.05938868032402529
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "whole:velocity"
+    }
+  ],
+  "spatial_distance.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        116.22143594738614,
+        555.0521485047792
+      ],
+      "ylabel": "Mean novice median distance (px)",
+      "comparison_group": "spatial:distance_median_px"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        116.22143594738614,
+        555.0521485047792
+      ],
+      "ylabel": "Mean novice median distance (px)",
+      "comparison_group": "spatial:distance_median_px"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        116.22143594738614,
+        555.0521485047792
+      ],
+      "ylabel": "Mean novice median distance (px)",
+      "comparison_group": "spatial:distance_median_px"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        116.22143594738614,
+        555.0521485047792
+      ],
+      "ylabel": "Mean novice median distance (px)",
+      "comparison_group": "spatial:distance_median_px"
+    }
+  ],
+  "spatial_proximity.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        0.0,
+        13.728111191158014
+      ],
+      "ylabel": "Mean novice proximity (%)",
+      "comparison_group": "spatial:proximity"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        0.0,
+        13.728111191158014
+      ],
+      "ylabel": "Mean novice proximity (%)",
+      "comparison_group": "spatial:proximity"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        0.0,
+        13.728111191158014
+      ],
+      "ylabel": "Mean novice proximity (%)",
+      "comparison_group": "spatial:proximity"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        0.0,
+        13.728111191158014
+      ],
+      "ylabel": "Mean novice proximity (%)",
+      "comparison_group": "spatial:proximity"
+    }
+  ],
+  "spatial_changes.png": [
+    {
+      "title": "Task A",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -9.350039300238144,
+        66.73208396963614
+      ],
+      "ylabel": "Distance change from zero lag (px)",
+      "comparison_group": "spatial_change:distance_median_px"
+    },
+    {
+      "title": "Task A",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -3.7792474845993747,
+        0.47631677367866665
+      ],
+      "ylabel": "Proximity change (percentage points)",
+      "comparison_group": "spatial_change:proximity"
+    },
+    {
+      "title": "Task C",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -9.350039300238144,
+        66.73208396963614
+      ],
+      "ylabel": "Distance change from zero lag (px)",
+      "comparison_group": "spatial_change:distance_median_px"
+    },
+    {
+      "title": "Task C",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -3.7792474845993747,
+        0.47631677367866665
+      ],
+      "ylabel": "Proximity change (percentage points)",
+      "comparison_group": "spatial_change:proximity"
+    }
+  ],
+  "stages_A_position.png": [
+    {
+      "title": "drop ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.012,
+        0.012
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:drop ring"
+    },
+    {
+      "title": "drop ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.012,
+        0.012
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:drop ring"
+    },
+    {
+      "title": "grab ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.17654504607758753,
+        0.2784903825035795
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:grab ring"
+    },
+    {
+      "title": "grab ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.17654504607758753,
+        0.2784903825035795
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:grab ring"
+    },
+    {
+      "title": "place ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14866087715591553,
+        0.26640110901687963
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:place ring"
+    },
+    {
+      "title": "place ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14866087715591553,
+        0.26640110901687963
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:place ring"
+    },
+    {
+      "title": "reach ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.1322337555518759,
+        0.582640806854104
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:reach ring"
+    },
+    {
+      "title": "reach ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.1322337555518759,
+        0.582640806854104
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:reach ring"
+    },
+    {
+      "title": "transfer ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.12187826390051681,
+        0.6018763901843232
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:transfer ring"
+    },
+    {
+      "title": "transfer ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.12187826390051681,
+        0.6018763901843232
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:A:position:transfer ring"
+    }
+  ],
+  "stages_A_velocity.png": [
+    {
+      "title": "drop ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.0048,
+        0.0048
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:drop ring"
+    },
+    {
+      "title": "drop ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.0048,
+        0.0048
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:drop ring"
+    },
+    {
+      "title": "grab ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.056418682579210885,
+        0.07084045989574227
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:grab ring"
+    },
+    {
+      "title": "grab ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.056418682579210885,
+        0.07084045989574227
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:grab ring"
+    },
+    {
+      "title": "place ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.05112755476395554,
+        0.047629713373657526
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:place ring"
+    },
+    {
+      "title": "place ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.05112755476395554,
+        0.047629713373657526
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:place ring"
+    },
+    {
+      "title": "reach ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.037808625904563326,
+        0.06089370306899956
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:reach ring"
+    },
+    {
+      "title": "reach ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.037808625904563326,
+        0.06089370306899956
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:reach ring"
+    },
+    {
+      "title": "transfer ring / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04132511919281294,
+        0.07067725519668132
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:transfer ring"
+    },
+    {
+      "title": "transfer ring / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04132511919281294,
+        0.07067725519668132
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:A:velocity:transfer ring"
+    }
+  ],
+  "stages_C_position.png": [
+    {
+      "title": "pull through and cinch / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.3745005298472144,
+        0.513668183264288
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:pull through and cinch"
+    },
+    {
+      "title": "pull through and cinch / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.3745005298472144,
+        0.513668183264288
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:pull through and cinch"
+    },
+    {
+      "title": "reach string / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.1204821437497694,
+        0.5801962660579122
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:reach string"
+    },
+    {
+      "title": "reach string / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.1204821437497694,
+        0.5801962660579122
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:reach string"
+    },
+    {
+      "title": "threading string through tower / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.5433121955240144,
+        0.806183444846187
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:threading string through tower"
+    },
+    {
+      "title": "threading string through tower / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.5433121955240144,
+        0.806183444846187
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:threading string through tower"
+    },
+    {
+      "title": "wrap around psm / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.058185026204741835,
+        0.5564318236800562
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:wrap around psm"
+    },
+    {
+      "title": "wrap around psm / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.058185026204741835,
+        0.5564318236800562
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "stage:C:position:wrap around psm"
+    }
+  ],
+  "stages_C_velocity.png": [
+    {
+      "title": "pull through and cinch / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.03719560538031666,
+        0.05482680856272375
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:pull through and cinch"
+    },
+    {
+      "title": "pull through and cinch / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.03719560538031666,
+        0.05482680856272375
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:pull through and cinch"
+    },
+    {
+      "title": "reach string / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.037591959701976964,
+        0.0774503798024962
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:reach string"
+    },
+    {
+      "title": "reach string / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.037591959701976964,
+        0.0774503798024962
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:reach string"
+    },
+    {
+      "title": "threading string through tower / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.23186987966486328,
+        0.3003092311980047
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:threading string through tower"
+    },
+    {
+      "title": "threading string through tower / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.23186987966486328,
+        0.3003092311980047
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:threading string through tower"
+    },
+    {
+      "title": "wrap around psm / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.026468775993193416,
+        0.069830107888005
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:wrap around psm"
+    },
+    {
+      "title": "wrap around psm / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.026468775993193416,
+        0.069830107888005
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "stage:C:velocity:wrap around psm"
+    }
+  ],
+  "record_peaks_position.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.2239860230766445,
+        0.9596764807597716
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:position"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.2239860230766445,
+        0.9596764807597716
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:position"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.2239860230766445,
+        0.9596764807597716
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:position"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.2239860230766445,
+        0.9596764807597716
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:position"
+    }
+  ],
+  "record_peaks_velocity.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.01173810162882611,
+        0.12911911791708722
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:velocity"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.01173810162882611,
+        0.12911911791708722
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:velocity"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.01173810162882611,
+        0.12911911791708722
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:velocity"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.16,
+        2.16
+      ],
+      "ylim": [
+        -0.01173810162882611,
+        0.12911911791708722
+      ],
+      "ylabel": "Recording peak correlation r",
+      "comparison_group": "record_peaks:velocity"
+    }
+  ],
+  "paired_novices_position.png": [
+    {
+      "title": "PSM L: 11 paired novices / full range",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -2.346341463414634,
+        2.395121951219512
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:position:full"
+    },
+    {
+      "title": "PSM R: 11 paired novices / full range",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -2.346341463414634,
+        2.395121951219512
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:position:full"
+    },
+    {
+      "title": "PSM L: 11 paired novices / detail",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.8,
+        0.8
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:position:detail"
+    },
+    {
+      "title": "PSM R: 11 paired novices / detail",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.8,
+        0.8
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:position:detail"
+    }
+  ],
+  "paired_novices_velocity.png": [
+    {
+      "title": "PSM L: 11 paired novices / full range",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.7853658536585365,
+        1.0292682926829269
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:velocity:full"
+    },
+    {
+      "title": "PSM R: 11 paired novices / full range",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.7853658536585365,
+        1.0292682926829269
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:velocity:full"
+    },
+    {
+      "title": "PSM L: 11 paired novices / detail",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.8,
+        0.8
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:velocity:detail"
+    },
+    {
+      "title": "PSM R: 11 paired novices / detail",
+      "xlim": [
+        -0.15,
+        1.15
+      ],
+      "ylim": [
+        -0.8,
+        0.8
+      ],
+      "ylabel": "Novice peak lag (s)",
+      "comparison_group": "paired:velocity:detail"
+    }
+  ],
+  "bootstrap_peak_lags_position.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -0.3292682926829271,
+        0.6707317073170738
+      ],
+      "ylim": [
+        0.0,
+        31.359999999999573
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:position"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -0.3292682926829271,
+        0.6707317073170738
+      ],
+      "ylim": [
+        0.0,
+        31.359999999999573
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:position"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -0.3292682926829271,
+        0.6707317073170738
+      ],
+      "ylim": [
+        0.0,
+        31.359999999999573
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:position"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -0.3292682926829271,
+        0.6707317073170738
+      ],
+      "ylim": [
+        0.0,
+        31.359999999999573
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:position"
+    }
+  ],
+  "bootstrap_peak_lags_velocity.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -0.4756097560975614,
+        0.6463414634146347
+      ],
+      "ylim": [
+        0.0,
+        87.91999999999923
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:velocity"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -0.4756097560975614,
+        0.6463414634146347
+      ],
+      "ylim": [
+        0.0,
+        87.91999999999923
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:velocity"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -0.4756097560975614,
+        0.6463414634146347
+      ],
+      "ylim": [
+        0.0,
+        87.91999999999923
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:velocity"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -0.4756097560975614,
+        0.6463414634146347
+      ],
+      "ylim": [
+        0.0,
+        87.91999999999923
+      ],
+      "ylabel": "Bootstrap replicates (%)",
+      "comparison_group": "bootstrap:velocity"
+    }
+  ],
+  "novice_curves_position.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14156037529380716,
+        0.8860601709655554
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "novice:position"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14156037529380716,
+        0.8860601709655554
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "novice:position"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14156037529380716,
+        0.8860601709655554
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "novice:position"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.14156037529380716,
+        0.8860601709655554
+      ],
+      "ylabel": "Position correlation r",
+      "comparison_group": "novice:position"
+    }
+  ],
+  "novice_curves_velocity.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04898206801039187,
+        0.0869463083555348
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "novice:velocity"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04898206801039187,
+        0.0869463083555348
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "novice:velocity"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04898206801039187,
+        0.0869463083555348
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "novice:velocity"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.0,
+        2.0
+      ],
+      "ylim": [
+        -0.04898206801039187,
+        0.0869463083555348
+      ],
+      "ylabel": "Velocity correlation r",
+      "comparison_group": "novice:velocity"
+    }
+  ],
+  "conclusion_position.png": [
+    {
+      "title": "",
+      "xlim": [
+        -858.6280487804877,
+        664.115853658536
+      ],
+      "ylim": [
+        -0.65,
+        3.65
+      ],
+      "ylabel": "",
+      "comparison_group": "conclusion:panel0"
+    },
+    {
+      "title": "",
+      "xlim": [
+        -858.6280487804877,
+        664.115853658536
+      ],
+      "ylim": [
+        -0.65,
+        1.65
+      ],
+      "ylabel": "",
+      "comparison_group": "conclusion:panel1"
+    },
+    {
+      "title": "",
+      "xlim": [
+        0.0,
+        14.976121299445106
+      ],
+      "ylim": [
+        -0.65,
+        3.65
+      ],
+      "ylabel": "",
+      "comparison_group": "conclusion:panel2"
+    }
+  ],
+  "stage_peak_lags_position.png": [
+    {
+      "title": "Task A / PSM L",
+      "xlim": [
+        -2.32,
+        2.32
+      ],
+      "ylim": [
+        -0.7,
+        4.7
+      ],
+      "ylabel": "",
+      "comparison_group": "stage_peaks:position"
+    },
+    {
+      "title": "Task A / PSM R",
+      "xlim": [
+        -2.32,
+        2.32
+      ],
+      "ylim": [
+        -0.7,
+        4.7
+      ],
+      "ylabel": "",
+      "comparison_group": "stage_peaks:position"
+    },
+    {
+      "title": "Task C / PSM L",
+      "xlim": [
+        -2.32,
+        2.32
+      ],
+      "ylim": [
+        -0.7,
+        3.7
+      ],
+      "ylabel": "",
+      "comparison_group": "stage_peaks:position"
+    },
+    {
+      "title": "Task C / PSM R",
+      "xlim": [
+        -2.32,
+        2.32
+      ],
+      "ylim": [
+        -0.7,
+        3.7
+      ],
+      "ylabel": "",
+      "comparison_group": "stage_peaks:position"
+    }
+  ]
+}
