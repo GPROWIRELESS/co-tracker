@@ -9,6 +9,11 @@ left/right PSM mask-centroid positions. It uses normalized 2-D **position xcorr*
 spatial-distance checks, and novice-level inference. Velocity xcorr is secondary.
 Dataset files are read only.
 
+For a separate stage analysis that selects the larger signed-xcorr PSM peak
+within each recording before participant/group aggregation, see
+[maximum-xcorr PSM selection](gaze_psm_xcorr_max.md). Its results go to
+`outputs/gaze_psm_xcorr_max`, with one merged PSM condition per stage.
+
 Run from the repository root with Python, NumPy, SciPy, OpenCV, and Matplotlib:
 
 ```bash

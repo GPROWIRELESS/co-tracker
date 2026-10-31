@@ -166,6 +166,31 @@ class SyntheticDatasetTests(unittest.TestCase):
         np.testing.assert_allclose(cached["gaze_l"], data["gaze_l"])
         self.assertEqual(cached_qc, qc)
 
+    def test_distinct_left_right_masks_keep_their_side(self):
+        centers = {"l": np.array([10., 15.]), "r": np.array([52., 32.])}
+        for side, center in centers.items():
+            path = self.base/"sam"/self.cid/"mask"/f"obj_psm_{side}.mp4"
+            writer = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"mp4v"), 10., (64, 48))
+            if not writer.isOpened():
+                self.skipTest("OpenCV mp4v encoder unavailable")
+            try:
+                x, y = center.astype(int)
+                image = np.zeros((48, 64, 3), dtype=np.uint8)
+                image[y-2:y+3, x-2:x+3] = 255
+                for i in range(len(self.times)):
+                    if i != self.deleted:
+                        writer.write(image)
+            finally:
+                writer.release()
+        args = self.args()
+        data, _ = pipeline.extract(self.record, args)
+        for side, center in centers.items():
+            with self.subTest(side=side):
+                np.testing.assert_allclose(data[f"native_psm_{side}"], np.tile(center, (79, 1)), atol=.05)
+                _, psm, _, _ = pipeline.curve_inputs(data, side, "position", args.hz)
+                np.testing.assert_allclose(psm[:20], np.tile(center, (20, 1)), atol=.05)
+                self.assertTrue(np.isnan(psm[self.deleted]).all())
+
     def test_pixel_allocation_gaze_uses_frame_join_and_can_flip_y(self):
         args = self.args("--gaze-source", "allocation", "--gaze-units", "pixels", "--flip-gaze-y")
         data, _ = pipeline.extract(self.record, args)

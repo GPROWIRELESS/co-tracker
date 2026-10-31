@@ -217,7 +217,7 @@ def set_manual_seed(rows, start, end, points, seed=None):
 
 def add_data_arguments(parser):
     parser.add_argument('--items', nargs='+', type=Path, default=[
-        ROOT/'Index/items/novice_active_taskA'],
+        ROOT/'Index/items/novice_active_taskC'],
         help='Index JSON files or directories; selects active recordings of any task or skill level')
     parser.add_argument('--data-root', type=Path,
                         default=Path('/mnt/nas/Users/yxl3527/Dataset/dvss'),
@@ -544,16 +544,23 @@ class Labeler:
             tk.Radiobutton(points, text=str(i), variable=self.selected, value=i).pack(side='left')
         tk.Button(points, text='Delete selected point', command=self.delete_point).pack(side='left')
         tk.Button(points, text='Clear frame', command=self.clear_frame).pack(side='left')
+        tk.Button(points, text='Clear ALL points in stage', command=self.clear_stage).pack(side='left')
         ranges = tk.Frame(button_area)
         ranges.pack()
         tk.Button(ranges, text='[ Set start', command=self.mark_start).pack(side='left')
         tk.Button(ranges, text='] Set end', command=self.mark_end).pack(side='left')
         tk.Button(ranges, text='Clear ALL points in range', command=self.clear_range).pack(side='left')
+        deletion = tk.Frame(button_area)
+        deletion.pack()
+        tk.Label(deletion, text='Selected point:').pack(side='left')
+        tk.Button(deletion, text='Delete in current stage', command=self.delete_point_stage).pack(side='left')
+        tk.Button(deletion, text='Delete in selected range', command=self.delete_point_range).pack(side='left')
         help_area = tk.Frame(footer)
         help_area.grid(row=0, column=0, sticky='sw', padx=8)
         tk.Label(help_area, justify='left', anchor='sw',
                  text='Space: play/pause | Left/Right: stage\n'
-                 ', / .: frame | J/L: 60 frames | [ / ]: range\n'
+                 ', / .: frame | J/L: 60 frames\n'
+                 'U: +30 | O: -30 frames | [ / ]: range\n'
                  'Right-click: delete | Ctrl+S: save').pack(side='left')
         tk.Button(help_area, text='Help', command=self.show_help).pack(side='left', padx=6)
         tk.Frame(footer, width=1).grid(row=0, column=2)
@@ -564,7 +571,8 @@ class Labeler:
             canvas.bind('<ButtonRelease-1>', lambda e: setattr(self, 'dragging', False))
         self.window.bind('<space>', self.toggle_play)
         for key, delta in [('comma', -1), ('less', -1), ('period', 1), ('greater', 1),
-                           ('j', -60), ('J', -60), ('l', 60), ('L', 60)]:
+                           ('j', -60), ('J', -60), ('l', 60), ('L', 60),
+                           ('u', 30), ('U', 30), ('o', -30), ('O', -30)]:
             self.window.bind(f'<{key}>', lambda e, d=delta: self.move(d))
         for key, direction in [('Left', -1), ('Right', 1)]:
             self.window.bind(f'<{key}>', lambda e, d=direction: self.move_stage(d))
@@ -583,11 +591,17 @@ class Labeler:
         self.messagebox.showinfo('Labeling controls',
             'Space: play/pause\nLeft / Right: previous / next stage\n'
             ', / . or < / >: previous / next frame\nJ / L: back / forward 60 frames\n'
+            'U / O: forward / back 30 frames\n'
             '[ / ]: set inclusive range start / end\n\n'
             'All three views are editable.\n'
             'Left-click: add the lowest missing point; when full, edit the selected point.\n'
             'Drag: move the placed point.\nRight-click near a point: delete it.\n'
             'Delete: remove the selected point in the current frame.\n'
+            'Choose an Edit point number, then Delete in current stage / selected range\n'
+            'to remove only that point number from every frame in that scope.\n'
+            'Range endpoints are inclusive and may be marked in either order.\n'
+            'Other point numbers and coordinates stay unchanged.\n'
+            'Clear ALL points in stage: remove every point from all frames of the current stage.\n'
             'Ctrl+S / Save: write pending changes.', parent=self.window)
 
     def pause(self):
@@ -874,6 +888,42 @@ class Labeler:
     def clear_frame(self):
         self.pause()
         self.clear_rows([self.editable_row()])
+
+    def delete_point_stage(self):
+        self.pause()
+        start, end = self.reference_frames
+        if start is not None and end is not None:
+            self.delete_point_rows(start, end)
+
+    def delete_point_range(self):
+        self.pause()
+        if self.range_start is None or self.range_end is None:
+            self.messagebox.showwarning('Select a range', 'Use [ and ] to set both range endpoints first.')
+            return
+        self.delete_point_rows(*sorted((self.range_start, self.range_end)))
+
+    def delete_point_rows(self, start, end):
+        # Keep point identities stable: deleting point 2 must not renumber point 3.
+        prefix = f'point_{self.selected.get()}_'
+        for frame, row in self.by_frame.items():
+            if not start <= frame <= end:
+                continue
+            keys = [prefix + suffix for suffix in ('x', 'y', 'visible')]
+            if not any(row.get(key, '') != '' for key in keys):
+                continue
+            for key in keys:
+                if key in row:
+                    row[key] = ''
+            row['point_label_mode'] = 'edited'
+            self.dirty = True
+        self.redraw()
+
+    def clear_stage(self):
+        self.pause()
+        start, end = self.reference_frames
+        if start is None or end is None:
+            return
+        self.clear_rows([row for frame, row in self.by_frame.items() if start <= frame <= end])
 
     def clear_rows(self, rows):
         for row in rows:

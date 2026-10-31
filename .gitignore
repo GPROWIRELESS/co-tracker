@@ -7,3 +7,5 @@ __pycache__/
 /outputs/**/results.json
 /outputs/**/*.npz
 /outputs/**/*.png
+/outputs/*
+/logs/*

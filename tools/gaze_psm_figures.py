@@ -88,13 +88,13 @@ def _figure_legend(fig, axes, *, y=.925, columns=3):
                    bbox_to_anchor=(.5, y), ncol=columns, frameon=False, fontsize=9)
 
 
-def _save(fig, path):
+def _save(fig, path, *, partial_record=False):
     """Save publication-size raster/vector artifacts and inspectable axis metadata."""
     path = Path(path)
     try:
-        partial = bool(json.loads((path.parent.parent/'config.json').read_text()).get('partial_record', False))
+        partial = partial_record or bool(json.loads((path.parent.parent/'config.json').read_text()).get('partial_record', False))
     except (OSError, ValueError, TypeError):
-        partial = False
+        partial = partial_record
     if partial:
         fig.text(.5, .51, 'PARTIAL RECORD / SMOKE TEST', ha='center', va='center',
                  fontsize=25, rotation=24, color='firebrick', alpha=.16, zorder=1000)
@@ -103,7 +103,15 @@ def _save(fig, path):
     manifest = path.parent/'axes.json'
     current = json.loads(manifest.read_text()) if manifest.exists() else {}
     current[path.name] = [{'title': ax.get_title(), 'xlim': list(ax.get_xlim()),
-                           'ylim': list(ax.get_ylim()), 'ylabel': ax.get_ylabel(),
+                           'ylim': list(ax.get_ylim()), 'xlabel': ax.get_xlabel(),
+                           'ylabel': ax.get_ylabel(),
+                           **({'time_reference': ax._gaze_time_reference}
+                              if hasattr(ax, '_gaze_time_reference') else {}),
+                           **({'xticks': ax.get_xticks().tolist(),
+                               'xticklabels': [label.get_text() for label in ax.get_xticklabels()]}
+                              if hasattr(ax, '_gaze_time_reference') else {}),
+                           **({'alignment': ax._gaze_alignment}
+                              if hasattr(ax, '_gaze_alignment') else {}),
                            'comparison_group': getattr(ax, '_gaze_comparison_group', None)}
                           for ax in fig.axes]
     manifest.write_text(json.dumps(current, indent=2), encoding='utf-8')

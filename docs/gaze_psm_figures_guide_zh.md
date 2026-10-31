@@ -25,6 +25,18 @@
 
 ## 2. 哪些图适合用来写结论
 
+### 只看一张：全部用户的 Task A/C 总结
+
+[打开 PNG](../outputs/gaze_psm_xcorr/figures/all_users_task_A_C_conclusion.png) · [矢量 PDF](../outputs/gaze_psm_xcorr/figures/all_users_task_A_C_conclusion.pdf)
+
+`all_users_task_A_C_conclusion` 将当前分析的 11 名新手、84 条记录汇总到一张图：A 为整任务峰值 lag 与参与者 bootstrap 95% CI，B 比较零 lag 与组曲线最佳 lag 的相关，C/D 为 Task A/C 的阶段 lag 与 CI。右器械整任务表现为 A 中 gaze 领先约 341 ms、C 中 gaze 滞后约 171 ms；左器械两任务的方向均不明确。图底保留参与者配对的 C−A 任务差。
+
+图中的“最佳 lag”来自已保存的组曲线，不是将每个人单独优化后的相关或峰值取平均。记录先在人内汇总、参与者再等权汇总；阶段结果为探索性，threading 阶段完整支持的用户数为 8，其他受支持阶段为 11。三角形表示搜索边界；drop ring 因支持不足不画估计点。相邻 JSON 保存参与者名单、记录 ID 与所有显示值。重新生成：
+
+```bash
+python tools/plot_gaze_psm_conclusion.py
+```
+
 ### 第一选择：`conclusion_position.png`
 
 [打开 PNG](../outputs/gaze_psm_xcorr/figures/conclusion_position.png) · [打开矢量 PDF](../outputs/gaze_psm_xcorr/figures/conclusion_position.pdf)
@@ -100,7 +112,7 @@ C 面板的零 lag 与峰 lag 两种标记接近重叠，反映真实空间改�
 
 ## 5. 保存、复现与验证
 
-- 新图在 [`outputs/gaze_psm_xcorr/figures/`](../outputs/gaze_psm_xcorr/figures/)：共 **19 张 PNG 与 19 份矢量 PDF**。
+- 统计结果图在 [`outputs/gaze_psm_xcorr/figures/`](../outputs/gaze_psm_xcorr/figures/)：共 **19 张 PNG 与 19 份矢量 PDF**；另有下节的 **84 组位置时间轨迹 PNG/PDF**。
 - 原来的 14 张 PNG 保存在 [`figures_before_readability_20261030/`](../outputs/gaze_psm_xcorr/figures_before_readability_20261030/)。重复重画不会向原版备份中混入新图。
 - 各图坐标范围与比较分组记录在 [`figures/axes.json`](../outputs/gaze_psm_xcorr/figures/axes.json)。
 - 绘图前后文件哈希及代码来源记录在 [`figure_readability_20261030.json`](../outputs/gaze_psm_xcorr/figure_readability_20261030.json)；原始数值文件、NPZ 缓存与原分析代码快照保留。
@@ -114,5 +126,53 @@ python tools/replot_gaze_psm_outputs.py --output outputs/gaze_psm_xcorr
 ```
 
 实现位于 [`tools/gaze_psm_figures.py`](../tools/gaze_psm_figures.py)；[`gaze_psm_report.py`](../tools/gaze_psm_report.py) 的数值导出函数不变，绘图部分委托给该模块。历史 `code_snapshot` 保留的是原始分析时的代码，不覆盖成新的绘图代码。
+
+## 6. Gaze 与 PSM 的 X/Y 位置时间轨迹
+
+每条记录单独保存一张四面板图：上排比较 gaze X 与 PSM X，下排比较 gaze Y 与 PSM Y；左列为左器械，右列为右器械。蓝线为 gaze，橙线为 PSM mask 质心。横轴是从视频开始计算的秒数，纵轴是像素；每行左右两图共享位置范围，四图共享完整时间范围。图像坐标中的 Y 数值向下增大。
+
+直接读取缓存中的 `time_s`、`gaze_l/r` 和 `psm_l/r`，使用已有平滑轨迹（当前配置的平滑设置为 80 ms）。保留缺失数据的断线，不进行 lag 平移，不修改原有数值结果或缓存。部分记录按缓存或配置中的 `partial_record` 标记水印。
+
+从仓库根目录生成所有缓存记录（当前共 84 条：Task A 33 条、Task C 51 条）：
+
+```bash
+python tools/plot_gaze_psm_positions.py --output outputs/gaze_psm_xcorr
+```
+
+也可以指定记录：
+
+```bash
+python tools/plot_gaze_psm_positions.py --records User1_1_1 User1_3_1
+```
+
+输出位于 `figures/position_traces_<recording_id>.png` 和同名矢量 PDF，坐标元数据追加到 `figures/axes.json`。示例：[Task A](../outputs/gaze_psm_xcorr/figures/position_traces_User1_1_1.png) · [Task C](../outputs/gaze_psm_xcorr/figures/position_traces_User1_3_1.png)。这类图用于检查实际轨迹随时间的对应；相关峰值及不确定性仍参考前面的统计结果图。
+
+### 按 stage 分别绘制
+
+```bash
+python tools/plot_gaze_psm_positions.py --by-stage
+```
+
+结果单独保存在 [`figures/position_traces_by_stage/`](../outputs/gaze_psm_xcorr/figures/position_traces_by_stage/)，文件名为 `position_traces_<recording_id>__<stage>.png` 和同名 PDF；该目录的 `axes.json` 保存坐标元数据。也可以加 `--records User1_1_1 User1_3_1` 仅生成指定记录。
+
+每个记录和已标注的 stage 各一张四面板图，仍为上排 X、下排 Y、左列左器械、右列右器械。当前 84 条缓存共有 **291 组 stage PNG/PDF**。标题注明 stage 和连续出现次数；仅显示对应 stage 的同步 gaze/PSM 样本；`none` 等未标注样本不单独绘图。缓存已有的平滑结果与原有缺失值保持不变。
+
+新版将同一 stage 的各次出现按顺序放在独立时间窗内，窗间只留窄白缝，其他 stage 的数据不显示。每个时间窗的横轴两端分别标注该次 stage 在**原视频中的开始秒数与结束秒数**，上方用 `#1`、`#2` 等编号。横轴标题为 **Video time (s); shortened gaps**。短片段保留足够宽度以读清时间标签，因此每个时间窗有自己的时间尺度；不能跨窗比较斜率或把窗间白缝当作真实经过时间。逐次原始时间与显示位置的对应保存在同目录的 `occurrences.json`，坐标元数据注明 `video_time_s_in_separate_occurrence_windows`，并保存时间刻度和文字。
+
+每侧器械独立进行共同有效性筛选：只有同一时刻 gaze 和该侧 PSM 的 X/Y 坐标均有效，才同时绘制两条线；任一数据缺失时，两条线都断开，保持空白，不跨缺失段连线。只有单个有效配对样本的片段用点标出。某一侧完全没有有效配对时，该列不绘制轨迹并注明无配对样本。Task A 使用 `reach ring`，Task C 使用 `reach string`。
+
+新版同时放大字体、加粗蓝色 gaze 实线与橙色 PSM 虚线、缩短标题并减少留白；每行左右两图共享由该 stage 全部有效配对位置值确定的纵轴范围，不裁剪配对样本中的异常值。整任务轨迹图保持原视频时间轴和原有尺度。
+
+### 零 lag 与最优 lag 的时间轨迹核对
+
+```bash
+python tools/plot_gaze_psm_positions.py --by-stage --compare-lags
+```
+
+在 `figures/position_traces_by_stage/lag_comparison/psm_stage/` 中为每个记录和 stage 保存两张布局相同的图：`__zero_lag.png/.pdf` 与 `__optimal_lag.png/.pdf`。当前共 291 组比较，即 **582 组 PNG/PDF**。两张图共享 stage 时间窗和纵轴范围，保持上排 X、下排 Y、左右器械分列的形式；原有 stage 图不覆盖。
+
+最优 lag 直接取 `results.json` 中对应记录、stage、器械的已保存 **position / psm_stage** 曲线的最大有符号相关，X/Y 使用同一个二维位置 lag，不分别重新优化。正 lag 表示 gaze 领先：在 PSM 时间 `t` 绘制 `gaze(t - lag)` 与 `PSM(t)`。先在完整原始缓存时间轴上移动 gaze，再选取 stage；不在压缩后的显示坐标上平移，不循环回卷，不填补缺失数据。默认以 PSM stage 为锚，因而 shifted gaze 的原始采样时间可以位于相邻 stage；其他 stage 的 PSM 样本仍不显示。需要 gaze 与 PSM 均来自同一连续 stage 时，添加 `--lag-mode within_stage`，使用对应的已保存曲线并单独输出到 `within_stage/`。
+
+每张图只显示该 lag 下有效的 gaze/PSM 配对。无有效峰值的器械列注明 `No supported optimal lag`，不会用零 lag 冒充最优值；搜索端点峰标记为 `boundary`。两图配对样本数可能不同，不能把视觉接近直接解释为空间重合或因果证据。`lag_comparisons.json` 保存来源、峰值、零 lag 相关、平移采样数与文件对应；`occurrences.json` 保存各图实际配对数量与原视频时间，`axes.json` 保存坐标和 lag 元数据。
 
 相关说明：[计算与字段详解](gaze_psm_code_and_formulas_zh.md)；[数值结果复核报告](gaze_psm_results_audit_zh.md)。

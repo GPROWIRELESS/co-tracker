@@ -312,5 +312,68 @@ class TrackingTests(unittest.TestCase):
                 label.stages([{'Frame_Number': '0'}])
 
 
+class PointDeletionTests(unittest.TestCase):
+    def setUp(self):
+        from unittest.mock import Mock
+        self.app = label.Labeler.__new__(label.Labeler)
+        self.app.pause = Mock()
+        self.app.redraw = Mock()
+        self.app.messagebox = Mock()
+        self.app.selected = Mock()
+        self.app.selected.get.return_value = 2
+        self.app.dirty = False
+        # Sparse allocations should not gain rows during bulk deletion.
+        self.app.by_frame = {
+            frame: dict(Frame_Number=str(frame), event='reach', point_label_mode='tracked',
+                        point_1_x='10', point_1_y='20', point_2_x='30', point_2_y='40',
+                        point_2_visible='1', point_3_x='50', point_3_y='60')
+            for frame in (0, 1, 3, 4)
+        }
+        self.original = {frame: dict(row) for frame, row in self.app.by_frame.items()}
+
+    def assert_deleted_only(self, frames):
+        self.assertEqual(set(self.app.by_frame), set(self.original))
+        for frame, row in self.app.by_frame.items():
+            expected = dict(self.original[frame])
+            if frame in frames:
+                expected.update(point_2_x='', point_2_y='', point_2_visible='',
+                                point_label_mode='edited')
+            self.assertEqual(row, expected)
+        self.assertTrue(self.app.dirty)
+        self.app.pause.assert_called_once_with()
+        self.app.redraw.assert_called_once_with()
+
+    def test_delete_selected_point_in_current_stage_only(self):
+        self.app.reference_frames = (1, 3)
+        self.app.delete_point_stage()
+        self.assert_deleted_only({1, 3})
+
+    def test_delete_selected_point_in_inclusive_range_in_either_order(self):
+        for start, end in ((1, 3), (3, 1), (3, 3)):
+            with self.subTest(start=start, end=end):
+                self.setUp()
+                self.app.range_start, self.app.range_end = start, end
+                self.app.delete_point_range()
+                self.assert_deleted_only({1, 3} if start != end else {3})
+
+    def test_missing_scope_does_not_delete(self):
+        self.app.reference_frames = (None, None)
+        self.app.delete_point_stage()
+        for start, end in ((None, None), (1, None), (None, 3)):
+            self.app.range_start, self.app.range_end = start, end
+            self.app.delete_point_range()
+        self.assertEqual(self.app.by_frame, self.original)
+        self.assertFalse(self.app.dirty)
+        self.assertEqual(self.app.messagebox.showwarning.call_count, 3)
+
+    def test_absent_point_preserves_skipped_rows_and_saved_state(self):
+        self.app.by_frame = {1: dict(event='reach', point_label_mode='skipped',
+                                     point_2_x='', point_2_y='')}
+        self.app.reference_frames = (1, 3)
+        self.app.delete_point_stage()
+        self.assertEqual(self.app.by_frame[1]['point_label_mode'], 'skipped')
+        self.assertFalse(self.app.dirty)
+
+
 if __name__ == '__main__':
     unittest.main()
