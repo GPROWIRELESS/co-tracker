@@ -68,6 +68,63 @@ def attach_selection(records, lookup):
                     'left_peak_r', 'right_peak_r', 'left_peak_lag_s', 'right_peak_lag_s')})
 
 
+def unavailable_label(row, phase, outcome):
+    """Distinguish absent variation from small N; accept in-memory or CSV rows."""
+    if str(phase.get('group_usable', True)).lower() == 'false':
+        return 'excluded'
+    reason = row.get('unavailable_reason', '')
+    labels = {
+        'no_outcome_variation': 'no score\nvariation' if outcome == 'Score' else 'no outcome\nvariation',
+        'no_predictor_variation': 'no predictor\nvariation',
+        'insufficient_users': 'low N',
+        'insufficient_within_variation': 'low within\nvariation',
+        'insufficient_users_with_within_variation': 'low within\nvariation',
+        'within_variation': 'low within\nvariation',
+        'insufficient_residual_variation': 'no residual\nvariation',
+        'insufficient_residual_degrees_of_freedom': 'low residual df',
+    }
+    if reason in labels:
+        return labels[reason]
+    status = row.get('status', '')
+    if status.startswith('excluded_group_'):
+        return 'excluded'
+    return labels.get(status, 'N / variation')
+
+
+def annotate_unavailable_results(results, people, outcome, minimum, records=None):
+    """Add display diagnostics without changing eligibility or inference."""
+    summaries = {}
+    for person in people:
+        summaries.setdefault((person['scenario'], base.key(person)), []).append(person)
+    for row in results:
+        row['unavailable_reason'] = ''
+        if row['status'] == 'ok':
+            continue
+        if row['status'].startswith('excluded_group_'):
+            row['unavailable_reason'] = row['status']
+            continue
+        participants = summaries.get((row['scenario'], base.key(row)), [])
+        if row['method'] == 'between_participants':
+            sample = participants
+        elif records is not None:
+            sample = [r for r in base.scenario_rows(records, row['scenario'])
+                      if base.key(r) == base.key(row)]
+        else:
+            # Equal participant means do not imply constant within-user scores.
+            sample = []
+        y = np.asarray([base.number(p.get(outcome)) for p in sample])
+        x = np.asarray([base.number(p.get(row['predictor'])) for p in sample])
+        if len(y) and np.all(np.isfinite(y)) and np.ptp(y) == 0:
+            reason = 'no_outcome_variation'
+        elif len(x) and np.all(np.isfinite(x)) and np.ptp(x) == 0:
+            reason = 'no_predictor_variation'
+        elif len(participants) < minimum:
+            reason = 'insufficient_users'
+        else:
+            reason = row['status']
+        row['unavailable_reason'] = reason
+
+
 def overview(results, phases, outcome, signal, scenario):
     phases = sorted([p for p in phases if p['signal'] == signal and p['mode'] == 'psm_stage'],
                     key=base.group_order)
@@ -83,7 +140,7 @@ def overview(results, phases, outcome, signal, scenario):
                 value = row.get('association', np.nan)
                 matrix[i, j] = value
                 label = (f"{value:+.2f}"+(' *' if row.get('q_bh', 1) < .05 else '')
-                         if np.isfinite(value) else ('excluded' if not phase['group_usable'] else 'low N'))
+                         if np.isfinite(value) else unavailable_label(row, phase, outcome))
                 ax.text(j, i, label, ha='center', va='center', fontsize=9,
                         color='white' if np.isfinite(value) and abs(value) > .65 else 'black')
         cmap = base.plt.get_cmap('RdBu_r').copy()
@@ -127,13 +184,17 @@ def make_report(output, coverage, results, settings, n_recordings):
     lines = ['# Performance associations with maximum-xcorr PSM stage peaks', '',
              'Each recording/stage uses its previously selected PSM. Score matching never changes that selection. '
              'Position is primary and velocity is secondary; whole-task curves are not included.', '',
-             '| Outcome | Available recordings before stage filtering | Successful tests, including sensitivities | BH q < 0.05 |',
+             '| Outcome | Available recordings before stage filtering | Successful tests, including sensitivities | Family-specific q < 0.05 rows (not independent discoveries) |',
              '|---|---:|---:|---:|']
     for outcome in OUTCOMES:
         rr = [r for r in results if r['outcome'] == outcome]
         lines.append(f"| {outcome} | {coverage[outcome]} / {n_recordings} | {sum(r['status']=='ok' for r in rr)} | "
                      f"{sum(r.get('q_bh', 1)<.05 for r in rr)} |")
-    lines += ['', '## Methods', '',
+    lines += ['',
+        'TimeRaw and EcoRaw are approximately affine, sign-reversed versions of Time and Eco within each task. '
+        'Their rank associations are near-mirrors and are retained for traceability, not counted as independent evidence. '
+        'Rounding and aggregation can cause small differences.', '',
+        '## Methods', '',
         'Outcomes are supplied Score, Time, Eco, TimeRaw and EcoRaw values, without sign reversal or imputation. '
         'Failed attempts with supplied zero scores remain in primary analyses. Available-score counts are before stage exclusions.', '',
         'Eligible groups have status ok, positive peak correlation and at least three stable users. '
@@ -163,7 +224,49 @@ def make_report(output, coverage, results, settings, n_recordings):
         f"--input {settings['input']} --index {settings['index']} --output {settings['output']} "
         f"--bootstrap {settings['bootstrap']} --permutations {settings['permutations']} "
         f"--seed {settings['seed']} --min-users {settings['min_users']}", '```', '']
-    (output/'report.md').write_text('\n'.join(lines))
+    detail = ['', '## Interpretation and limitations', '',
+        'The table counts significant rows within separate BH families; it does not count independent discoveries. '
+        'No overall FDR claim across outcomes, scenarios and methods is made. The existing position-primary and '
+        'velocity-secondary labels describe the analysis plan; all findings remain exploratory. '
+        'A small number of discoveries does not establish a global null, and q values do not identify which findings are false.', '',
+        'Task C Score has a substantial floor at zero. Completed-only filtering does not remove this floor. '
+        'PenaltySum <= -100 is a severe-total-penalty proxy, not a validated definition of a critical event; '
+        'individual penalty fields must be checked. Excluding such attempts changes the target population and '
+        'is supplementary sensitivity analysis, not a replacement for the primary analysis.', '',
+        'TimeRaw-versus-recording-duration discrepancies and repeated score vectors warrant source verification. '
+        'Neither proves incorrect identity matching or authorizes replacement of source scores. See '
+        '[correction review](corrections/review_zh.md) and '
+        '[diagnostics](corrections/availability_diagnostics.csv) for the audit.', '',
+        'Selecting the larger side peak raises the selected correlation by construction. A positive selected peak '
+        'and a score association do not establish meaningful or statistically significant gaze-PSM coupling. '
+        'Signed lag describes the selected side for that recording/stage; side switching can mix instrument-specific '
+        'timing. These observations do not by themselves prove that the peak or lag is noise.', '',
+        'Small-cluster CR1 t inference is approximate. Within-participant bootstrap draws retain the original '
+        'full-sample ranks. A percentile interval touching -1 or +1 indicates boundary sensitivity, not by itself '
+        'a degenerate bootstrap. An unrestricted within-participant score permutation requires exchangeability '
+        'and can be invalid in the presence of practice/order effects.', '',
+        '### Score / Task A / transfer ring / velocity / peak r', '',
+        '| Method | Association | p | Family q | Participants |',
+        '|---|---:|---:|---:|---:|']
+    focus = [r for r in results if r['outcome'] == 'Score' and r['scenario'] == 'velocity_secondary'
+             and r['task'] == 'A' and r['stage'] == 'transfer ring' and r['predictor'] == 'peak_r']
+    for method in base.METHODS:
+        for row in focus:
+            if row['method'] == method:
+                detail.append(f"| {method} | {base.number(row.get('association')):.3f} | "
+                              f"{base.number(row.get('p')):.4g} | {base.number(row.get('q_bh')):.4g} | "
+                              f"{row['n_users']} |")
+    unadjusted = next((r for r in focus if r['method'] == 'within_participant'), {})
+    adjusted = next((r for r in focus if r['method'] == 'within_adjusted_order'), {})
+    if base.number(unadjusted.get('q_bh')) < .05 and base.number(adjusted.get('q_bh')) >= .05:
+        detail += ['', 'The within-participant Score association passes its family correction before order adjustment '
+                   'but not after adjustment. This weakens evidence for an association independent of task order; '
+                   'it does not prove that practice caused the entire association.']
+    detail += ['', 'In the recorded Task A sample Attempt is constant at 1, so attempt adjustment contributes no '
+               'additional covariate information; task-order adjustment still operates.', '']
+    insert_at = lines.index('## Reproduce')
+    lines[insert_at:insert_at] = detail
+    (output/'report.md').write_text('\n'.join(lines), encoding='utf-8')
 
 
 def main(argv=None):
@@ -194,6 +297,7 @@ def main(argv=None):
     output.mkdir(parents=True, exist_ok=True)
     all_results, all_people, coverage, checks = [], [], {}, {}
     plot_jobs = []
+    score_config, score_n_recordings = None, None
     for outcome in OUTCOMES:
         config, inventory, recordings, records, phases = base.prepare(args, outcome)
         attach_selection(records, lookup)
@@ -201,12 +305,14 @@ def main(argv=None):
         print(f'{outcome}: {coverage[outcome]}/{len(recordings)} usable outcomes', flush=True)
         scenarios = None if outcome == 'Score' else ('primary', 'velocity_secondary')
         results, people = base.analyze(args, records, phases, outcome, scenarios=scenarios)
+        annotate_unavailable_results(results, people, outcome, args.min_users, records)
         checks[outcome] = validate_scenarios(results, people, records, outcome)
         for row in results+people:
             row['outcome'] = outcome
         all_results.extend(results)
         all_people.extend(people)
         if outcome == 'Score':
+            score_config, score_n_recordings = config, len(recordings)
             for name, rows in [('associations', results), ('participant_summaries', people),
                 ('matched_scores', recordings), ('score_inventory', inventory),
                 ('record_phase_audit', records), ('phase_validity', phases)]:
@@ -255,7 +361,7 @@ def main(argv=None):
                     save_json(directory/'validation.json', check)
                     plot_validation.append(check)
                     print(f'Plotted {outcome}/{signal}/{predictor}', flush=True)
-    make_report(output, coverage, all_results, settings, len(recordings))
+    make_report(output, coverage, all_results, settings, score_n_recordings)
     after = protected_hashes(preserved)
     if before != after:
         raise RuntimeError('Protected inputs or existing outputs changed during analysis')
@@ -265,7 +371,7 @@ def main(argv=None):
     snapshot.mkdir(exist_ok=True)
     for path in scripts:
         (snapshot/path.name).write_bytes(path.read_bytes())
-    provenance.update(input_config=config, analysis_source_sha256={str(p): base.sha256(p) for p in scripts},
+    provenance.update(input_config=score_config, analysis_source_sha256={str(p): base.sha256(p) for p in scripts},
                       protected_files_unchanged=True, coverage=coverage)
     save_json(output/'provenance.json', provenance)
     # Refresh the provenance reference after adding final run metadata. Numerical

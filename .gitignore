@@ -6,6 +6,6 @@ __pycache__/
 /outputs/**/*.csv
 /outputs/**/results.json
 /outputs/**/*.npz
-/outputs/**/*.png
-/outputs/*
+/outputs/**/*.json
+/outputs/**/*.jsonl
 /logs/*

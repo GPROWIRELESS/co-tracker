@@ -1,0 +1,49 @@
+test_cache_and_frame_timestamp_validation (test_inputs_v2.InputChecks.test_cache_and_frame_timestamp_validation) ... ok
+test_grid_scale_expected_argmax_and_sampling (test_inputs_v2.InputChecks.test_grid_scale_expected_argmax_and_sampling) ... ok
+test_legacy_reuse_requires_verified_sha_and_indices (test_inputs_v2.InputChecks.test_legacy_reuse_requires_verified_sha_and_indices) ... ok
+test_record_validity_policies_and_raw_state_evidence (test_inputs_v2.InputChecks.test_record_validity_policies_and_raw_state_evidence) ... ok
+test_complete_negative_boundary_unidentifiable_curves_remain_in_main_set (test_pipeline_v2.PipelineTests.test_complete_negative_boundary_unidentifiable_curves_remain_in_main_set) ... ok
+test_fixed_side_comparison_does_not_follow_model_winning_side (test_pipeline_v2.PipelineTests.test_fixed_side_comparison_does_not_follow_model_winning_side) ... ok
+test_only_support_missingness_changes_common_input_and_is_side_specific (test_pipeline_v2.PipelineTests.test_only_support_missingness_changes_common_input_and_is_side_specific) ... ok
+test_peak_status_changes_do_not_change_input_eligibility (test_pipeline_v2.PipelineTests.test_peak_status_changes_do_not_change_input_eligibility) ... ok
+test_single_valid_side_selected (test_pipeline_v2.PipelineTests.test_single_valid_side_selected) ... ok
+test_tie_rule_is_left_and_independent_of_row_order (test_pipeline_v2.PipelineTests.test_tie_rule_is_left_and_independent_of_row_order) ... ok
+test_centered_savgol_preserves_linear_motion_interior (test_preprocess_v2.PreprocessTests.test_centered_savgol_preserves_linear_motion_interior) ... ok
+test_common_gaze_support_does_not_delete_independent_psm (test_preprocess_v2.PreprocessTests.test_common_gaze_support_does_not_delete_independent_psm) ... ok
+test_filter_does_not_bridge_missing_run (test_preprocess_v2.PreprocessTests.test_filter_does_not_bridge_missing_run) ... ok
+test_interpolation_does_not_extrapolate_or_cross_long_gap (test_preprocess_v2.PreprocessTests.test_interpolation_does_not_extrapolate_or_cross_long_gap) ... ok
+test_legacy_boxcar_and_midpoint_stage (test_preprocess_v2.PreprocessTests.test_legacy_boxcar_and_midpoint_stage) ... ok
+test_low_likelihood_and_outside_jump_are_retained (test_preprocess_v2.PreprocessTests.test_low_likelihood_and_outside_jump_are_retained) ... ok
+test_source_timeline_mismatch_rejected (test_preprocess_v2.PreprocessTests.test_source_timeline_mismatch_rejected) ... ok
+test_trim_edges_and_short_runs (test_preprocess_v2.PreprocessTests.test_trim_edges_and_short_runs) ... ok
+test_block_sampling_reproducible_and_fixed_draw_count (test_reliability_v2.ReliabilityTests.test_block_sampling_reproducible_and_fixed_draw_count) ... ok
+test_constant_curves_not_reliable_and_single_occ_no_fake_range (test_reliability_v2.ReliabilityTests.test_constant_curves_not_reliable_and_single_occ_no_fake_range) ... ok
+test_kernel_against_direct_per_lag_centering (test_reliability_v2.ReliabilityTests.test_kernel_against_direct_per_lag_centering) ... ok
+test_known_delay_signs (test_reliability_v2.ReliabilityTests.test_known_delay_signs) ... ok
+test_legacy_equivalence_missing_and_occurrences (test_reliability_v2.ReliabilityTests.test_legacy_equivalence_missing_and_occurrences) ... ok
+test_multipeak_intervals_are_not_envelope_width (test_reliability_v2.ReliabilityTests.test_multipeak_intervals_are_not_envelope_width) ... ok
+test_paired_resampling_output_deterministic (test_reliability_v2.ReliabilityTests.test_paired_resampling_output_deterministic) ... ok
+test_unusable_ids_retained_for_paired_sampling (test_reliability_v2.ReliabilityTests.test_unusable_ids_retained_for_paired_sampling) ... ok
+test_weighted_statistics_equal_repeated_occurrence_terms (test_reliability_v2.ReliabilityTests.test_weighted_statistics_equal_repeated_occurrence_terms) ... ok
+test_common_input_only_not_peaks (test_statistics_v2.StatisticsTests.test_common_input_only_not_peaks) ... ok
+test_exact_swap_small_n_floor (test_statistics_v2.StatisticsTests.test_exact_swap_small_n_floor) ... ok
+test_explicit_boundary_field_overrides_status (test_statistics_v2.StatisticsTests.test_explicit_boundary_field_overrides_status) ... ok
+test_group_fixed_support (test_statistics_v2.StatisticsTests.test_group_fixed_support) ... ok
+test_group_reproducible (test_statistics_v2.StatisticsTests.test_group_reproducible) ... ok
+test_identity_blocks_and_missing_stage (test_statistics_v2.StatisticsTests.test_identity_blocks_and_missing_stage) ... ok
+test_identity_lag_reference_uses_same_person_maps (test_statistics_v2.StatisticsTests.test_identity_lag_reference_uses_same_person_maps) ... ok
+test_no_identity_profile_returns_status (test_statistics_v2.StatisticsTests.test_no_identity_profile_returns_status) ... ok
+test_paired_group_shared_users_and_draws (test_statistics_v2.StatisticsTests.test_paired_group_shared_users_and_draws) ... ok
+test_shared_model_resample_draws (test_statistics_v2.StatisticsTests.test_shared_model_resample_draws) ... ok
+test_stage_then_person_equal (test_statistics_v2.StatisticsTests.test_stage_then_person_equal) ... ok
+
+----------------------------------------------------------------------
+Ran 38 tests in 0.443s
+
+OK
+test_gt_side_is_shared_and_missing_gt_is_preserved (test_revision_model_suite.SelectedRuleTests.test_gt_side_is_shared_and_missing_gt_is_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.020s
+
+OK

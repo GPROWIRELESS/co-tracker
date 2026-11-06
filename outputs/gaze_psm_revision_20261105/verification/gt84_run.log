@@ -1,0 +1,104 @@
+Record User1_1_1: 220 curves
+Record User1_3_1: 176 curves
+Record User1_5_1: 176 curves
+Record User1_5_2: 176 curves
+Record User1_5_3: 176 curves
+Record User1_6_1: 176 curves
+Record User1_7_1: 132 curves
+Record User1_8_1: 176 curves
+Record User2_2_1: 132 curves
+Record User2_2_2: 132 curves
+Record User2_3_1: 176 curves
+Record User2_4_1: 132 curves
+Record User2_5_1: 176 curves
+Record User2_7_1: 176 curves
+Record User2_9_1: 132 curves
+Record User2_9_2: 132 curves
+Record User3_1_1: 132 curves
+Record User3_1_2: 176 curves
+Record User3_2_1: 176 curves
+Record User3_4_1: 176 curves
+Record User3_6_1: 132 curves
+Record User3_6_2: 132 curves
+Record User3_8_1: 176 curves
+Record User3_8_2: 132 curves
+Record User3_9_1: 176 curves
+Record User5_2_1: 176 curves
+Record User5_3_1: 132 curves
+Record User5_3_2: 132 curves
+Record User5_4_1: 176 curves
+Record User5_5_1: 176 curves
+Record User5_5_2: 176 curves
+Record User5_7_1: 132 curves
+Record User5_7_2: 132 curves
+Record User5_9_1: 176 curves
+Record User6_1_1: 88 curves
+Record User6_1_2: 132 curves
+Record User6_3_1: 176 curves
+Record User6_5_1: 176 curves
+Record User6_6_1: 176 curves
+Record User6_7_1: 176 curves
+Record User6_8_1: 176 curves
+Record User7_1_1: 176 curves
+Record User7_3_1: 132 curves
+Record User7_4_1: 176 curves
+Record User7_4_2: 132 curves
+Record User7_5_1: 176 curves
+Record User7_8_1: 132 curves
+Record User7_9_1: 176 curves
+Record User8_2_1: 88 curves
+Record User8_2_2: 88 curves
+Record User8_3_1: 176 curves
+Record User8_4_1: 176 curves
+Record User8_6_1: 132 curves
+Record User8_7_1: 132 curves
+Record User8_7_2: 132 curves
+Record User8_8_1: 176 curves
+Record User9_1_1: 88 curves
+Record User9_1_2: 132 curves
+Record User9_2_1: 176 curves
+Record User9_5_1: 88 curves
+Record User9_5_2: 88 curves
+Record User9_6_1: 176 curves
+Record User9_7_1: 176 curves
+Record User9_9_1: 176 curves
+Record User10_1_1: 176 curves
+Record User10_2_1: 132 curves
+Record User10_2_2: 132 curves
+Record User10_5_1: 176 curves
+Record User10_6_1: 132 curves
+Record User10_7_1: 132 curves
+Record User10_9_1: 176 curves
+Record User11_2_1: 176 curves
+Record User11_3_1: 132 curves
+Record User11_4_1: 132 curves
+Record User11_6_1: 176 curves
+Record User11_7_1: 176 curves
+Record User11_8_1: 132 curves
+Record User12_1_1: 132 curves
+Record User12_3_1: 176 curves
+Record User12_4_1: 176 curves
+Record User12_5_1: 88 curves
+Record User12_5_2: 132 curves
+Record User12_8_1: 176 curves
+Record User12_9_1: 132 curves
+Observed curves and legacy regression complete {'n': 2328, 'passed': True, 'maximum_error': 1.7363888105137448e-13, 'legacy_max_groups': 36, 'legacy_max_groups_passed': True}
+Reference pair curves 1/84 targets; 18.4s
+Reference pair curves 5/84 targets; 57.0s
+Reference pair curves 10/84 targets; 103.8s
+Reference pair curves 15/84 targets; 145.6s
+Reference pair curves 20/84 targets; 207.6s
+Reference pair curves 25/84 targets; 252.8s
+Reference pair curves 30/84 targets; 283.8s
+Reference pair curves 35/84 targets; 335.6s
+Reference pair curves 40/84 targets; 385.5s
+Reference pair curves 45/84 targets; 410.0s
+Reference pair curves 50/84 targets; 452.4s
+Reference pair curves 55/84 targets; 495.5s
+Reference pair curves 60/84 targets; 545.0s
+Reference pair curves 65/84 targets; 580.0s
+Reference pair curves 70/84 targets; 632.0s
+Reference pair curves 75/84 targets; 658.6s
+Reference pair curves 80/84 targets; 696.8s
+Reference pair curves 84/84 targets; 727.2s
+{"n_records": 84, "n_users": 11, "n_curves": 12804, "n_groups": 396, "legacy_regression": {"n": 2328, "passed": true, "maximum_error": 1.7363888105137448e-13, "legacy_max_groups": 36, "legacy_max_groups_passed": true}, "input_unchanged": true, "changed_inputs": [], "dlc_quality_deleted": 0, "elapsed_seconds": 1025.2428500652313, "all_support_audits_pass": true}

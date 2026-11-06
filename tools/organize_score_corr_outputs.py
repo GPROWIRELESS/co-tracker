@@ -80,6 +80,29 @@ def normalize_tables(root, signal, outcome):
     return data, checks
 
 
+def unavailable_label(row, phase, outcome):
+    """Distinguish absent variation from small N; accept in-memory or CSV rows."""
+    if str(phase.get('group_usable', True)).lower() == 'false':
+        return 'excluded'
+    reason = row.get('unavailable_reason', '')
+    labels = {
+        'no_outcome_variation': 'no score\nvariation' if outcome == 'Score' else 'no outcome\nvariation',
+        'no_predictor_variation': 'no predictor\nvariation',
+        'insufficient_users': 'low N',
+        'insufficient_within_variation': 'low within\nvariation',
+        'insufficient_users_with_within_variation': 'low within\nvariation',
+        'within_variation': 'low within\nvariation',
+        'insufficient_residual_variation': 'no residual\nvariation',
+        'insufficient_residual_degrees_of_freedom': 'low residual df',
+    }
+    if reason in labels:
+        return labels[reason]
+    status = row.get('status', '')
+    if status.startswith('excluded_group_'):
+        return 'excluded'
+    return labels.get(status, 'N / variation')
+
+
 def make_overview(data, outcome, signal):
     scenario = 'primary' if signal == 'position' else 'velocity_secondary'
     phases = sorted([p for p in data['phase_validity'] if p['mode'] in ('whole', 'psm_stage')],
@@ -93,10 +116,25 @@ def make_overview(data, outcome, signal):
         for i, phase in enumerate(phases):
             for j, predictor in enumerate(PREDICTORS):
                 row = lookup[(method, base.key(phase), predictor)]
+                # Old tables may lack the explicit display diagnostic. Recover
+                # the verifiable no-outcome-variation case from saved summaries.
+                if not row.get('unavailable_reason') and row.get('status') != 'ok':
+                    if method == 'between_participants':
+                        sample = [p for p in data['participant_summaries']
+                                  if p['scenario'] == scenario and base.key(p) == base.key(phase)]
+                    else:
+                        sample = [r for r in data.get('record_phase_audit', [])
+                                  if str(r.get('eligible', False)).lower() == 'true'
+                                  and r.get('signal') == signal
+                                  and r.get('mode') in ('whole', 'psm_stage')
+                                  and base.key(r) == base.key(phase)]
+                    outcomes = np.asarray([base.number(p.get(outcome)) for p in sample])
+                    if len(outcomes) and np.all(np.isfinite(outcomes)) and np.ptp(outcomes) == 0:
+                        row = {**row, 'unavailable_reason': 'no_outcome_variation'}
                 value = base.number(row.get('association'))
                 matrix[i, j] = value
                 label = (f'{value:+.2f}'+(' *' if base.number(row.get('q_bh')) < .05 else '')
-                         if np.isfinite(value) else ('excluded' if phase['group_usable'] == 'False' else 'low N'))
+                         if np.isfinite(value) else unavailable_label(row, phase, outcome))
                 ax.text(j, i, label, ha='center', va='center', fontsize=8,
                         color='white' if np.isfinite(value) and abs(value) > .65 else 'black')
         cmap = base.plt.get_cmap('RdBu_r').copy()
