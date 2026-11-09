@@ -13,7 +13,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python tools/gaze_psm_xcorr_max.py --wo
 每个 `content_id / task / stage / signal / mode` 比较左右曲线在完整 lag
 窗口内的最大**有符号**相关系数。选中一侧后，保留其整条曲线及其空间指标。
 不会在不同 lag 上切换左右侧，也不会先汇总 user 再选侧。
-position、velocity、PSM 时间锚定的 stage 和 within-stage 分别选侧。
+position、velocity、PSM 时间锚定的 stage 和 Both in stage 分别选侧。
 whole-task 不纳入这份分析，也不拼接不同 stage。
 
 只有一侧有有限相关值时选择该侧；两侧均无有限值时保留缺失结果，

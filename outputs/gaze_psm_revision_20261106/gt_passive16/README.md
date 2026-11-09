@@ -1,0 +1,63 @@
+# Passive gaze 与来源 PSM
+
+[report.html](report.html) 包含中文离线报告与十三张 PNG/PDF 图。
+
+本次纳入 16 条观看记录、8 位观察者与 16 个来源视频。
+gaze 取自观看者 NPY，stage 和 DLC 取自 source_content_id 对应的操作视频。
+
+固定左右器械分别分析。41 Hz，最大插值间隙 0.1 秒，主 lag 窗口 ±2 秒。
+实际 pooled min_overlap 为 2.0 秒。
+Position 使用 Box3，velocity 从原始网格坐标独立做二阶 SG5 后差分。
+组内按观察者聚合与重抽样。完整 lag 支持规则与预定敏感性分支见 run_manifest.json。
+
+Unpaired reference 使用同 task、不同观察者的 donor，保留共享来源视频的配对。
+预定 A 五阶段与 C 四阶段均展示，缺失支持保留 NA。
+数据覆盖、排除原因与来源映射见 passive_metadata_audit.json 和输入清单。
+验证见 validation.json，冻结方法对照见 methods_consistency.csv。
+
+按用户指定采用 NPY 第 i 行、视频第 i 帧与 DLC 第 i 行逐行对应，时间轴沿用精确 video_ts。原 VID_FRAME 差异保留审计。实际播放时序尚无经验验证，lag 按冻结基线作探索性描述。
+
+
+## 本次数据与结果
+
+输入清单共122次观看，11名观看者、44个源视频。User2_1_1 经任务评分表和解码视频核实为B后，完整任务分布为A35、C38、B35、D14。
+排除任一端为intermediate的98次观看，剩24次novice–novice观看，其中A7、C9、B8。主分析纳入A/C共16次观看、8名观看者、16个源视频。
+所有122条NPY的行数与各自passive视频帧数一致。16条分析输入的NPY、passive/source视频、DLC行数和原始帧键也一致，按用户指定逐行对应。
+
+全部8个variant、固定左右侧、两种signal和两种mode均完成。共2420条逐录制条件曲线，其中primary为440条，全部具有完整lag支持。预定72个主组单元中56个支持充分。A的drop ring缺少阶段标注，C的threading string through tower不足3名完整支持观看者，相关单元保留缺失。
+
+Position的28个支持充分组峰高介于−0.0620和0.2532，velocity的28组介于0.0091和0.0598。峰高采用有符号最大相关。56个支持充分主组中23个受到搜索窗限制、31个方向不确定、2个重抽样峰lag范围位于负侧。440个逐录制主条件中仅3个通过原lag_identifiable规则，显示峰位定位总体不稳定。
+
+空间指标单独描述。零lag支持充分条件下，观看者分层平均的录制中位距离为135.9–419.1px，≤50px比例为0.34%–12.29%。峰高、峰lag与空间接近度分别保留。positive_peak仅表示峰值相关r>0。正lag表示gaze轨迹对应较早，百分位重采样范围作为探索性描述。
+
+两套非配对参考均按每组5000次尝试运行。主参考56个观察支持充分条件的有效参考数为114–5000，其余失败次数及原因完整导出。尾部比例比较参考峰高与观察峰高，BH为预定义family内的描述性调整。当前纳入的16个源视频互异，实际同源donor配对为0，抽样规则仍允许不同观看者观看同一源视频。
+
+全部440条primary由独立显式配对核重新计算，有限掩码一致，最大绝对相关误差为8.1324×10⁻¹⁴。GT84代表性A/C回归72条曲线最大误差为2.2204×10⁻¹⁶，原生NPY到冻结gaze网格误差为0像素。组聚合、bootstrap、阶段差值、非配对抽样及尾部比例均通过独立复核。
+269个实际输入及补充证据文件指纹一致，GT84的2846个文件指纹一致。指定outputs/tools目录不存在，实际采用GT84冻结code_snapshot中的数值核。两个legacy回归文件明确记录无passive历史基线。
+
+## 结果与复现文件
+
+- [方法一致性表](methods_consistency.csv) 和 [可读版本](methods_consistency.md)
+- [全部观看输入清单](input_record_inventory.csv) 和 [纳入记录清单](analysis_record_inventory.csv)
+- [预定阶段完整覆盖](stage_coverage.csv)
+- [组曲线与峰](group_summary.csv) 和 [逐lag结果](group_curves.csv)
+- [逐录制可靠性](record_summary.csv) 和 [完整曲线](record_curves.jsonl)
+- [零lag和组峰位空间指标](spatial_summary.csv)
+- [非配对参考](unpaired_reference.csv) 和 [参考方法](unpaired_reference_method.json)
+- [全部variant组峰位分布索引](group_bootstrap_full_index.json) 和 [5000次完整分布](group_bootstrap_full_peak_lags.npz)
+- [NPY行数与视频帧数](npy_video_frame_count_audit.csv)
+- [逐行原始VID_FRAME差异审计](native_row_frame_discrepancies.csv) 和 [用户对应规则](user_input_confirmations.json)
+- [独立数值验证](passive_independent_validation.json) 和 [GT84代表性回归](gt84_representative_regression.json)
+
+point_provenance保存8个variant的逐点来源、有效掩码、滤波边缘、插值标记、原始NPY坐标及历史原始眼动行映射。input_mapping保存原始帧键、局部行号、精确时间和阶段occurrence。input_audit保留历史构造代码、任务证据、解码画面对比和VID_FRAME差异。
+
+冻结分析表的content_id作为唯一录制键，与recording_id同值。source_content_id保存源视频身份，user和observer_user均为真实观看者。source_user单独保存操作者。
+
+code_snapshot、report_code和validation_code保存本次代码。reproduction_inputs保存实际输入缓存与配置。execution_commands.json记录实际运行命令和seed派生规则，runtime_packages.txt保存运行依赖版本。重新计算时请为--output指定新的空目录。
+
+
+## Passive 与 Active 配对比较补充
+
+已按来源视频匹配当前16条passive与gt84中的active记录。包含共同支持的相关曲线、配对指标、空间比较、共同有效时间点敏感性及独立验证。
+
+[打开补充比较报告](active_passive_comparison/report.html) · [配对清单](active_passive_comparison/paired_record_mapping.csv) · [验证记录](active_passive_comparison/validation.json)

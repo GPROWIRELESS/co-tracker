@@ -1,0 +1,1199 @@
+# NOTEBOOK CELL 0
+This code will generate the gaze x y and match with video ts(60Hz)
+Do not run it on HPC
+
+# NOTEBOOK CELL 1
+import os
+import re
+import math
+import json
+from pathlib import Path
+from dataclasses import dataclass
+from typing import Optional, Tuple, Dict, List
+
+import numpy as np
+import pandas as pd
+import cv2
+from tqdm import tqdm
+
+
+# NOTEBOOK CELL 2
+# input parameters
+ACTIVE_ROOT  = Path(r"C:/ros2/ros_ws/src/varjo_ros2_example/RealData/Active_Data")
+PASSIVE_ROOT = Path(r"C:/Users/yxl3527/Desktop/Yizhou_Li_Folder/GazePointProject/Passive_Data")
+
+# dry run: True -> do not write npy/csv, only print/report
+DRY_RUN = False
+
+# Optional max dt threshold: set to None to disable
+# Example: 50 ms -> 50.0
+MAX_DT_MS = None   # e.g. 50.0 or None
+
+# Whether to clamp gaze_x/y to [0,1] after normalization
+CLAMP_01 = True
+
+# Whether to filter IsDelete==1 frames (you said YES)
+FILTER_ISDELETE = True
+
+# Report output files (in current working dir)
+ACTIVE_REPORT_CSV  = Path("C:/Yizhou Li Folder/github_project/DVSS_Pytorch/model/alignment_report_active.csv")
+PASSIVE_REPORT_CSV = Path("C:/Yizhou Li Folder/github_project/DVSS_Pytorch/model/alignment_report_passive.csv")
+
+# NOTEBOOK CELL 3
+# Math function (Angle-axis rotation + projection)
+def angle_axis_to_R(ax: float, ay: float, az: float) -> np.ndarray:
+    """
+    Convert angle-axis vector (ax,ay,az) to 3x3 rotation matrix.
+    Here (ax,ay,az) encodes axis * angle (Rodrigues vector).
+    """
+    r = np.array([ax, ay, az], dtype=float)
+    theta = np.linalg.norm(r)
+    if theta < 1e-12:
+        return np.eye(3, dtype=float)
+
+    k = r / theta
+    kx, ky, kz = k
+    K = np.array([
+        [0,  -kz, ky],
+        [kz,  0, -kx],
+        [-ky, kx,  0]
+    ], dtype=float)
+
+    R = np.eye(3, dtype=float) + math.sin(theta) * K + (1 - math.cos(theta)) * (K @ K)
+    return R
+
+
+def project_gaze_to_pixel(gx, gy, gz, view_center_x, win_w, win_h,
+                          d, ox, oy, ax, ay, az, use_pose=True):
+    cx, cy = int(view_center_x), int(win_h / 2)
+    if gz == 0.0:
+        return cx, cy
+
+    if not use_pose:
+        z_ratio = d / gz
+        px = int(gx * z_ratio + cx) + int(ox)
+        py = int(win_h - (gy * z_ratio + cy)) + int(oy)
+        return px, py
+
+    R = angle_axis_to_R(ax, ay, az)
+    u = R @ np.array([1, 0, 0], float)
+    w = -(R @ np.array([0, 1, 0], float))  # pixel Y down
+    n = R @ np.array([0, 0, 1], float)
+
+    v = np.array([gx, gy, gz], float)
+    denom = float(n @ v)
+    if abs(denom) < 1e-8:
+        return cx, cy
+
+    t = d / denom
+    X = t * v
+    Xu = float(u @ X)
+    Xw = float(w @ X)
+
+    px = int(Xu + cx) + int(ox)
+    py = int(Xw + cy) + int(oy)
+    return px, py
+
+
+# NOTEBOOK CELL 4
+# I/O functions (video size, calibration, parsing)
+def get_video_wh(video_path: Path) -> Tuple[int, int]:
+    cap = cv2.VideoCapture(str(video_path))
+    if not cap.isOpened():
+        raise FileNotFoundError(f"Cannot open video: {video_path}")
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    cap.release()
+    if w <= 0 or h <= 0:
+        raise RuntimeError(f"Invalid video size for {video_path}: w={w}, h={h}")
+    return w, h
+
+
+@dataclass
+class CalibParams:
+    d: float
+    ox: float
+    oy: float
+    ax: float
+    ay: float
+    az: float
+
+
+def read_calib_matrix(calib_path: Path) -> CalibParams:
+    df = pd.read_csv(calib_path)
+    # Columns you provided:
+    # OptimalDistance OptimalOffsetX OptimalOffsetY OptimalAngleAxisX OptimalAngleAxisY OptimalAngleAxisZ
+    row = df.iloc[0]
+    return CalibParams(
+        d=float(row["OptimalDistance"]),
+        ox=float(row["OptimalOffsetX"]),
+        oy=float(row["OptimalOffsetY"]),
+        ax=float(row["OptimalAngleAxisX"]),
+        ay=float(row["OptimalAngleAxisY"]),
+        az=float(row["OptimalAngleAxisZ"]),
+    )
+
+
+def ensure_dir(p: Path):
+    p.mkdir(parents=True, exist_ok=True)
+
+
+# Active filename patterns
+RE_ACTIVE_GAZE = re.compile(r"^User(?P<u>\d+)_(?P<task>\d+)_(?P<att>\d+)_gaze\.csv$", re.IGNORECASE)
+RE_ACTIVE_VTS  = re.compile(r"^User(?P<u>\d+)_(?P<task>\d+)_(?P<att>\d+)_video_ts\.csv$", re.IGNORECASE)
+RE_ACTIVE_CAL  = re.compile(r"^User(?P<u>\d+)_(?P<task>\d+)_calibrationmatrix\.csv$", re.IGNORECASE)
+
+# Passive filename patterns
+RE_PASSIVE_GAZE = re.compile(r"^User(?P<o>\d+)_(?P<seq>\d+)_User(?P<u>\d+)_(?P<task>\d+)_(?P<att>\d+)_gaze\.csv$", re.IGNORECASE)
+RE_PASSIVE_VTS  = re.compile(r"^User(?P<o>\d+)_(?P<seq>\d+)_User(?P<u>\d+)_(?P<task>\d+)_(?P<att>\d+)_video_ts\.csv$", re.IGNORECASE)
+
+
+# NOTEBOOK CELL 5
+# Alignment core (nearest match with optional max_dt)
+def nearest_align_frames_to_gaze(
+    t_frames_ns: np.ndarray,
+    t_gaze_ns: np.ndarray,
+    gaze_xy: np.ndarray,     # shape [Ng,2]
+    gaze_valid: np.ndarray,  # shape [Ng]
+    max_dt_ms: Optional[float] = None
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    For each t_frame, pick nearest t_gaze.
+    Returns:
+      aligned_xy: [Nf,2] float32 (may contain NaN if max_dt_ms is set and exceeded)
+      aligned_valid: [Nf] uint8/int
+      dt_abs_ns: [Nf] int64 absolute dt to nearest gaze (for QC)
+    """
+    if len(t_gaze_ns) == 0 or len(t_frames_ns) == 0:
+        aligned_xy = np.full((len(t_frames_ns), 2), np.nan, dtype=np.float32)
+        aligned_valid = np.zeros((len(t_frames_ns),), dtype=np.uint8)
+        dt_abs_ns = np.full((len(t_frames_ns),), np.iinfo(np.int64).max, dtype=np.int64)
+        return aligned_xy, aligned_valid, dt_abs_ns
+
+    # Ensure gaze timestamps sorted
+    order = np.argsort(t_gaze_ns)
+    t_gaze_ns = t_gaze_ns[order]
+    gaze_xy = gaze_xy[order]
+    gaze_valid = gaze_valid[order]
+
+    # searchsorted
+    idx = np.searchsorted(t_gaze_ns, t_frames_ns, side="left")
+
+    # candidates: idx-1 and idx
+    idx0 = np.clip(idx - 1, 0, len(t_gaze_ns) - 1)
+    idx1 = np.clip(idx,     0, len(t_gaze_ns) - 1)
+
+    dt0 = np.abs(t_frames_ns - t_gaze_ns[idx0])
+    dt1 = np.abs(t_frames_ns - t_gaze_ns[idx1])
+
+    choose1 = dt1 < dt0
+    best_idx = np.where(choose1, idx1, idx0)
+    dt_abs = np.where(choose1, dt1, dt0).astype(np.int64)
+
+    aligned_xy = gaze_xy[best_idx].astype(np.float32, copy=False)
+    aligned_valid = gaze_valid[best_idx]
+
+    if max_dt_ms is not None:
+        max_dt_ns = int(max_dt_ms * 1e6)  # ms -> ns
+        mask = dt_abs > max_dt_ns
+        if np.any(mask):
+            aligned_xy = aligned_xy.copy()
+            aligned_xy[mask, :] = np.nan  # keep valid as-is (or set to 0 if you prefer)
+    return aligned_xy, aligned_valid, dt_abs
+
+
+# NOTEBOOK CELL 6
+# Processing Active users
+OUTPUT_DTYPE = np.dtype([
+    ("Frame_Number", np.int32),
+    ("Timestamp(ns)", np.int64),
+    ("gaze_x", np.float32),
+    ("gaze_y", np.float32),
+    ("valid", np.uint8),
+])
+
+def process_active_user(user_dir: Path, max_dt_ms: Optional[float], dry_run: bool) -> List[dict]:
+    """
+    Process one Active user folder: User{U}/
+    Creates User{U}/npy/*.npy and *.csv
+    Returns list of report rows.
+    """
+    csv_dir = user_dir / "csv"
+    stim_dir = user_dir / "stimuli"
+    cali_dir = user_dir / "cali"
+    out_dir = user_dir / "npy"
+    ensure_dir(out_dir)
+
+    # Gather available calibration matrices by task
+    calib_by_task: Dict[int, Path] = {}
+    if cali_dir.exists():
+        for p in cali_dir.glob("*_calibrationmatrix.csv"):
+            m = RE_ACTIVE_CAL.match(p.name)
+            if m:
+                task = int(m.group("task"))
+                calib_by_task[task] = p
+
+    # Gather samples from gaze csv names
+    samples = []
+    for gaze_csv in csv_dir.glob("*_gaze.csv"):
+        m = RE_ACTIVE_GAZE.match(gaze_csv.name)
+        if not m:
+            continue
+        task = int(m.group("task"))
+        att  = int(m.group("att"))
+        u    = int(m.group("u"))
+        vts_csv = csv_dir / f"User{u}_{task}_{att}_video_ts.csv"
+        video_left = stim_dir / f"User{u}_{task}_{att}.mp4"
+        if not vts_csv.exists() or not video_left.exists():
+            # ignore incomplete
+            continue
+        samples.append((task, att, u, gaze_csv, vts_csv, video_left))
+
+    # Sort by task then attempt (important for calib inheritance)
+    samples.sort(key=lambda x: (x[0], x[1]))
+
+    # report_rows = []
+    # last_calib: Optional[CalibParams] = None
+    
+    report_rows = []
+
+    # ===== NEW: initialize last_calib from earliest available calibration task,
+    # even if that task has no gaze/video samples =====
+    last_calib: Optional[CalibParams] = None
+    init_calib_task: Optional[int] = None
+    if calib_by_task:
+        init_calib_task = min(calib_by_task.keys())
+        last_calib = read_calib_matrix(calib_by_task[init_calib_task])
+    # =================================================
+
+
+    # Detect if user ever has calibration at all
+    has_any_calib = len(calib_by_task) > 0
+
+    for (task, att, u, gaze_csv, vts_csv, video_left) in tqdm(samples, desc=f"Active User{user_dir.name}", leave=False):
+        # Update calib if current task has one
+        if task in calib_by_task:
+            last_calib = read_calib_matrix(calib_by_task[task])
+
+        # If no last calib yet, skip this sample (can't use future calib)
+        if last_calib is None:
+            report_rows.append({
+                "source": "active",
+                "user": u,
+                "task": task,
+                "attempt": att,
+                "status": "skip_no_prior_calib",
+                "gaze_csv": str(gaze_csv),
+                "vts_csv": str(vts_csv),
+                "video": str(video_left),
+            })
+            continue
+
+        # Read video size
+        try:
+            win_w, win_h = get_video_wh(video_left)
+        except Exception as e:
+            report_rows.append({
+                "source": "active",
+                "user": u, "task": task, "attempt": att,
+                "status": f"skip_video_error:{e}",
+                "gaze_csv": str(gaze_csv), "vts_csv": str(vts_csv), "video": str(video_left),
+            })
+            continue
+
+        view_center_x = win_w / 2.0
+
+        # Read video_ts
+        vts = pd.read_csv(vts_csv)
+        if not {"Frame_Number", "Timestamp(ns)", "IsDelete"}.issubset(vts.columns):
+            report_rows.append({
+                "source": "active",
+                "user": u, "task": task, "attempt": att,
+                "status": "skip_bad_vts_columns",
+                "vts_cols": ",".join(vts.columns.astype(str)),
+                "vts_csv": str(vts_csv),
+            })
+            continue
+
+        n_total_frames = len(vts)
+        n_deleted = int((vts["IsDelete"] == 1).sum()) if "IsDelete" in vts.columns else 0
+
+        if FILTER_ISDELETE and "IsDelete" in vts.columns:
+            vts = vts[vts["IsDelete"] != 1].copy()
+
+        t_frames = vts["Timestamp(ns)"].to_numpy(dtype=np.int64)
+        frame_nums = vts["Frame_Number"].to_numpy(dtype=np.int32)
+
+        # Read active gaze csv
+        gdf = pd.read_csv(gaze_csv)
+
+        need_cols = ["Capture Unix timestamp", "Left Forward X", "Left Forward Y", "Left Forward Z", "Left Status"]
+        missing = [c for c in need_cols if c not in gdf.columns]
+        if missing:
+            report_rows.append({
+                "source": "active",
+                "user": u, "task": task, "attempt": att,
+                "status": "skip_missing_gaze_cols",
+                "missing": ",".join(missing),
+                "gaze_csv": str(gaze_csv),
+            })
+            continue
+
+        t_gaze = gdf["Capture Unix timestamp"].to_numpy(dtype=np.int64)
+
+        gx = gdf["Left Forward X"].to_numpy(dtype=np.float64)
+        gy = gdf["Left Forward Y"].to_numpy(dtype=np.float64)
+        gz = gdf["Left Forward Z"].to_numpy(dtype=np.float64)
+
+        valid = gdf["Left Status"].to_numpy()
+        # store as uint8
+        valid_u8 = valid.astype(np.uint8, copy=False)
+
+        # Project each gaze sample to pixel then normalize
+        calib = last_calib
+        # px = np.empty_like(gx, dtype=np.int32)
+        # py = np.empty_like(gx, dtype=np.int32)
+
+        # for i in range(len(gx)):
+        #     pxi, pyi = project_gaze_to_pixel(
+        #         gx[i], gy[i], gz[i],
+        #         view_center_x=view_center_x,
+        #         win_w=win_w, win_h=win_h,
+        #         d=calib.d, ox=calib.ox, oy=calib.oy,
+        #         ax=calib.ax, ay=calib.ay, az=calib.az,
+        #         use_pose=True
+        #     )
+        #     px[i] = pxi
+        #     py[i] = pyi
+
+        # # Normalize to [0,1]
+        # denom_w = max(1, win_w - 1)
+        # denom_h = max(1, win_h - 1)
+        # gaze_x = (px.astype(np.float32) / float(denom_w))
+        # gaze_y = (py.astype(np.float32) / float(denom_h))
+        # ---- SAFE projection: allow bad gaze rows to become NaN ----
+        denom_w = max(1, win_w - 1)
+        denom_h = max(1, win_h - 1)
+
+        gaze_x = np.full((len(gx),), np.nan, dtype=np.float32)
+        gaze_y = np.full((len(gx),), np.nan, dtype=np.float32)
+
+        # Pre-check calibration params are finite
+        calib_ok = np.isfinite([calib.d, calib.ox, calib.oy, calib.ax, calib.ay, calib.az]).all()
+
+        for i in range(len(gx)):
+            # Skip if gaze vector has NaN/Inf or gz==0
+            if (not calib_ok) or (not np.isfinite(gx[i])) or (not np.isfinite(gy[i])) or (not np.isfinite(gz[i])) or (gz[i] == 0.0):
+                continue
+
+            try:
+                pxi, pyi = project_gaze_to_pixel(
+                    gx[i], gy[i], gz[i],
+                    view_center_x=view_center_x,
+                    win_w=win_w, win_h=win_h,
+                    d=calib.d, ox=calib.ox, oy=calib.oy,
+                    ax=calib.ax, ay=calib.ay, az=calib.az,
+                    use_pose=True
+                )
+            except Exception:
+                # Any numerical issue -> keep NaN
+                continue
+
+            # Convert to normalized float
+            x = float(pxi) / float(denom_w)
+            y = float(pyi) / float(denom_h)
+
+            if CLAMP_01:
+                x = 0.0 if x < 0.0 else (1.0 if x > 1.0 else x)
+                y = 0.0 if y < 0.0 else (1.0 if y < 0.0 else (1.0 if y > 1.0 else y))
+
+            gaze_x[i] = np.float32(x)
+            gaze_y[i] = np.float32(y)
+
+        gaze_xy = np.stack([gaze_x, gaze_y], axis=1)  # [Ng,2]
+        # ----------------------------------------------------------
+
+
+        if CLAMP_01:
+            gaze_x = np.clip(gaze_x, 0.0, 1.0)
+            gaze_y = np.clip(gaze_y, 0.0, 1.0)
+
+        gaze_xy = np.stack([gaze_x, gaze_y], axis=1)  # [Ng,2]
+
+        # Align frames -> nearest gaze
+        aligned_xy, aligned_valid, dt_abs = nearest_align_frames_to_gaze(
+            t_frames_ns=t_frames,
+            t_gaze_ns=t_gaze,
+            gaze_xy=gaze_xy,
+            gaze_valid=valid_u8,
+            max_dt_ms=max_dt_ms
+        )
+
+        # Build output structured array
+        out = np.empty(len(t_frames), dtype=OUTPUT_DTYPE)
+        out["Frame_Number"] = frame_nums
+        out["Timestamp(ns)"] = t_frames
+        out["gaze_x"] = aligned_xy[:, 0]
+        out["gaze_y"] = aligned_xy[:, 1]
+        out["valid"]  = aligned_valid.astype(np.uint8, copy=False)
+
+        # Output filenames mirror original gaze csv naming
+        out_stem = gaze_csv.name.replace(".csv", "")  # ..._gaze
+        out_npy = out_dir / f"{out_stem}.npy"
+        out_csv = out_dir / f"{out_stem}.csv"
+
+        # QC stats
+        dt_ms = (dt_abs.astype(np.float64) / 1e6)
+        row = {
+            "source": "active",
+            "user": u,
+            "task": task,
+            "attempt": att,
+            "status": "ok",
+            "win_w": win_w,
+            "win_h": win_h,
+            "frames_total": n_total_frames,
+            "frames_deleted": n_deleted,
+            "frames_used": len(t_frames),
+            "gaze_rows": len(gdf),
+            "dt_ms_p50": float(np.percentile(dt_ms, 50)) if len(dt_ms) else np.nan,
+            "dt_ms_p95": float(np.percentile(dt_ms, 95)) if len(dt_ms) else np.nan,
+            "dt_ms_max": float(np.max(dt_ms)) if len(dt_ms) else np.nan,
+            "out_npy": str(out_npy),
+            "out_csv": str(out_csv),
+        }
+
+        if dry_run:
+            row["write"] = "dry_run"
+        else:
+            np.save(out_npy, out)
+            pd.DataFrame({
+                "Frame_Number": out["Frame_Number"],
+                "Timestamp(ns)": out["Timestamp(ns)"],
+                "gaze_x": out["gaze_x"],
+                "gaze_y": out["gaze_y"],
+                "valid": out["valid"],
+            }).to_csv(out_csv, index=False, encoding="utf-8-sig")
+            row["write"] = "wrote"
+
+        report_rows.append(row)
+
+    # If user has no calib at all, report it (samples before first calib already skipped)
+    if not has_any_calib:
+        report_rows.append({
+            "source": "active",
+            "user_dir": str(user_dir),
+            "status": "user_has_no_calibration_files",
+        })
+
+    return report_rows
+
+
+# NOTEBOOK CELL 7
+# Processing Passive users
+def process_passive_user(user_dir: Path, max_dt_ms: Optional[float], dry_run: bool) -> List[dict]:
+    """
+    Process one Passive observer folder: User{O}/
+    Creates User{O}/npy/*.npy and *.csv
+    Returns list of report rows.
+    """
+    csv_dir = user_dir / "csv"
+    stim_dir = user_dir / "stimuli"
+    out_dir = user_dir / "npy"
+    ensure_dir(out_dir)
+
+    # Gather samples from gaze csv names
+    samples = []
+    for gaze_csv in csv_dir.glob("*_gaze.csv"):
+        m = RE_PASSIVE_GAZE.match(gaze_csv.name)
+        if not m:
+            continue
+        o = int(m.group("o"))
+        seq = int(m.group("seq"))
+        u = int(m.group("u"))
+        task = int(m.group("task"))
+        att = int(m.group("att"))
+
+        vts_csv = csv_dir / f"User{o}_{seq}_User{u}_{task}_{att}_video_ts.csv"
+        video = stim_dir / f"User{o}_{seq}_User{u}_{task}_{att}.mp4"
+        if not vts_csv.exists() or not video.exists():
+            continue
+        samples.append((o, seq, u, task, att, gaze_csv, vts_csv, video))
+
+    samples.sort(key=lambda x: (x[1], x[2], x[3], x[4]))  # seq,u,task,att
+
+    report_rows = []
+    for (o, seq, u, task, att, gaze_csv, vts_csv, video) in tqdm(samples, desc=f"Passive User{user_dir.name}", leave=False):
+
+        # Read video_ts
+        vts = pd.read_csv(vts_csv)
+        if not {"Frame_Number", "Timestamp(ns)", "IsDelete"}.issubset(vts.columns):
+            report_rows.append({
+                "source": "passive",
+                "observer": o, "seq": seq, "user": u, "task": task, "attempt": att,
+                "status": "skip_bad_vts_columns",
+                "vts_cols": ",".join(vts.columns.astype(str)),
+                "vts_csv": str(vts_csv),
+            })
+            continue
+
+        n_total_frames = len(vts)
+        n_deleted = int((vts["IsDelete"] == 1).sum()) if "IsDelete" in vts.columns else 0
+
+        if FILTER_ISDELETE and "IsDelete" in vts.columns:
+            vts = vts[vts["IsDelete"] != 1].copy()
+
+        t_frames = vts["Timestamp(ns)"].to_numpy(dtype=np.int64)
+        frame_nums = vts["Frame_Number"].to_numpy(dtype=np.int32)
+
+        # Read passive gaze csv
+        gdf = pd.read_csv(gaze_csv)
+
+        need_cols = ["TIMETICK(f=10000000)", "BPOGX", "BPOGY", "BPOGV"]
+        missing = [c for c in need_cols if c not in gdf.columns]
+        if missing:
+            report_rows.append({
+                "source": "passive",
+                "observer": o, "seq": seq, "user": u, "task": task, "attempt": att,
+                "status": "skip_missing_gaze_cols",
+                "missing": ",".join(missing),
+                "gaze_csv": str(gaze_csv),
+            })
+            continue
+
+        tick = gdf["TIMETICK(f=10000000)"].to_numpy(dtype=np.int64)
+        bpx  = gdf["BPOGX"].to_numpy(dtype=np.float32)
+        bpy  = gdf["BPOGY"].to_numpy(dtype=np.float32)
+        bpv  = gdf["BPOGV"].to_numpy(dtype=np.uint8)
+
+        # Convert timetick -> ns using alignment with first row of video_ts
+        # 1 tick = 1/1e7 sec = 100 ns
+        if len(t_frames) == 0 or len(tick) == 0:
+            report_rows.append({
+                "source": "passive",
+                "observer": o, "seq": seq, "user": u, "task": task, "attempt": att,
+                "status": "skip_empty_frames_or_gaze",
+                "gaze_csv": str(gaze_csv),
+                "vts_csv": str(vts_csv),
+            })
+            continue
+
+        t0_ns = int(t_frames[0])
+        tick0 = int(tick[0])
+        t_gaze = t0_ns + (tick - tick0) * 100  # ns
+
+        gaze_xy = np.stack([bpx, bpy], axis=1).astype(np.float32, copy=False)
+        valid_u8 = bpv.astype(np.uint8, copy=False)
+
+        # Align frames -> nearest gaze
+        aligned_xy, aligned_valid, dt_abs = nearest_align_frames_to_gaze(
+            t_frames_ns=t_frames,
+            t_gaze_ns=t_gaze,
+            gaze_xy=gaze_xy,
+            gaze_valid=valid_u8,
+            max_dt_ms=max_dt_ms
+        )
+
+        if CLAMP_01:
+            aligned_xy[:, 0] = np.clip(aligned_xy[:, 0], 0.0, 1.0)
+            aligned_xy[:, 1] = np.clip(aligned_xy[:, 1], 0.0, 1.0)
+
+        # Build output structured array
+        out = np.empty(len(t_frames), dtype=OUTPUT_DTYPE)
+        out["Frame_Number"] = frame_nums
+        out["Timestamp(ns)"] = t_frames
+        out["gaze_x"] = aligned_xy[:, 0]
+        out["gaze_y"] = aligned_xy[:, 1]
+        out["valid"]  = aligned_valid.astype(np.uint8, copy=False)
+
+        out_stem = gaze_csv.name.replace(".csv", "")  # ..._gaze
+        out_npy = out_dir / f"{out_stem}.npy"
+        out_csv = out_dir / f"{out_stem}.csv"
+
+        dt_ms = (dt_abs.astype(np.float64) / 1e6)
+        row = {
+            "source": "passive",
+            "observer": o,
+            "seq": seq,
+            "user": u,
+            "task": task,
+            "attempt": att,
+            "status": "ok",
+            "frames_total": n_total_frames,
+            "frames_deleted": n_deleted,
+            "frames_used": len(t_frames),
+            "gaze_rows": len(gdf),
+            "dt_ms_p50": float(np.percentile(dt_ms, 50)) if len(dt_ms) else np.nan,
+            "dt_ms_p95": float(np.percentile(dt_ms, 95)) if len(dt_ms) else np.nan,
+            "dt_ms_max": float(np.max(dt_ms)) if len(dt_ms) else np.nan,
+            "out_npy": str(out_npy),
+            "out_csv": str(out_csv),
+        }
+
+        if dry_run:
+            row["write"] = "dry_run"
+        else:
+            np.save(out_npy, out)
+            pd.DataFrame({
+                "Frame_Number": out["Frame_Number"],
+                "Timestamp(ns)": out["Timestamp(ns)"],
+                "gaze_x": out["gaze_x"],
+                "gaze_y": out["gaze_y"],
+                "valid": out["valid"],
+            }).to_csv(out_csv, index=False, encoding="utf-8-sig")
+            row["write"] = "wrote"
+
+        report_rows.append(row)
+
+    return report_rows
+
+
+# NOTEBOOK CELL 8
+# Run all
+def list_user_dirs(root: Path) -> List[Path]:
+    # Expect structure root/User{N}/...
+    out = []
+    for p in sorted(root.glob("User*")):
+        if p.is_dir():
+            out.append(p)
+    return out
+
+all_active_rows = []
+all_passive_rows = []
+
+# ---- Active ----
+if ACTIVE_ROOT.exists():
+    active_users = list_user_dirs(ACTIVE_ROOT)
+    print(f"[Active] found users: {len(active_users)}")
+    for ud in tqdm(active_users, desc="Active Users"):
+        rows = process_active_user(ud, max_dt_ms=MAX_DT_MS, dry_run=DRY_RUN)
+        all_active_rows.extend(rows)
+else:
+    print(f"[Active] root not found: {ACTIVE_ROOT}")
+
+# ---- Passive ----
+if PASSIVE_ROOT.exists():
+    passive_users = list_user_dirs(PASSIVE_ROOT)
+    print(f"[Passive] found users: {len(passive_users)}")
+    for ud in tqdm(passive_users, desc="Passive Users"):
+        rows = process_passive_user(ud, max_dt_ms=MAX_DT_MS, dry_run=DRY_RUN)
+        all_passive_rows.extend(rows)
+else:
+    print(f"[Passive] root not found: {PASSIVE_ROOT}")
+
+# Write reports
+active_rep = pd.DataFrame(all_active_rows)
+passive_rep = pd.DataFrame(all_passive_rows)
+
+print("\n=== Summary ===")
+if len(active_rep):
+    print("[Active] status counts:\n", active_rep["status"].value_counts(dropna=False).head(20))
+    if "frames_deleted" in active_rep.columns:
+        print("[Active] total deleted frames filtered:", int(active_rep["frames_deleted"].fillna(0).sum()))
+if len(passive_rep):
+    print("[Passive] status counts:\n", passive_rep["status"].value_counts(dropna=False).head(20))
+    if "frames_deleted" in passive_rep.columns:
+        print("[Passive] total deleted frames filtered:", int(passive_rep["frames_deleted"].fillna(0).sum()))
+
+if not DRY_RUN:
+    active_rep.to_csv(ACTIVE_REPORT_CSV, index=False, encoding="utf-8-sig")
+    passive_rep.to_csv(PASSIVE_REPORT_CSV, index=False, encoding="utf-8-sig")
+    print(f"\n[OK] wrote reports:\n  {ACTIVE_REPORT_CSV}\n  {PASSIVE_REPORT_CSV}")
+else:
+    print("\n[DRY_RUN] reports not written (set DRY_RUN=False to save)")
+
+
+# NOTEBOOK CELL 9
+print("\n=== Active samples skipped due to missing prior calibration ===")
+if "status" not in active_rep.columns:
+    print("active_rep has no 'status' column. Columns are:", active_rep.columns.tolist())
+else:
+    skipped = active_rep[active_rep["status"] == "skip_no_prior_calib"].copy()
+    if skipped.empty:
+        print("No rows with status == skip_no_prior_calib")
+    else:
+        # 确保这些列存在才打印
+        cols = [c for c in ["user","task","attempt","gaze_csv","vts_csv","video"] if c in skipped.columns]
+        print(f"Found {len(skipped)} skipped samples.")
+        for _, r in skipped[cols].iterrows():
+            u  = r.get("user",  "NA")
+            t  = r.get("task",  "NA")
+            a  = r.get("attempt","NA")
+            print(f"\nUser{u} Task{t} Attempt{a}")
+            if "gaze_csv" in r: print("  gaze :", r["gaze_csv"])
+            if "vts_csv"  in r: print("  vts  :", r["vts_csv"])
+            if "video"    in r: print("  video:", r["video"])
+
+
+# NOTEBOOK CELL 10
+from pathlib import Path
+
+def dump_skips(df: pd.DataFrame, name: str, save_csv: bool = False, out_csv: str = ""):
+    if df is None or len(df) == 0:
+        print(f"\n[{name}] empty dataframe.")
+        return
+
+    if "status" not in df.columns:
+        print(f"\n[{name}] no 'status' column. Columns:", df.columns.tolist())
+        return
+
+    targets = ["skip_missing_gaze_cols", "skip_bad_vts_columns"]
+    sub = df[df["status"].isin(targets)].copy()
+
+    print(f"\n=== {name}: skip files ({len(sub)}) ===")
+    if sub.empty:
+        print("No rows with those statuses.")
+        return
+
+    # pick available path columns
+    cand_cols = ["gaze_csv", "vts_csv", "video", "user_dir", "user", "observer", "seq", "task", "attempt", "missing", "vts_cols"]
+    cols = [c for c in cand_cols if c in sub.columns]
+
+    # print nicely
+    for i, r in sub[cols].iterrows():
+        print(f"\n[{name}] status={r.get('status')}")
+        for c in cols:
+            v = r.get(c, "")
+            if pd.isna(v):
+                continue
+            print(f"  {c}: {v}")
+
+    # optionally save a csv list
+    if save_csv:
+        if not out_csv:
+            out_csv = f"{name}_skip_files.csv"
+        sub[cols].to_csv(out_csv, index=False, encoding="utf-8-sig")
+        print(f"\n[OK] wrote: {out_csv}")
+
+# ---- run ----
+dump_skips(active_rep,  "ACTIVE",  save_csv=True, out_csv="active_skip_files.csv")
+dump_skips(passive_rep, "PASSIVE", save_csv=True, out_csv="passive_skip_files.csv")
+
+
+# NOTEBOOK CELL 11
+# fix IsDeteled comlumn name to IsDelete in Passive data
+from pathlib import Path
+import pandas as pd
+PASSIVE_ROOT = Path(r"C:/Users/yxl3527/Desktop/Yizhou_Li_Folder/GazePointProject/Passive_Data")
+DRY_RUN = False   # ← 先用 True 看会改哪些文件
+
+# NOTEBOOK CELL 12
+fixed = []
+skipped = []
+
+for user_dir in sorted(PASSIVE_ROOT.glob("User*")):
+    csv_dir = user_dir / "csv"
+    if not csv_dir.exists():
+        continue
+
+    for vts_csv in csv_dir.glob("*_video_ts.csv"):
+        try:
+            df = pd.read_csv(vts_csv)
+            cols = [c.strip().replace("\ufeff", "") for c in df.columns]
+
+            if "IsDeleted" in cols and "IsDelete" not in cols:
+                print(f"[FIX] {vts_csv}")
+                print("  before:", cols)
+
+                if not DRY_RUN:
+                    df.columns = cols
+                    df = df.rename(columns={"IsDeleted": "IsDelete"})
+                    df.to_csv(vts_csv, index=False, encoding="utf-8-sig")
+
+                fixed.append(str(vts_csv))
+            else:
+                skipped.append(str(vts_csv))
+
+        except Exception as e:
+            print(f"[ERROR] {vts_csv}: {e}")
+
+
+# NOTEBOOK CELL 13
+print("\n=== SUMMARY ===")
+print("Fixed files:", len(fixed))
+print("Skipped files:", len(skipped))
+
+if DRY_RUN:
+    print("\n[DRY RUN] No files were modified.")
+    print("Set DRY_RUN = False to apply changes.")
+
+# NOTEBOOK CELL 14
+# check output file by generate video
+import cv2
+import numpy as np
+import pandas as pd
+from pathlib import Path
+
+def overlay_gaze_on_video(
+    video_path: str,
+    gaze_csv_path: str,
+    out_path: str = None,
+    radius: int = 30,
+    thickness: int = -1,
+    draw_only_valid: bool = False,
+    valid_threshold: int = 1,   # if draw_only_valid=True, valid>=threshold will be drawn
+    max_frames: int = None,     # for quick test, e.g. 300
+):
+    video_path = str(video_path)
+    gaze_csv_path = str(gaze_csv_path)
+
+    if out_path is None:
+        out_path = str(Path(video_path).with_name(Path(video_path).stem + "_gaze_overlay.mp4"))
+
+    df = pd.read_csv(gaze_csv_path)
+
+    need = {"Frame_Number", "gaze_x", "gaze_y"}
+    if not need.issubset(df.columns):
+        raise ValueError(f"CSV missing columns. Need {need}, got {set(df.columns)}")
+
+    has_valid = "valid" in df.columns
+
+    # Build dict: Frame_Number -> (gaze_x, gaze_y, valid)
+    gaze_map = {}
+    frame_numbers = df["Frame_Number"].astype(int).to_numpy()
+    fn0 = int(frame_numbers.min())  # <-- key fix: base frame number
+
+    for _, r in df.iterrows():
+        fn = int(r["Frame_Number"])
+        gx = r["gaze_x"]
+        gy = r["gaze_y"]
+        vv = int(r["valid"]) if has_valid and not pd.isna(r["valid"]) else None
+        gaze_map[fn] = (gx, gy, vv)
+
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        raise FileNotFoundError(f"Cannot open video: {video_path}")
+
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    if fps <= 1e-6:
+        fps = 30.0
+
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    writer = cv2.VideoWriter(out_path, fourcc, fps, (w, h))
+
+    # Debug counters
+    hit_frames = 0
+    draw_frames = 0
+    nan_frames = 0
+    miss_frames = 0
+
+    idx = 0
+    while True:
+        ok, frame = cap.read()
+        if not ok:
+            break
+        if max_frames is not None and idx >= max_frames:
+            break
+
+        # Key fix: map video index -> CSV Frame_Number using fn0
+        fn = fn0 + idx
+        if fn not in gaze_map:
+            miss_frames += 1
+            writer.write(frame)
+            idx += 1
+            continue
+
+        hit_frames += 1
+        gx, gy, vv = gaze_map[fn]
+
+        if draw_only_valid and has_valid and vv is not None and vv < valid_threshold:
+            writer.write(frame)
+            idx += 1
+            continue
+
+        if not (gx is not None and gy is not None and np.isfinite(gx) and np.isfinite(gy)):
+            nan_frames += 1
+            writer.write(frame)
+            idx += 1
+            continue
+
+        px = int(round(float(gx) * (w - 1)))
+        py = int(round(float(gy) * (h - 1)))
+
+        cv2.circle(frame, (px, py), radius, (0, 0, 255), thickness)
+        cv2.putText(frame, f"fn={fn} px,py=({px},{py})", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+        draw_frames += 1
+        writer.write(frame)
+        idx += 1
+
+    cap.release()
+    writer.release()
+    print(f"[OK] wrote: {out_path}")
+    print(f"[DEBUG] fn0={fn0}, hit={hit_frames}, draw={draw_frames}, nan={nan_frames}, miss={miss_frames}")
+
+
+# ===== Example usage =====
+basepath = Path(r"C:/ros2/ros_ws/src/varjo_ros2_example/RealData/Active_Data")
+Usernum = 98
+
+overlay_gaze_on_video(
+    video_path=str(basepath / f"User{Usernum}" / "stimuli" / f"User{Usernum}_10_1.mp4"),
+    gaze_csv_path=str(basepath / f"User{Usernum}" / "npy" / f"User{Usernum}_10_1_gaze.csv"),
+    out_path=str(basepath / f"User{Usernum}" / f"User{Usernum}_10_1_overlay.mp4"),
+    draw_only_valid=False
+)
+
+
+# NOTEBOOK CELL 15
+# small code block fix User98 10 1 gaze csv timestamp issue
+# Cell 1: Config
+from pathlib import Path
+
+FILE1 = Path(r"C:/ros2/ros_ws/src/varjo_ros2_example/RealData/User98_finished/Task_10_video_ts_20250912173059_merged.csv")   # 原始 video_ts
+FILE3 = Path(r"C:/ros2/ros_ws/src/varjo_ros2_example/RealData/Active_Data/User98/csv/User98_10_1_video_ts.csv")     # 你修改过的 video_ts
+
+OUT   = FILE3.with_name(FILE3.stem + "_fixed.csv")
+
+DRY_RUN = False   # True: 只预览不保存；False: 保存 OUT
+SHOW_N  = 12     # 预览显示的行数
+
+
+
+# NOTEBOOK CELL 16
+# Cell 2: Helpers
+import pandas as pd
+
+def pick_col(df, candidates, required=True, hint=""):
+    """Pick first existing column from candidates."""
+    for c in candidates:
+        if c in df.columns:
+            return c
+    if required:
+        raise KeyError(f"Cannot find {hint} column. Tried: {candidates}. Existing: {list(df.columns)}")
+    return None
+
+def load_csv_safe(p: Path) -> pd.DataFrame:
+    # 关键：全部先按字符串读，避免 ts 被解析成 float
+    return pd.read_csv(p, dtype=str, encoding="utf-8-sig")
+
+def to_int_series(s: pd.Series, name=""):
+    # Frame_Number 必须能转成 int
+    out = pd.to_numeric(s, errors="coerce")
+    if out.isna().any():
+        bad_idx = out[out.isna()].index[:10].tolist()
+        raise ValueError(f"{name} contains non-integer values at rows: {bad_idx}")
+    return out.astype("int64")
+
+# Cell 3: Load + detect columns
+df1 = load_csv_safe(FILE1)  # 原始
+df3 = load_csv_safe(FILE3)  # 修改后
+
+frame_col_1 = pick_col(df1, ["Frame_Number", "frame", "frame_number", "FrameNumber"], hint="Frame_Number (FILE1)")
+frame_col_3 = pick_col(df3, ["Frame_Number", "frame", "frame_number", "FrameNumber"], hint="Frame_Number (FILE3)")
+
+ts_col_1 = pick_col(df1, ["Timestamp(ns)", "Timestamp", "timestamp_ns", "ts", "TimeStamp(ns)", "time_ns"], hint="Timestamp (FILE1)")
+ts_col_3 = pick_col(df3, ["Timestamp(ns)", "Timestamp", "timestamp_ns", "ts", "TimeStamp(ns)", "time_ns"], hint="Timestamp (FILE3)")
+
+# 转 int（Frame_Number）
+f1 = to_int_series(df1[frame_col_1], name=f"FILE1[{frame_col_1}]")
+f3 = to_int_series(df3[frame_col_3], name=f"FILE3[{frame_col_3}]")
+
+df1 = df1.copy()
+df3 = df3.copy()
+df1["_frame_int_"] = f1
+df3["_frame_int_"] = f3
+
+print("FILE1:", FILE1)
+print("  rows:", len(df1), "frame range:", (df1["_frame_int_"].min(), df1["_frame_int_"].max()), "ts_col:", ts_col_1)
+print("FILE3:", FILE3)
+print("  rows:", len(df3), "frame range:", (df3["_frame_int_"].min(), df3["_frame_int_"].max()), "ts_col:", ts_col_3)
+
+# Cell 4: Build mapping from FILE1 frame -> timestamp, then repair FILE3 timestamps
+# 如果 FILE1 同一帧出现多次（理论上不该），我们取第一条，并在报告里提示
+dup_frames = df1["_frame_int_"].duplicated(keep="first")
+if dup_frames.any():
+    dups = df1.loc[dup_frames, "_frame_int_"].head(10).tolist()
+    print("[WARN] FILE1 has duplicated Frame_Number. Examples:", dups)
+    print("       Will use the first occurrence for each frame.")
+
+map_frame_to_ts = (
+    df1.sort_values("_frame_int_")
+       .drop_duplicates("_frame_int_", keep="first")
+       .set_index("_frame_int_")[ts_col_1]
+       .to_dict()
+)
+
+# 记录原 ts（用于对比）
+df3["_ts_before_"] = df3[ts_col_3]
+
+# 执行拷贝：按 FILE3 的 Frame_Number 在 map 中找 FILE1 的 ts
+df3["_ts_from_file1_"] = df3["_frame_int_"].map(map_frame_to_ts)
+
+# 哪些帧在 FILE1 里找不到？
+missing_mask = df3["_ts_from_file1_"].isna()
+missing_frames = df3.loc[missing_mask, "_frame_int_"].head(20).tolist()
+
+# 覆盖/修复 Timestamp 列
+df3[ts_col_3] = df3["_ts_from_file1_"].where(~missing_mask, df3[ts_col_3])
+
+# 统计变化
+changed_mask = (df3[ts_col_3] != df3["_ts_before_"]) & (~missing_mask)
+n_total   = len(df3)
+n_missing = int(missing_mask.sum())
+n_changed = int(changed_mask.sum())
+
+print("\n=== Repair Summary ===")
+print("Total rows in FILE3:", n_total)
+print("Rows with frame NOT found in FILE1:", n_missing)
+print("Rows whose Timestamp was updated from FILE1:", n_changed)
+
+if n_missing > 0:
+    print("\n[WARN] Missing frames (first up to 20):", missing_frames)
+
+# Cell 5: DRY RUN preview (before/after)
+# 展示一段从 FILE3 起始 frame 附近的对比
+start_frame_3 = df3["_frame_int_"].min()
+preview = df3.sort_values("_frame_int_").head(SHOW_N)[
+    [frame_col_3, "_frame_int_", "_ts_before_", ts_col_3, "_ts_from_file1_"]
+].copy()
+
+print(f"\n=== Preview (first {SHOW_N} rows by frame, FILE3 start_frame={start_frame_3}) ===")
+display(preview)
+
+# Cell 6: Save (only if not dry run)
+if DRY_RUN:
+    print("\n[DRY RUN] Not saving. Set DRY_RUN=False to write:", OUT)
+else:
+    # 清理辅助列
+    drop_cols = ["_frame_int_", "_ts_before_", "_ts_from_file1_"]
+    out_df = df3.drop(columns=[c for c in drop_cols if c in df3.columns])
+
+    out_df.to_csv(OUT, index=False, encoding="utf-8-sig")
+    print("\n[SAVED]", OUT)
+
+
+# NOTEBOOK CELL 17
+# small code block to check all active and passive video ts, make sure timestamps are increasing
+# Cell 1: Config
+from pathlib import Path
+
+ACTIVE_ROOT  = Path(r"C:/ros2/ros_ws/src/varjo_ros2_example/RealData\Active_Data/")   # e.g. r"C:\...\Active_Data"
+PASSIVE_ROOT = Path(r"C:/Users/yxl3527/Desktop/Yizhou_Li_Folder/GazePointProject/Passive_Data/")  # e.g. r"C:\...\Passive_Data"
+
+STRICT_INCREASING = True   # True: t[i] > t[i-1] ; False: t[i] >= t[i-1]
+SHOW_BAD_AROUND   = 3      # 出错点前后显示几行
+MAX_FILES         = None   # None=不限制；或设置例如 200 用于快速测试
+
+# Cell 2: Scan + Check
+import pandas as pd
+
+TS_CANDIDATES = ["Timestamp(ns)", "Timestamp", "timestamp_ns", "time_ns", "ts", "TimeStamp(ns)"]
+
+def pick_col(df, candidates):
+    for c in candidates:
+        if c in df.columns:
+            return c
+    return None
+
+def check_monotonic_ts(csv_path: Path, strict: bool = True):
+    """
+    Return dict with:
+      ok, n_rows, ts_col, first_bad_idx, prev_ts, curr_ts, delta
+    """
+    # 关键：按字符串读取，避免 Excel 病毒式浮点化
+    df = pd.read_csv(csv_path, dtype=str, encoding="utf-8-sig")
+
+    ts_col = pick_col(df, TS_CANDIDATES)
+    if ts_col is None:
+        return {
+            "ok": False, "reason": "NO_TS_COL",
+            "n_rows": len(df), "ts_col": None,
+            "first_bad_idx": None, "prev_ts": None, "curr_ts": None, "delta": None,
+        }
+
+    # 转成整数（Timestamp(ns) 应该是 64-bit 范围内的整数）
+    ts = pd.to_numeric(df[ts_col], errors="coerce")
+    if ts.isna().any():
+        bad = ts[ts.isna()].index[:5].tolist()
+        return {
+            "ok": False, "reason": "TS_NOT_NUMERIC",
+            "n_rows": len(df), "ts_col": ts_col,
+            "first_bad_idx": bad[0] if bad else None, "prev_ts": None, "curr_ts": None, "delta": None,
+        }
+
+    ts = ts.astype("int64")
+    diff = ts.diff()
+
+    if strict:
+        bad_mask = diff <= 0
+    else:
+        bad_mask = diff < 0
+
+    if bad_mask.any():
+        # diff[0] 是 NaN；bad_mask[0] 会是 False
+        first_bad_idx = int(bad_mask[bad_mask].index[0])
+        prev_ts = int(ts.iloc[first_bad_idx - 1])
+        curr_ts = int(ts.iloc[first_bad_idx])
+        delta = int(curr_ts - prev_ts)
+
+        return {
+            "ok": False, "reason": "NOT_MONOTONIC",
+            "n_rows": len(df), "ts_col": ts_col,
+            "first_bad_idx": first_bad_idx,
+            "prev_ts": prev_ts, "curr_ts": curr_ts, "delta": delta,
+        }
+    else:
+        return {
+            "ok": True, "reason": "OK",
+            "n_rows": len(df), "ts_col": ts_col,
+            "first_bad_idx": None, "prev_ts": None, "curr_ts": None, "delta": None,
+        }
+
+def iter_video_ts_files(root: Path):
+    # 找到 User*/csv/*_video_ts.csv
+    if not root.exists():
+        return []
+    return sorted(root.glob("User*/csv/*_video_ts.csv"))
+
+rows = []
+
+for dataset_name, root in [("Active", ACTIVE_ROOT), ("Passive", PASSIVE_ROOT)]:
+    files = iter_video_ts_files(root)
+    if MAX_FILES is not None:
+        files = files[:MAX_FILES]
+
+    for p in files:
+        r = check_monotonic_ts(p, strict=STRICT_INCREASING)
+        rows.append({
+            "dataset": dataset_name,
+            "user": p.parent.parent.name,   # User{U}
+            "file": str(p),
+            **r
+        })
+
+report = pd.DataFrame(rows).sort_values(["dataset", "user", "file"]).reset_index(drop=True)
+
+print("Checked files:", len(report))
+print("OK:", int((report["ok"] == True).sum()), "BAD:", int((report["ok"] == False).sum()))
+report.head(10)
+# Cell 3: Show all BAD files
+bad = report[report["ok"] == False].copy()
+bad[["dataset","user","reason","n_rows","ts_col","first_bad_idx","delta","file"]].head(50)
+
+# Cell 4: For a specific bad file, show rows around the first failure
+# 选择第一个 bad 文件做例子，你也可以手动指定 path
+if len(bad) == 0:
+    print("No bad files 🎉")
+else:
+    target = Path(bad.iloc[0]["file"])
+    print("Inspect:", target)
+
+    df = pd.read_csv(target, dtype=str, encoding="utf-8-sig")
+    ts_col = pick_col(df, TS_CANDIDATES)
+    idx = int(bad.iloc[0]["first_bad_idx"])
+
+    lo = max(0, idx - SHOW_BAD_AROUND)
+    hi = min(len(df), idx + SHOW_BAD_AROUND + 1)
+
+    view = df.iloc[lo:hi].copy()
+    # 加一列 diff 帮你看断点
+    ts_num = pd.to_numeric(view[ts_col], errors="coerce")
+    view["_ts_int_"] = ts_num.astype("Int64")
+    view["_diff_"] = view["_ts_int_"].diff()
+
+    print(f"First bad idx = {idx}, showing [{lo}:{hi}) around it, ts_col={ts_col}")
+    display(view)

@@ -1,0 +1,347 @@
+Probability geometry self-check passed.
+{
+  "passed": true,
+  "checks": 29,
+  "record_details": [
+    {
+      "content_id": "User1_6_1",
+      "native_n": 7327,
+      "video_n": 7327,
+      "prediction_n": 3664,
+      "original_first_frame": 1501,
+      "original_last_frame": 8827,
+      "training_clock_max_abs_difference_ms": 284.0209000000016,
+      "training_clock_signed_percentiles_ms": {
+        "min": -2.8236999999999983,
+        "p01": 16.846970000007104,
+        "median": 183.67980000000017,
+        "p95": 266.33064000000246,
+        "p99": 274.3950139999984,
+        "max": 284.0209000000016
+      },
+      "nearest_target_max_abs_error_ms": 14.777300000019977,
+      "saved_label_actual_horizon_errors": [
+        {
+          "horizon_ms": 0,
+          "n": 3658,
+          "signed_percentiles_ms": {
+            "min": 0.0,
+            "p01": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "horizon_ms": 500,
+          "n": 3647,
+          "signed_percentiles_ms": {
+            "min": -29.725299999995514,
+            "p01": -25.17668199999605,
+            "median": -9.768200000010552,
+            "p95": 3.16849000000019,
+            "p99": 10.174153999997186,
+            "max": 24.260399999974425
+          }
+        },
+        {
+          "horizon_ms": 1000,
+          "n": 3637,
+          "signed_percentiles_ms": {
+            "min": -24.800799999999956,
+            "p01": -17.389903999999632,
+            "median": 5.616500000002134,
+            "p95": 25.53824000000871,
+            "p99": 36.00117599998607,
+            "max": 67.69620000000032
+          }
+        },
+        {
+          "horizon_ms": 1500,
+          "n": 3627,
+          "signed_percentiles_ms": {
+            "min": -43.767199999997786,
+            "p01": -32.57259400000073,
+            "median": -3.5419999999959373,
+            "p95": 21.144180000000272,
+            "p99": 32.98669000000752,
+            "max": 67.1980999999846
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "User2_3_1",
+      "native_n": 13731,
+      "video_n": 13731,
+      "prediction_n": 6866,
+      "original_first_frame": 2596,
+      "original_last_frame": 16326,
+      "training_clock_max_abs_difference_ms": 0.0,
+      "training_clock_signed_percentiles_ms": {
+        "min": 0.0,
+        "p01": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0.0
+      },
+      "nearest_target_max_abs_error_ms": 17.95980000002828,
+      "saved_label_actual_horizon_errors": [
+        {
+          "horizon_ms": 0,
+          "n": 6415,
+          "signed_percentiles_ms": {
+            "min": 0.0,
+            "p01": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "horizon_ms": 500,
+          "n": 6376,
+          "signed_percentiles_ms": {
+            "min": -17.537500000003092,
+            "p01": -16.027125000007914,
+            "median": -5.046699999994075,
+            "p95": 14.460149999997896,
+            "p99": 15.892400000012685,
+            "max": 17.47320000004038
+          }
+        },
+        {
+          "horizon_ms": 1000,
+          "n": 6373,
+          "signed_percentiles_ms": {
+            "min": -16.915699999970002,
+            "p01": -14.654668000006268,
+            "median": 1.1602999999809072,
+            "p95": 13.052040000002306,
+            "p99": 15.068287999993103,
+            "max": 17.03539999999748
+          }
+        },
+        {
+          "horizon_ms": 1500,
+          "n": 6382,
+          "signed_percentiles_ms": {
+            "min": -17.148500000018885,
+            "p01": -15.531919000011953,
+            "median": -0.9800999999995952,
+            "p95": 13.705139999997584,
+            "p99": 15.518344000012686,
+            "max": 17.48310000004949
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "User5_2_1",
+      "native_n": 14729,
+      "video_n": 14729,
+      "prediction_n": 7365,
+      "original_first_frame": 13210,
+      "original_last_frame": 27938,
+      "training_clock_max_abs_difference_ms": 0.0,
+      "training_clock_signed_percentiles_ms": {
+        "min": 0.0,
+        "p01": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0.0
+      },
+      "nearest_target_max_abs_error_ms": 21.837199999993118,
+      "saved_label_actual_horizon_errors": [
+        {
+          "horizon_ms": 0,
+          "n": 6981,
+          "signed_percentiles_ms": {
+            "min": 0.0,
+            "p01": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "horizon_ms": 500,
+          "n": 6973,
+          "signed_percentiles_ms": {
+            "min": -21.45299999999395,
+            "p01": -13.674375999995902,
+            "median": -3.505499999988615,
+            "p95": 12.357519999966371,
+            "p99": 13.588356000027487,
+            "max": 14.94070000001102
+          }
+        },
+        {
+          "horizon_ms": 1000,
+          "n": 6974,
+          "signed_percentiles_ms": {
+            "min": -16.789200000000058,
+            "p01": -13.68164700000186,
+            "median": 0.3200500000026807,
+            "p95": 12.346644999989875,
+            "p99": 13.675436000002602,
+            "max": 15.977300000031391
+          }
+        },
+        {
+          "horizon_ms": 1500,
+          "n": 6962,
+          "signed_percentiles_ms": {
+            "min": -21.837199999993118,
+            "p01": -13.560718999996624,
+            "median": -0.27024999999980537,
+            "p95": 12.31934000000976,
+            "p99": 13.536225999995112,
+            "max": 15.139099999998962
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "User5_9_1",
+      "native_n": 7939,
+      "video_n": 7939,
+      "prediction_n": 3970,
+      "original_first_frame": 2776,
+      "original_last_frame": 10714,
+      "training_clock_max_abs_difference_ms": 0.0,
+      "training_clock_signed_percentiles_ms": {
+        "min": 0.0,
+        "p01": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0.0
+      },
+      "nearest_target_max_abs_error_ms": 17.288900000011154,
+      "saved_label_actual_horizon_errors": [
+        {
+          "horizon_ms": 0,
+          "n": 3889,
+          "signed_percentiles_ms": {
+            "min": 0.0,
+            "p01": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "horizon_ms": 500,
+          "n": 3881,
+          "signed_percentiles_ms": {
+            "min": -14.72090000001458,
+            "p01": -13.608019999996657,
+            "median": 0.553899999999885,
+            "p95": 12.488699999998687,
+            "p99": 13.5168799999974,
+            "max": 16.262199999999893
+          }
+        },
+        {
+          "horizon_ms": 1000,
+          "n": 3870,
+          "signed_percentiles_ms": {
+            "min": -17.288900000011154,
+            "p01": -13.4486029999983,
+            "median": 0.36244999999013316,
+            "p95": 12.115509999991755,
+            "p99": 13.448856000007083,
+            "max": 17.023800000000477
+          }
+        },
+        {
+          "horizon_ms": 1500,
+          "n": 3861,
+          "signed_percentiles_ms": {
+            "min": -15.1237999999978,
+            "p01": -13.478979999995744,
+            "median": 0.0868999999852349,
+            "p95": 12.16769999999201,
+            "p99": 13.433520000003798,
+            "max": 15.857999999980166
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "User11_2_1",
+      "native_n": 9365,
+      "video_n": 9365,
+      "prediction_n": 4683,
+      "original_first_frame": 486,
+      "original_last_frame": 9850,
+      "training_clock_max_abs_difference_ms": 0.0,
+      "training_clock_signed_percentiles_ms": {
+        "min": 0.0,
+        "p01": 0.0,
+        "median": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "max": 0.0
+      },
+      "nearest_target_max_abs_error_ms": 9.519300000000008,
+      "saved_label_actual_horizon_errors": [
+        {
+          "horizon_ms": 0,
+          "n": 4285,
+          "signed_percentiles_ms": {
+            "min": 0.0,
+            "p01": 0.0,
+            "median": 0.0,
+            "p95": 0.0,
+            "p99": 0.0,
+            "max": 0.0
+          }
+        },
+        {
+          "horizon_ms": 500,
+          "n": 4269,
+          "signed_percentiles_ms": {
+            "min": -9.519300000000008,
+            "p01": -3.7342759999992836,
+            "median": 0.005700000002661909,
+            "p95": 1.3597399999980546,
+            "p99": 4.247400000001131,
+            "max": 9.442499999999576
+          }
+        },
+        {
+          "horizon_ms": 1000,
+          "n": 4254,
+          "signed_percentiles_ms": {
+            "min": -8.7104999999994,
+            "p01": -4.815057999999173,
+            "median": 0.026500000011253633,
+            "p95": 1.4765150000002336,
+            "p99": 5.0604440000001825,
+            "max": 9.07329999999984
+          }
+        },
+        {
+          "horizon_ms": 1500,
+          "n": 4239,
+          "signed_percentiles_ms": {
+            "min": -8.325000000002802,
+            "p01": -5.463699999998894,
+            "median": 0.028600000007372728,
+            "p95": 1.7015499999997628,
+            "p99": 5.346560000000061,
+            "max": 9.122499999998368
+          }
+        }
+      ]
+    }
+  ]
+}

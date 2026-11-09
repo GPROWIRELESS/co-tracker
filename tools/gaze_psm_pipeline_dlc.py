@@ -5,6 +5,7 @@ midpoint between instruments. DLC indices address retained video rows, not
 the original Frame_Number IDs. Likelihoods are retained without filtering.
 Only source-video metadata is read; no mask videos are decoded.
 """
+from gaze_psm_modes import mode_rows, normalize_modes
 import argparse
 import csv
 from concurrent.futures import ProcessPoolExecutor
@@ -31,7 +32,7 @@ EMPTY_STAGES = {"", "none", "nan", "null"}
 
 def read_rows(path):
     with Path(path).open(encoding="utf-8-sig", newline="") as f:
-        return list(csv.DictReader(f))
+        return list(mode_rows(csv.DictReader(f)))
 
 
 def number(value):
@@ -229,7 +230,7 @@ def extract(record, args):
         with np.load(cache, allow_pickle=False) as z:
             if str(z["fingerprint"]) == key:
                 data = {k: z[k] for k in z.files}
-                return data, json.loads(str(data["qc_json"]))
+                return data, normalize_modes(json.loads(str(data["qc_json"])))
     if args.phase == "analyze":
         raise ValueError("Matching trajectory cache unavailable; run --phase extract or all first")
     frames, ns, n_deleted = timeline(base, cid)
@@ -353,15 +354,15 @@ def calculate(record, data, args, donor=None):
             if args.stages:
                 for stage in sorted(set(labels)-EMPTY_STAGES):
                     occurrence = np.where(labels == stage, ids, -1)
-                    selections.append((stage, "psm_stage", occurrence))
-                    if args.within_stage:
-                        selections.append((stage, "within_stage", occurrence))
+                    selections.append((stage, "PSM in stage", occurrence))
+                    if args.both_in_stage:
+                        selections.append((stage, "Both in stage", occurrence))
             for stage, mode, occurrence in selections:
                 rms_g = args.min_gaze_rms if signal == "position" else args.min_velocity_rms
                 rms_p = args.min_psm_rms if signal == "position" else args.min_velocity_rms
                 result = analyze_curve(g, p, args.hz, max_lag=args.max_lag,
                     min_overlap=args.min_overlap if mode == "whole" else args.stage_min_overlap,
-                    occurrence_ids=occurrence, within_stage=mode == "within_stage",
+                    occurrence_ids=occurrence, both_in_stage=mode == "Both in stage",
                     min_gaze_rms=rms_g, min_psm_rms=rms_p,
                     spatial_tolerance=args.spatial_tolerance, compute_spatial=signal == "position" and donor is None)
                 result.update(content_id=record["content_id"], user=record["content_id"].split("_")[0],
@@ -439,7 +440,7 @@ def parse_args(argv=None):
     parser.add_argument("--min-overlap", type=float, default=5.)
     parser.add_argument("--stage-min-overlap", type=float, default=2.)
     parser.add_argument("--stages", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--within-stage", action="store_true")
+    parser.add_argument("--both-in-stage", action="store_true")
     parser.add_argument("--signals", nargs="+", choices=["position", "velocity"], default=["position", "velocity"])
     parser.add_argument("--smooth-ms", type=float, default=80.)
     parser.add_argument("--threshold", type=int, default=127, help="Compatibility option; unused for DLC coordinates")

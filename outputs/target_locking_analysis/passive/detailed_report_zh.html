@@ -1,0 +1,336 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>Passive Target Locking v3 真实gaze分析</title><style>body{font:16px/1.75 "Microsoft YaHei",sans-serif;color:#1c2b36;max-width:1240px;margin:36px auto;padding:0 24px}h1,h2{color:#18465d}.note{background:#fff4d8;border-left:5px solid #bd8a20;padding:16px}table{border-collapse:collapse;font-size:13px;display:block;overflow:auto}td,th{border:1px solid #dce3e8;padding:6px 9px;text-align:right;white-space:nowrap}th{background:#edf2f5}img{max-width:100%;margin:16px 0}a{color:#17628c}code{background:#eef2f5}</style><body>
+    <h1>删除模型评测后的 Target Locking v3 真实 gaze 分析：Passive</h1>
+    <p>仅使用JSON指定的passive观看者gaze。统一标识为analysis_branch=observed_gaze、source=gaze、scope=real_all。结果针对已经逐原帧键核实的现存NPY关联和其原生video_ts时间轴。</p>
+    <div class="note"><b>时间与坐标解释边界：</b>已核实NPY、标注、video_ts、源视频和DLC的规范原帧关联，历史生成过程精确重现；passive video_ts继承源视频采集时间。原始CSV的VID_FRAME采用另一种时间/帧定义，其与NPY局部索引不同，不能据此断言物理播放错配，也不能宣称已验证实际显示时序。媒体均为1280×1024单视图，采用存储归一化坐标乘以图像宽高；实验现场屏幕viewport/播放显示延迟未获独立校准证据。本结果是现存数据规范映射下的分析，不构成硬件显示同步校验。</div>
+    <h2>1. 候选、范围和实际覆盖</h2><p>权威JSON共122条观看记录：A35、C38、B33、D14、未知任务2；不纠正或猜测JSON中的任务。A/C候选73条，观看者技能为novice32、intermediate41；源操作者为novice45、intermediate28，二者不混用。45条A/C记录五项链接均存在。双novice筛选得到16条（A7、C9）、8名观看者、16个源视频。所有split均可纳入。A/C另外28条的stage、target及DLC链接缺失，且源技能不符合本次范围；逐项缺失重叠不能重复扣减。</p>
+    <table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>task</th>
+      <th>watches</th>
+      <th>observers</th>
+      <th>source_videos</th>
+      <th>valid_n</th>
+      <th>valid_s</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A</td>
+      <td>7</td>
+      <td>7</td>
+      <td>7</td>
+      <td>96223</td>
+      <td>2274.1700</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>9</td>
+      <td>8</td>
+      <td>9</td>
+      <td>79544</td>
+      <td>1822.0566</td>
+    </tr>
+  </tbody>
+</table><img src="figures/input_coverage.png"><p>上述有效秒按规范原生video_ts计算，并非声称现场实际显示曝光时间。B/D及未知任务不进入分析；drop ring纳入时长严格为0。whole为四个纳入阶段的时间合并。</p>
+    <h2>2. 主结果</h2><p><b>Task A：</b>target占用（%）9.78 [5.92–13.63]，n=7；腕部邻域占用（%）4.40 [2.42–6.55]，n=7；C（%）72.04 [64.32–79.20]，n=7。直接切换率（次/有效分钟）0.04 [0.00–0.09]，n=7，经重叠切换率（次/有效分钟）0.00 [0.00–0.00]，n=7。区间为参与者bootstrap 95%区间，n为该指标观察者数。</p><p><b>Task C：</b>target占用（%）8.69 [5.95–11.88]，n=8；腕部邻域占用（%）17.02 [12.25–22.13]，n=8；C（%）25.29 [16.47–33.98]，n=8。直接切换率（次/有效分钟）0.00 [0.00–0.00]，n=8，经重叠切换率（次/有效分钟）0.02 [0.00–0.05]，n=8。区间为参与者bootstrap 95%区间，n为该指标观察者数。</p><p>高C只表示T/P可分辨部分偏向target，不能直接解释为高target总占用；须同时报告D、L_target和重叠O。这里不进行观察者间、Passive与Active、观看者与源操作者的统计比较。</p>
+    <h2>3. 分阶段覆盖与区域定义</h2><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>task</th>
+      <th>stage</th>
+      <th>candidate_watches</th>
+      <th>candidate_observers</th>
+      <th>stage_frames</th>
+      <th>target_frames</th>
+      <th>gaze_frames</th>
+      <th>DLC_frames</th>
+      <th>valid_frames</th>
+      <th>valid_seconds</th>
+      <th>valid_watches</th>
+      <th>valid_observers</th>
+      <th>valid_fraction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A</td>
+      <td>reach ring</td>
+      <td>7</td>
+      <td>7</td>
+      <td>36646</td>
+      <td>36091</td>
+      <td>36646</td>
+      <td>36646</td>
+      <td>36091</td>
+      <td>860.0673</td>
+      <td>7</td>
+      <td>7</td>
+      <td>0.9849</td>
+    </tr>
+    <tr>
+      <td>A</td>
+      <td>grab ring</td>
+      <td>7</td>
+      <td>7</td>
+      <td>13073</td>
+      <td>13073</td>
+      <td>13073</td>
+      <td>13073</td>
+      <td>13073</td>
+      <td>311.7230</td>
+      <td>7</td>
+      <td>7</td>
+      <td>1.0000</td>
+    </tr>
+    <tr>
+      <td>A</td>
+      <td>transfer ring</td>
+      <td>7</td>
+      <td>7</td>
+      <td>31424</td>
+      <td>31424</td>
+      <td>31424</td>
+      <td>31424</td>
+      <td>31424</td>
+      <td>743.4326</td>
+      <td>7</td>
+      <td>7</td>
+      <td>1.0000</td>
+    </tr>
+    <tr>
+      <td>A</td>
+      <td>place ring</td>
+      <td>7</td>
+      <td>7</td>
+      <td>15635</td>
+      <td>15635</td>
+      <td>15635</td>
+      <td>15635</td>
+      <td>15635</td>
+      <td>358.9471</td>
+      <td>7</td>
+      <td>7</td>
+      <td>1.0000</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>reach string</td>
+      <td>9</td>
+      <td>8</td>
+      <td>30917</td>
+      <td>25564</td>
+      <td>30917</td>
+      <td>30917</td>
+      <td>25564</td>
+      <td>575.5283</td>
+      <td>9</td>
+      <td>8</td>
+      <td>0.8269</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>wrap around psm</td>
+      <td>9</td>
+      <td>8</td>
+      <td>48168</td>
+      <td>47512</td>
+      <td>48168</td>
+      <td>48168</td>
+      <td>47512</td>
+      <td>1111.7486</td>
+      <td>9</td>
+      <td>8</td>
+      <td>0.9864</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>pull through and cinch</td>
+      <td>9</td>
+      <td>8</td>
+      <td>16066</td>
+      <td>3181</td>
+      <td>16066</td>
+      <td>16066</td>
+      <td>3181</td>
+      <td>55.7750</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0.1980</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>threading string through tower</td>
+      <td>9</td>
+      <td>8</td>
+      <td>3287</td>
+      <td>3287</td>
+      <td>3287</td>
+      <td>3287</td>
+      <td>3287</td>
+      <td>79.0047</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1.0000</td>
+    </tr>
+  </tbody>
+</table><p>这些是各条件的边际帧数；有效分析要求阶段、gaze、至少一个target槽位和双侧DLC同时可用。低覆盖阶段只能代表被观测部分，缺失时段不补零。target取有效point_1至point_5的均值，以未取整中心半径50px分类；PSM取左右DLC腕部/铰接点圆盘并集，不代表完整器械或jaw tip。T/P/O/N互斥，不可用帧保持-1。像素面积在像素中心计数、画面边界裁剪并对重叠去重。</p>
+    <p><b>低覆盖提醒：</b>Task C的cinch仅3条观看、3名观察者有有效占用；threading仅2条观看、1名观察者，因此该阶段不生成均值置信区间。驻留等指标还可能因没有达到120ms的段而具有更少的可估人数，必须读取逐指标n，不能把候选8人当作有效8人。</p>
+    <h2>4. 时间、驻留和敏感性</h2><p>dt在阶段切分前计算：仅原帧连续且0&lt;Δt≤100ms的间隔两端各分一半；不向首尾外推，不跨缺帧补时长。occurrence、明确identity、缺帧/时间缺口和未纳入阶段切断序列。bitmask变化只审计，不视为物体身份切换。观察段≥120ms才纳入驻留中位数，达到阈值的截断段仍纳入并报告截断数。直接切换仅相邻合格T/P段；经重叠切换允许中间O不足120ms；不跨N或missing跳接。先记录内求段中位数，再在观察者内等权。</p>
+    <p>主条件Task A共2次合格直接切换、0次经重叠切换；Task C共0次直接、1次经重叠切换，事件很少。A的合格T/P/O驻留段分别331/136/46，其中截断20/7/0；C分别141/441/133，其中截断0/9/0。组驻留中位数的均值约为191–220ms，但各状态覆盖人数不同。零切换是当前有效观察支持下按预定规则检出的计数，不代表不存在其他形式的注意转移。</p>
+    <p>五条件全部运行：main 50/50、r25 25/25、r100 100/100、gripper100 50/100，均使用原始有效坐标；smooth为50/50，沿用原短缺口≤100ms插值、41Hz网格、居中3点平均及映回原生支持。主分析不重采样，target/DLC不平滑，smooth插补不进入main。不依据结果挑选半径。</p>
+    <p>whole的敏感性显示：A的C在等半径25/50/100px条件为70.24%/72.04%/69.73%，smooth为73.03%；仅扩大PSM至100px后C为28.35%。C任务相应C为24.83%/25.29%/26.92%，smooth为25.66%，gripper100为3.19%。占用本身随区域半径明显变化；C任务C_excess从r25的−6.17个百分点变为r100的+3.82个百分点，不能脱离区域大小解释偏好。smooth的C任务via_rate为约0.176次/有效分钟，高于main的约0.018，稀少切换对预处理敏感，不据此选择最佳条件。</p>
+    <h2>5. 图表：占用、面积修正、驻留/切换和敏感性</h2>
+    <figure><img src="figures/task_A_four_regions.png"><figcaption>task_A_four_regions</figcaption></figure><figure><img src="figures/task_A_occupancy.png"><figcaption>task_A_occupancy</figcaption></figure><figure><img src="figures/task_A_area_adjustment.png"><figcaption>task_A_area_adjustment</figcaption></figure><figure><img src="figures/task_A_temporal.png"><figcaption>task_A_temporal</figcaption></figure><figure><img src="figures/task_A_sensitivity.png"><figcaption>task_A_sensitivity</figcaption></figure><figure><img src="figures/task_C_four_regions.png"><figcaption>task_C_four_regions</figcaption></figure><figure><img src="figures/task_C_occupancy.png"><figcaption>task_C_occupancy</figcaption></figure><figure><img src="figures/task_C_area_adjustment.png"><figcaption>task_C_area_adjustment</figcaption></figure><figure><img src="figures/task_C_temporal.png"><figcaption>task_C_temporal</figcaption></figure><figure><img src="figures/task_C_sensitivity.png"><figcaption>task_C_sensitivity</figcaption></figure>
+    <h2>6. 指标、层级统计与NA</h2><p>L_T+L_P+L_O+L_N=1；L_target=L_T+L_O；L_gripper=L_P+L_O；D=L_T+L_P；C=L_T/D；B=L_T−L_P。面积同样分为a_T/a_P/a_O/a_N；C_U=a_T/(a_T+a_P)；C_excess=C−C_U；E_target=L_target−a_T−a_O；E_gripper=L_gripper−a_P−a_O；B_excess=L_T−L_P−a_T+a_P。零分母为NA并保留原因，C不可估不影响其他指标。</p>
+    <p>每观看记录内原生dt加权；观察者内有效记录等权平均；组内观察者等权平均。各指标独立保存人数和有效观看次数。Bootstrap沿用ParticipantBootstrap、10000次、seed=42及SeedSequence([42,n])，参与者有放回抽样，2.5/97.5百分位；不足2名可估观察者不生成均值区间，defined/undefined均为0表示未运行。无新增p值、置换、t检验或BH/FDR。</p>
+    <h2>7. 输入、坐标和时间映射审计</h2><p>每个观看以完整clip键和带hash的唯一输出ID表示。stage/target/DLC仅来自JSON指定路径；缺失字串nan/null/none不当文件路径。stage与target可同NPY，读取的只是相应标注字段，从未读取该文件的gaze坐标作观看者gaze，也不使用源gaze有效性。双侧DLC局部索引由保留source video_ts的Frame_Number映射验证。</p>
+    <p>真实gaze只从gaze_npy_path取gaze_x/gaze_y，两个坐标有限并在闭区间[0,1]，0/1保留；valid及原始Status不筛选。target和DLC采用半开图像边界。历史构造曾把超界原始坐标裁到端点，本次严格分析现存NPY，不反向剔除或恢复原坐标。已验证媒体尺寸和三个抽样位置的源/passive图像几何一致；不新增左右并排折叠、裁剪或比例变换。</p>
+    <table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>recording</th>
+      <th>rows</th>
+      <th>constructor_exact</th>
+      <th>raw_VID_FRAME_different</th>
+      <th>delta_min</th>
+      <th>delta_max</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>User1_4_User11_2_1</td>
+      <td>9365</td>
+      <td>True</td>
+      <td>7543</td>
+      <td>-1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>User1_6_User9_5_2</td>
+      <td>5436</td>
+      <td>True</td>
+      <td>5427</td>
+      <td>-412</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <td>User2_2_User11_3_1</td>
+      <td>10442</td>
+      <td>True</td>
+      <td>10416</td>
+      <td>-34</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>User2_6_User12_3_1</td>
+      <td>12916</td>
+      <td>True</td>
+      <td>10277</td>
+      <td>-1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>User3_2_User6_3_1</td>
+      <td>13808</td>
+      <td>True</td>
+      <td>13800</td>
+      <td>-561</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>User3_4_User12_5_2</td>
+      <td>11550</td>
+      <td>True</td>
+      <td>9453</td>
+      <td>-1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>User6_2_User1_3_1</td>
+      <td>18001</td>
+      <td>True</td>
+      <td>17822</td>
+      <td>-2</td>
+      <td>94</td>
+    </tr>
+    <tr>
+      <td>User6_6_User2_2_1</td>
+      <td>6878</td>
+      <td>True</td>
+      <td>6572</td>
+      <td>-2</td>
+      <td>55</td>
+    </tr>
+    <tr>
+      <td>User8_4_User10_1_1</td>
+      <td>17081</td>
+      <td>True</td>
+      <td>17046</td>
+      <td>-1</td>
+      <td>303</td>
+    </tr>
+    <tr>
+      <td>User8_6_User5_3_1</td>
+      <td>2741</td>
+      <td>True</td>
+      <td>2591</td>
+      <td>-1</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <td>User9_2_User8_6_1</td>
+      <td>20137</td>
+      <td>True</td>
+      <td>20129</td>
+      <td>-397</td>
+      <td>69</td>
+    </tr>
+    <tr>
+      <td>User9_6_User5_2_1</td>
+      <td>14729</td>
+      <td>True</td>
+      <td>14441</td>
+      <td>-27</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>User10_2_User7_1_1</td>
+      <td>18525</td>
+      <td>True</td>
+      <td>18389</td>
+      <td>-13</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>User10_4_User2_2_2</td>
+      <td>3898</td>
+      <td>True</td>
+      <td>3794</td>
+      <td>-18</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>User12_2_User7_3_1</td>
+      <td>24811</td>
+      <td>True</td>
+      <td>24734</td>
+      <td>-603</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <td>User12_6_User9_2_1</td>
+      <td>14705</td>
+      <td>True</td>
+      <td>14703</td>
+      <td>-128</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table><p>此表的差值为原始VID_FRAME减NPY局部行号，二者不可混作同一计数器。所有原始NPY行和原帧、stage/target行、DLC行及原始眼动样本行索引保存在frames与mapping_frames，保证追溯。overlays显示存储映射下的空间关系，不作为现场显示同步证据。</p>
+    <h2>8. 不适用模块、验证和交付</h2><p>JSON未提供passive观看者本人、与基准语义一致的成绩/完成状态及练习轮次；因此成绩相关、leave-one-out、participant_round_summary和1→3/1→2/2→3变化不适用。源操作者成绩、技能和seq均未替代这些信息。</p>
+    <p>代表性基准回归先行：4条原始录像、5条件、100阶段行、227015帧状态及4900项标量复现。独立验证重新读取原始passive NPY和链接标注，验证有效帧、占用、smooth、时间序列、层级平均和bootstrap。数值与原帧数据检查的状态，与未独立建立的物理播放/外部屏幕映射明确分开，不将后者标为通过。</p>
+    <p>已删除模型预测输入、K样本、概率MC、decoder、paired_test、模型误差/比较/排名、Brier/BSS和混淆矩阵，不拟合center/train参照，不输出GT_smoothed评价诊断；保留uniform area解释和smooth敏感性。本次复现的是“删除模型评测后的Target Locking v3真实gaze分析”。</p>
+    <ul><li><a href="trial_stage.csv">trial_stage.csv</a></li><li><a href="participant_stage_summary.csv">participant_stage_summary.csv</a></li><li><a href="group_stage_summary.csv">group_stage_summary.csv</a></li><li><a href="coverage.csv">coverage.csv</a></li><li><a href="recording_audit.csv">recording_audit.csv</a></li><li><a href="target_labels.csv">target_labels.csv</a></li><li><a href="passive_mapping_audit.csv">passive_mapping_audit.csv</a></li><li><a href="input_issues.json">input_issues.json</a></li><li><a href="run_config.json">run_config.json</a></li><li><a href="statistics_manifest.json">statistics_manifest.json</a></li><li><a href="validation.json">validation.json</a></li><li><a href="independent_validation.json">independent_validation.json</a></li><li><a href="final_output_validation.json">final_output_validation.json</a></li><li><a href="output_index.csv">output_index.csv</a></li><li><a href="baseline_observed_regression.json">baseline_observed_regression.json</a></li><li><a href="supplementary_applicability.json">supplementary_applicability.json</a></li></ul>
+    <p><a href="region_review/occurrence_geometry_flags.csv">Occurrence区域几何审计</a> · <a href="region_review/overlay_index.csv">叠加图索引</a> · <a href="input_fingerprints.json">输入指纹</a> · <a href="baseline_and_mapping_fingerprints_after.json">基准及JSON未改变验证</a></p>
+    </body></html>

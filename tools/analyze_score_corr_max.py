@@ -55,7 +55,7 @@ def attach_selection(records, lookup):
     if len(records) != len(lookup):
         raise ValueError('Stage records and selection metadata do not match')
     for row in records:
-        if row['side'] != 'max' or row['mode'] not in ('psm_stage', 'within_stage'):
+        if row['side'] != 'max' or row['mode'] not in ('PSM in stage', 'Both in stage'):
             raise ValueError('Expected selected-PSM stage curves only')
         detail = lookup[tuple(row[k] for k in SELECTION_KEY)]
         side = detail['selected_side']
@@ -69,7 +69,7 @@ def attach_selection(records, lookup):
 
 
 def overview(results, phases, outcome, signal, scenario):
-    phases = sorted([p for p in phases if p['signal'] == signal and p['mode'] == 'psm_stage'],
+    phases = sorted([p for p in phases if p['signal'] == signal and p['mode'] == 'PSM in stage'],
                     key=base.group_order)
     lookup = {(r['method'], base.key(r), r['predictor']): r
               for r in results if r['scenario'] == scenario}
@@ -148,7 +148,7 @@ def make_report(output, coverage, results, settings, n_recordings):
         'Within-participant p values use the existing participant-cluster CR1 t approximation.', '',
         'BH families pool all three predictors and stages separately within each outcome, scenario and method. '
         'Outcomes, methods and sensitivity scenarios are not jointly corrected. '
-        'Total Score includes within-stage, completed-only and stronger-peaks sensitivities. '
+        'Total Score includes Both in stage, completed-only and stronger-peaks sensitivities. '
         'Other outcomes use primary position and secondary velocity analyses.', '',
         'Selected PSM means the instrument with higher signed correlation, not an independently identified operated instrument. '
         'All associations are exploratory; score is measured for the whole attempt, not for each stage.', '',

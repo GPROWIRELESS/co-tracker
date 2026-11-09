@@ -5,6 +5,7 @@ whole tasks share a scale per signal; stages share a scale across instruments
 and conditioning modes in each row. Individual trajectories have their own
 diagnostic figures so they cannot hide group uncertainty in the main figures.
 """
+from gaze_psm_modes import normalize_modes
 import json
 from pathlib import Path
 
@@ -92,7 +93,7 @@ def _save(fig, path, *, partial_record=False):
     """Save publication-size raster/vector artifacts and inspectable axis metadata."""
     path = Path(path)
     try:
-        partial = partial_record or bool(json.loads((path.parent.parent/'config.json').read_text()).get('partial_record', False))
+        partial = partial_record or bool(normalize_modes(json.loads((path.parent.parent/'config.json').read_text())).get('partial_record', False))
     except (OSError, ValueError, TypeError):
         partial = partial_record
     if partial:
@@ -101,7 +102,7 @@ def _save(fig, path, *, partial_record=False):
     fig.savefig(path, dpi=220, bbox_inches='tight')
     fig.savefig(path.with_suffix('.pdf'), bbox_inches='tight')
     manifest = path.parent/'axes.json'
-    current = json.loads(manifest.read_text()) if manifest.exists() else {}
+    current = normalize_modes(json.loads(manifest.read_text())) if manifest.exists() else {}
     current[path.name] = [{'title': ax.get_title(), 'xlim': list(ax.get_xlim()),
                            'ylim': list(ax.get_ylim()), 'xlabel': ax.get_xlabel(),
                            'ylabel': ax.get_ylabel(),
@@ -174,7 +175,7 @@ def _whole_figures(plt, directory, groups, users):
 
 
 def _stage_figures(plt, directory, groups, users):
-    staged = [g for g in groups if g.get('mode') == 'psm_stage']
+    staged = [g for g in groups if g.get('mode') == 'PSM in stage']
     for task in _task_order(staged):
         for signal in sorted({g['signal'] for g in staged if g['task'] == task}):
             stages = sorted({g['stage'] for g in staged if _matches(g, task=task, signal=signal)})
@@ -184,13 +185,13 @@ def _stage_figures(plt, directory, groups, users):
                 selected = [g for g in groups if _matches(g, task=task, signal=signal, stage=stage)]
                 for col, side in enumerate(('l', 'r')):
                     ax = axes[row, col]
-                    conditions = dict(task=task, side=side, signal=signal, stage=stage, mode='psm_stage')
+                    conditions = dict(task=task, side=side, signal=signal, stage=stage, mode='PSM in stage')
                     _curve_panel(ax, groups, users, conditions)
-                    within = [g for g in selected if _matches(g, side=side, mode='within_stage')]
+                    within = [g for g in selected if _matches(g, side=side, mode='Both in stage')]
                     if within and _finite(within[0]):
                         curve = within[0]
                         ax.plot(curve['lag_s'], curve['r'], color=ORANGE, linestyle='--',
-                                linewidth=1.7, label='Within occurrence')
+                                linewidth=1.7, label='Both in stage')
                         if _finite(curve, 'r_ci_low'):
                             ax.fill_between(curve['lag_s'], curve['r_ci_low'], curve['r_ci_high'],
                                             color=ORANGE, alpha=.09, label='Within-occurrence CI (95%)')
@@ -515,7 +516,7 @@ def _conclusion_figures(plt, directory, groups, contrasts):
 
 
 def _stage_peak_figures(plt, directory, groups):
-    selected = [g for g in groups if g.get('signal') == 'position' and g.get('mode') in {'psm_stage', 'within_stage'}]
+    selected = [g for g in groups if g.get('signal') == 'position' and g.get('mode') in {'PSM in stage', 'Both in stage'}]
     tasks = _task_order(selected)
     if not tasks:
         return
@@ -527,11 +528,11 @@ def _stage_peak_figures(plt, directory, groups):
             ax = axes[row, col]
             for i, stage in enumerate(stages):
                 y = len(stages)-1-i
-                for mode, offset, color, label in [('psm_stage', .12, BLUE, 'PSM-stage'),
-                                                   ('within_stage', -.12, ORANGE, 'Within occurrence')]:
+                for mode, offset, color, label in [('PSM in stage', .12, BLUE, 'PSM in stage'),
+                                                   ('Both in stage', -.12, ORANGE, 'Both in stage')]:
                     g = next((g for g in selected if _matches(g, task=task, side=side, stage=stage, mode=mode)), None)
                     if g is None or not _finite(g):
-                        if mode == 'psm_stage':
+                        if mode == 'PSM in stage':
                             ax.text(0, y, 'unsupported', ha='center', va='center', color='.5', fontsize=8)
                         continue
                     _interval(ax, g['peak_lag_s'], g['peak_lag_ci_low'], g['peak_lag_ci_high'],

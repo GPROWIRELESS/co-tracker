@@ -19,10 +19,10 @@ class ReliabilityTests(unittest.TestCase):
         ids = np.full(n, -1, dtype=int)
         ids[20:100]=4; ids[180:220]=8; ids[250:400]=9
         for within in (False, True):
-            s = occurrence_statistics(g, p, ids, hz=20, max_lag=1, within_stage=within)
+            s = occurrence_statistics(g, p, ids, hz=20, max_lag=1, both_in_stage=within)
             actual = aggregate_statistics(s, min_overlap=2)
             expected = analyze_curve(g,p,20,max_lag=1,min_overlap=2,occurrence_ids=ids,
-                                     within_stage=within,compute_spatial=False)
+                                     both_in_stage=within,compute_spatial=False)
             for key in ('lag_s','r','pairs','occurrences','gaze_rms','psm_rms'):
                 np.testing.assert_allclose(actual[key],expected[key],atol=1e-10,rtol=1e-10,equal_nan=True)
 
@@ -68,7 +68,7 @@ class ReliabilityTests(unittest.TestCase):
     def test_unusable_ids_retained_for_paired_sampling(self):
         g=self.rng.normal(size=(200,2))*30;p=g.copy();ids=np.repeat(np.arange(4),50)
         g[:50]=np.nan
-        s=occurrence_statistics(g,p,ids,20,.5,within_stage=True)
+        s=occurrence_statistics(g,p,ids,20,.5,both_in_stage=True)
         np.testing.assert_array_equal(s['ids'],np.arange(4))
         self.assertTrue((s['terms'][0]==0).all())
 

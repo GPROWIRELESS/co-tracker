@@ -1,0 +1,23 @@
+Actual supplement completion summary from the current in-place coordinate-only rerun.
+{
+  "complete": true,
+  "whole_excluded_from_phase_average": true,
+  "native_gt_reference_curves": 180,
+  "shared_complete_record_gt_sampling_comparison": true,
+  "matched_sensitivity_rows": 2464,
+  "exact_observed_record_support_in_donor_reference": true,
+  "elapsed_seconds": 60.74312472343445,
+  "execution_sequence": "corrected lead_psm_postprocess_driver.py then lead_psm_supplement.py; input GT uses finite normalized [0,1] coordinates only",
+  "code_sha256": {
+    "gaze_psm_core_legacy.py": "98baa4793e66094725c0f4340fd46a6c5b75a038b3e32d17bd100eba06eaa2b5",
+    "gaze_psm_preprocess_v2.py": "66cdb4067d44b992d081063a6f452a9e2dd242915ca665b8c969a76aa05afd11",
+    "gaze_psm_reliability_v2.py": "866ed02775f28eec7e6d82814989608a489b780c6ec8273c652c4d9eacaa2dcf",
+    "gaze_psm_statistics_v2.py": "6f741f175881ba5b03cb4ad312d40f4641b6af48355702e3f27a2b9ed4db451b",
+    "lead_psm_postprocess_driver.py": "d46e7feadedcd9e0bfd6b004d71e7f141616842eba64cbbc5ff8c7c167927d36",
+    "lead_psm_run.py": "d46e7feadedcd9e0bfd6b004d71e7f141616842eba64cbbc5ff8c7c167927d36",
+    "lead_psm_supplement.py": "4d03ba213485ed0430dfc9ee676dce2e97e6c5360871898ebd5477ba1c65dabd",
+    "lead_psm_zero_horizon_fix.py": "438efa2ae741c6fe1d925d0176900f2c3099cf228a88f7213a83332d6055f8cd",
+    "reproduce_lead.py": "62d479633c947d8b3f6f7cda735febd49729f86e579254e099aa4826d0690ff2"
+  },
+  "gt_valid_column_used_for_selection": false
+}

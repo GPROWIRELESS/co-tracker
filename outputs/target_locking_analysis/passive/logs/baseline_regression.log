@@ -1,0 +1,34 @@
+User1_1_1 passed 12595 frames x 5 scenarios
+User1_3_1 passed 18001 frames x 5 scenarios
+User1_6_1 passed 7327 frames x 5 scenarios
+User12_9_1 passed 7480 frames x 5 scenarios
+{
+  "status": "passed",
+  "reference_run": "D:\\GitHub_Project\\co-tracker\\outputs\\target_locking_analysis\\20261105T063658759189Z_v3_full",
+  "toy_checks": [
+    "native_dt_edges",
+    "closed_gaze_open_annotation_boundaries",
+    "pixel_area_enumeration",
+    "dwell_switch_missing_other_censoring",
+    "smooth_short_gap_occurrence_isolation",
+    "NA_empty_and_zero_denominator",
+    "isolated_point_zero_exposure",
+    "bootstrap_exact_seed_sequence",
+    "equal_recording_equal_observer_metric_specific_support"
+  ],
+  "scenarios": [
+    "main",
+    "r25",
+    "r100",
+    "gripper100",
+    "smooth"
+  ],
+  "trial_stage_rows_checked": 100,
+  "raw_frame_scenario_states_checked": 227015,
+  "scalar_measurements_checked": 4900,
+  "exact_native_dt_smooth_and_interpolated_flags": true,
+  "independent_run_list_temporal_check": true,
+  "whole_equals_included_stage_exposure": true,
+  "predictions_loaded": false,
+  "original_inputs_unmodified": true
+}

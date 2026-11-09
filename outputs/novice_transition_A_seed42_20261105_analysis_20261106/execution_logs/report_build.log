@@ -1,0 +1,4 @@
+GT 的目标区域占用为 26.59%；四个模型中 Future 500 的目标概率最高，为 7.73%。
+四个模型的目标占用均低于 GT，参与者配对重采样区间也均位于零以下。
+四阶段合并的位置曲线，GT峰值为左+415 ms、右+341 ms；Future1000/1500约+195～220 ms，Current/Future500更接近零。所有合并位置曲线因近峰过宽，均未通过可靠lead判定。主分析100个来源/条件组合中，3个分阶段条件满足初步lead规则；其中右PSM transfer ring的两项较稳健，但依赖允许跨阶段gaze配对，不能推广为整个Task A或阶段内部稳定领先。
+Report generated C:\Users\GT502\Documents\ChatGPT\JMRR\outputs\novice_transition_A_seed42_20261105_analysis_20261106\report

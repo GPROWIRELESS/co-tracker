@@ -5,6 +5,7 @@ Legacy files remain available for existing scripts and historical provenance.
 Run again after regenerating an analysis to refresh the comparison layout.
 """
 from __future__ import annotations
+from gaze_psm_modes import normalize_modes
 
 import argparse
 from datetime import datetime
@@ -72,7 +73,7 @@ def normalize_tables(root, signal, outcome):
         checks[name] = dict(source=paths[name].relative_to(root).as_posix(),
                            source_sha256=base.sha256(paths[name]), n_rows=len(rows),
                            normalized_sha256=base.sha256(dest/f'{name}.csv'))
-    info = json.loads(provenance.read_text())
+    info = normalize_modes(json.loads(provenance.read_text()))
     save_json(dest/'provenance.json', dict(signal=signal, outcome=outcome,
         settings=info['settings'], original_provenance=provenance.relative_to(root).as_posix(),
         original_provenance_sha256=base.sha256(provenance), tables=checks,
@@ -105,7 +106,7 @@ def unavailable_label(row, phase, outcome):
 
 def make_overview(data, outcome, signal):
     scenario = 'primary' if signal == 'position' else 'velocity_secondary'
-    phases = sorted([p for p in data['phase_validity'] if p['mode'] in ('whole', 'psm_stage')],
+    phases = sorted([p for p in data['phase_validity'] if p['mode'] in ('whole', 'PSM in stage')],
                     key=base.group_order)
     lookup = {(r['method'], base.key(r), r['predictor']): r
               for r in data['associations'] if r['scenario'] == scenario}
@@ -126,7 +127,7 @@ def make_overview(data, outcome, signal):
                         sample = [r for r in data.get('record_phase_audit', [])
                                   if str(r.get('eligible', False)).lower() == 'true'
                                   and r.get('signal') == signal
-                                  and r.get('mode') in ('whole', 'psm_stage')
+                                  and r.get('mode') in ('whole', 'PSM in stage')
                                   and base.key(r) == base.key(phase)]
                     outcomes = np.asarray([base.number(p.get(outcome)) for p in sample])
                     if len(outcomes) and np.all(np.isfinite(outcomes)) and np.ptp(outcomes) == 0:
@@ -190,7 +191,7 @@ def ensure_plot_set(root, signal, outcome, predictor):
             source_hashes=hashes, participant_summaries_and_scipy_checked=True,
             inference_recomputed=False))
         action = 'generated_from_saved_statistics'
-    axes = json.loads((dest/'axes.json').read_text())
+    axes = normalize_modes(json.loads((dest/'axes.json').read_text()))
     if not axes['all_checks_passed']:
         raise ValueError(f'Invalid axes audit in {dest}')
     for panel in axes['panels']:

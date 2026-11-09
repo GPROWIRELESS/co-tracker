@@ -5,6 +5,7 @@ Reads saved results only. NumPy, SciPy and Matplotlib are sufficient; no NAS,
 Pandas, or changes to the original correlation analysis are required.
 """
 from __future__ import annotations
+from gaze_psm_modes import mode_rows, normalize_modes, seed_identity
 
 import argparse
 import csv
@@ -44,7 +45,7 @@ def number(value):
 
 def read_csv(path):
     with Path(path).open(newline="", encoding="utf-8-sig") as stream:
-        return list(csv.DictReader(stream))
+        return list(mode_rows(csv.DictReader(stream)))
 
 
 def write_csv(path, rows):
@@ -64,7 +65,7 @@ def record_key(row):
 
 
 def rng_for(seed, *parts):
-    digest = hashlib.sha256(repr(parts).encode()).digest()
+    digest = hashlib.sha256(repr(seed_identity(parts)).encode()).digest()
     return np.random.default_rng(np.random.SeedSequence([seed, int.from_bytes(digest[:4], "little")]))
 
 
@@ -197,7 +198,7 @@ def within_test(records, predictor, adjusted, rng, bootstrap, minimum, outcome="
 
 def prepare(args, outcome="Score"):
     source, index = args.input, args.index
-    config = json.loads((source/"config.json").read_text())
+    config = normalize_modes(json.loads((source/"config.json").read_text()))
     if config.get("partial_record"):
         raise ValueError("Refusing partial-record correlation results")
     summary = read_csv(source/"record_summary.csv")
@@ -218,7 +219,7 @@ def prepare(args, outcome="Score"):
     # Retain only the few diagnostics needed rather than loading results.json.
     curves = defaultdict(list)
     with (source/"record_curves.csv").open(newline="") as stream:
-        for row in csv.DictReader(stream):
+        for row in mode_rows(csv.DictReader(stream)):
             curves[record_key(row)].append((number(row["lag_s"]), number(row["r"])))
     expected = np.arange(-round(config["max_lag"]*config["hz"]),
                          round(config["max_lag"]*config["hz"])+1)/config["hz"]
@@ -327,10 +328,10 @@ def prepare(args, outcome="Score"):
 
 def scenario_rows(records, scenario):
     selected = [r for r in records if r["eligible"]]
-    if scenario == "within_stage":
-        return [r for r in selected if r["signal"] == "position" and r["mode"] == "within_stage"]
+    if scenario == "Both in stage":
+        return [r for r in selected if r["signal"] == "position" and r["mode"] == "Both in stage"]
     signal = "velocity" if scenario == "velocity_secondary" else "position"
-    selected = [r for r in selected if r["signal"] == signal and r["mode"] in ("whole", "psm_stage")]
+    selected = [r for r in selected if r["signal"] == signal and r["mode"] in ("whole", "PSM in stage")]
     if scenario == "completed_only":
         selected = [r for r in selected if r["AttemptStatus"] == "Completed"]
     if scenario == "stronger_peaks":
@@ -354,7 +355,7 @@ def aggregate_participants(records, outcome="Score"):
 def analyze(args, records, phases, outcome="Score", scenarios=None):
     output, participant_rows = [], []
     if scenarios is None:
-        scenarios = ("primary", "within_stage", "completed_only", "stronger_peaks", "velocity_secondary")
+        scenarios = ("primary", "Both in stage", "completed_only", "stronger_peaks", "velocity_secondary")
     for scenario in scenarios:
         print(f"Analyzing {scenario}", flush=True)
         chosen = scenario_rows(records, scenario)
@@ -364,7 +365,7 @@ def analyze(args, records, phases, outcome="Score", scenarios=None):
         # Include empty groups in result tables so exclusions remain visible.
         for phase in phases:
             signal = "velocity" if scenario == "velocity_secondary" else "position"
-            modes = ("within_stage",) if scenario == "within_stage" else ("whole", "psm_stage")
+            modes = ("Both in stage",) if scenario == "Both in stage" else ("whole", "PSM in stage")
             if phase["signal"] != signal or phase["mode"] not in modes:
                 continue
             k = key(phase)
@@ -418,7 +419,7 @@ def group_order(row):
 def make_association_overview(results, phases, outcome="Score", coverage=None):
     """Shared layout for overall-score and component association figures."""
     primary_groups = sorted([p for p in phases if p["signal"] == "position" and
-                             p["mode"] in ("whole", "psm_stage")], key=group_order)
+                             p["mode"] in ("whole", "PSM in stage")], key=group_order)
     lookup = {(r["method"], key(r), r["predictor"]): r for r in results if r["scenario"] == "primary"}
     fig, axes = plt.subplots(1, 3, figsize=(15, 12), sharey=True)
     titles = ("Between participants", "Within participant",
@@ -477,7 +478,7 @@ def make_figures(args, results, participant_rows, recordings, phases, record_pha
             plt.close(fig)
             saved.append(name)
 
-        primary_groups = sorted([p for p in phases if p["signal"] == "position" and p["mode"] in ("whole", "psm_stage")], key=group_order)
+        primary_groups = sorted([p for p in phases if p["signal"] == "position" and p["mode"] in ("whole", "PSM in stage")], key=group_order)
         lookup = {(r["scenario"], r["method"], key(r), r["predictor"]): r for r in results}
         fig = make_association_overview(results, phases)
         save(fig, "association_overview")
@@ -543,7 +544,7 @@ def make_figures(args, results, participant_rows, recordings, phases, record_pha
         save(fig, "score_distribution")
 
         # Forest plot of timing results with every sensitivity on the same row.
-        scenarios = ("primary", "completed_only", "stronger_peaks", "within_stage")
+        scenarios = ("primary", "completed_only", "stronger_peaks", "Both in stage")
         fig, axes = plt.subplots(1, 2, figsize=(15, 13), sharey=True)
         palette = ("#2463a0", "#b56020", "#267443", "#8b4f9c")
         for ax, method, title in zip(axes, ("between_participants", "within_adjusted_order"), ("Between participants", "Within participant, order adjusted")):
@@ -551,10 +552,10 @@ def make_figures(args, results, participant_rows, recordings, phases, record_pha
                 label_added = False
                 for i, g in enumerate(primary_groups):
                     gg = dict(g)
-                    if scenario == "within_stage":
+                    if scenario == "Both in stage":
                         if g["mode"] == "whole":
                             continue
-                        gg["mode"] = "within_stage"
+                        gg["mode"] = "Both in stage"
                     r = lookup.get((scenario, method, key(gg), "signed_lag_s"), {})
                     if r.get("status") != "ok":
                         continue
@@ -575,7 +576,7 @@ def make_figures(args, results, participant_rows, recordings, phases, record_pha
 
         fig, axes = plt.subplots(2, 2, figsize=(12, 10))
         for j, side in enumerate(("l", "r")):
-            group_key = ("A", side, "velocity", "grab ring", "psm_stage")
+            group_key = ("A", side, "velocity", "grab ring", "PSM in stage")
             pp = [p for p in participant_rows if p["scenario"] == "velocity_secondary" and key(p) == group_key]
             between = lookup[("velocity_secondary", "between_participants", group_key, "peak_r")]
             unadjusted = lookup[("velocity_secondary", "within_participant", group_key, "peak_r")]
@@ -633,7 +634,7 @@ def make_report(args, recordings, records, phases, results, provenance):
     significant = [r for r in main if r.get("q_bh", 1) < .05]
     usable = [r for r in recordings if r["score_usable"]]
     invalid = [r for r in recordings if not r["score_usable"]]
-    primary_phases = sorted([p for p in phases if p["signal"] == "position" and p["mode"] == "psm_stage"], key=group_order)
+    primary_phases = sorted([p for p in phases if p["signal"] == "position" and p["mode"] == "PSM in stage"], key=group_order)
     timing_hits = [r for r in significant if r["predictor"] == "signed_lag_s"]
     velocity = [r for r in results if r["scenario"] == "velocity_secondary" and r["status"] == "ok"]
     velocity_grab = sorted([r for r in velocity if r["task"] == "A" and r["stage"] == "grab ring" and r["predictor"] == "peak_r"],
@@ -724,9 +725,9 @@ def make_report(args, recordings, records, phases, results, provenance):
               "Between participants:", "", result_table(sorted(between, key=lambda r: r["p"])[:8]), "",
               "Within participant, after order adjustment:", "", result_table(sorted(within, key=lambda r: r.get("p", 1))[:8]), "",
               "## Timing sensitivity for the strongest between-participant candidates", "",
-              "Each row below is a separate analysis. The strict within-stage mode can differ in phase admissibility and retained recordings; a missing result is not a zero effect.", ""]
+              "Each row below is a separate analysis. The strict Both in stage mode can differ in phase admissibility and retained recordings; a missing result is not a zero effect.", ""]
     candidates = list(signed[:3])
-    strict_timing = sorted([r for r in results if r["scenario"] == "within_stage" and r["method"] == "between_participants"
+    strict_timing = sorted([r for r in results if r["scenario"] == "Both in stage" and r["method"] == "between_participants"
                             and r["predictor"] == "signed_lag_s" and r["status"] == "ok"], key=lambda r: r["p"])
     if strict_timing:
         strict = strict_timing[0]
@@ -737,7 +738,7 @@ def make_report(args, recordings, records, phases, results, provenance):
         lines += ["### "+phase_label(candidate), "",
                   "| Scenario / method | N recordings / users | Association [95% CI] | p | q |",
                   "|---|---:|---:|---:|---:|"]
-        for scenario in ("primary", "completed_only", "stronger_peaks", "within_stage"):
+        for scenario in ("primary", "completed_only", "stronger_peaks", "Both in stage"):
             for method in ("between_participants", "within_participant", "within_adjusted_order"):
                 matches = [r for r in results if r["scenario"] == scenario and r["method"] == method and
                            r["predictor"] == "signed_lag_s" and all(r[k] == candidate[k] for k in ("task", "side", "stage"))]
@@ -754,8 +755,8 @@ def make_report(args, recordings, records, phases, results, provenance):
     for r in velocity_grab:
         lines.append(f"| {r['side'].upper()} / {r['method']} | {r['n_recordings']} / {r['n_users']} | "
                      f"{r['association']:+.3f} [{r['ci_low']:+.3f}, {r['ci_high']:+.3f}] | {r['p']:.5f} | {r['q_bh']:.4f} |")
-    velocity_rr = [r["peak_r"] for r in records if r["eligible"] and key(r) == ("A", "r", "velocity", "grab ring", "psm_stage")]
-    velocity_ll = [r["peak_r"] for r in records if r["eligible"] and key(r) == ("A", "l", "velocity", "grab ring", "psm_stage")]
+    velocity_rr = [r["peak_r"] for r in records if r["eligible"] and key(r) == ("A", "r", "velocity", "grab ring", "PSM in stage")]
+    velocity_ll = [r["peak_r"] for r in records if r["eligible"] and key(r) == ("A", "l", "velocity", "grab ring", "PSM in stage")]
     lines += ["", f"The right-side between-participant strength correlation has a leave-one-participant-out range of "
               f"{format_num(velocity_right.get('loo_min'))} to {format_num(velocity_right.get('loo_max'))}. "
               "However, the right-side within-participant association is weak, and the left-side adjusted association does not survive correction. "
@@ -764,10 +765,10 @@ def make_report(args, recordings, records, phases, results, provenance):
               f"R = {format_num(np.median(velocity_rr) if velocity_rr else np.nan)}). "
               "A high correlation between that strength metric and scores does not make gaze–PSM velocity correlation itself large. "
               "No signed velocity timing association survives its family's BH correction.", "",
-              f"The strict within-stage position analysis also produces a timing candidate, A place/right: "
-              f"{describe(reference('within_stage', 'between_participants', 'A', 'r', 'place ring'))}. "
-              f"Its main PSM-anchored estimate is {describe(reference('primary', 'between_participants', 'A', 'r', 'place ring'))}, "
-              f"and its within-participant order-adjusted strict-stage association is {describe(reference('within_stage', 'within_adjusted_order', 'A', 'r', 'place ring'))}. "
+              f"The strict Both in stage position analysis also produces a timing candidate, A place/right: "
+              f"{describe(reference('Both in stage', 'between_participants', 'A', 'r', 'place ring'))}. "
+              f"Its main PSM in stage estimate is {describe(reference('primary', 'between_participants', 'A', 'r', 'place ring'))}, "
+              f"and its within-participant order-adjusted strict-stage association is {describe(reference('Both in stage', 'within_adjusted_order', 'A', 'r', 'place ring'))}. "
               "This mode dependence does not support a stable timing-performance rule.", "",
               "## Interpretation and limitations", "",
               "- A/C are analyzed separately because their score distributions and task behaviors differ. Task C's many zeros create heavy ties and some participants have no score variation. "
@@ -785,7 +786,7 @@ def make_report(args, recordings, records, phases, results, provenance):
               "[all valid phase timing scatters](figures/phase_signed_lag_scatter.png), [whole-task feature scatters](figures/whole_task_scatter.png), "
               "[timing sensitivity](figures/signed_lag_sensitivity.png), [score coverage](figures/score_distribution.png), "
               "[secondary velocity strength](figures/velocity_grab_ring_strength.png). PNG and vector PDF versions are provided.",
-              "- `associations.csv`: all primary, completed-only, stronger-peak, strict within-stage and secondary velocity estimates, including excluded conditions and BH family sizes.",
+              "- `associations.csv`: all primary, completed-only, stronger-peak, strict Both in stage and secondary velocity estimates, including excluded conditions and BH family sizes.",
               "- `participant_summaries.csv`: exact participant inputs to between-participant analysis, with retained recording IDs.",
               "- `matched_scores.csv`, `score_inventory.csv`, `record_phase_audit.csv`, `phase_validity.csv`: joins, unused score rows, per-record exclusions and phase diagnostics.",
               "- `provenance.json`, `validation.json`, and `code_snapshot/analyze_score_corr.py`: settings, input hashes, numerical checks and the analysis source.", "",

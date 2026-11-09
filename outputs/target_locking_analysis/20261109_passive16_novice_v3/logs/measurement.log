@@ -1,0 +1,17 @@
+[1/16] User1_4_User11_2_1
+[2/16] User1_6_User9_5_2
+[3/16] User2_2_User11_3_1
+[4/16] User2_6_User12_3_1
+[5/16] User3_2_User6_3_1
+[6/16] User3_4_User12_5_2
+[7/16] User6_2_User1_3_1
+[8/16] User6_6_User2_2_1
+[9/16] User8_4_User10_1_1
+[10/16] User8_6_User5_3_1
+[11/16] User9_2_User8_6_1
+[12/16] User9_6_User5_2_1
+[13/16] User10_2_User7_1_1
+[14/16] User10_4_User2_2_2
+[15/16] User12_2_User7_3_1
+[16/16] User12_6_User9_2_1
+{"pairs": 16, "task_A_pairs": 7, "task_C_pairs": 9, "contents": 16, "observers": 8, "active_participants": 10, "metric_rows": 400, "region_joint_rows": 6400}

@@ -12,7 +12,7 @@ def fixture():
         for j, source in enumerate(SOURCES):
             meta = dict(variant='primary', content_id='User1_test', user='User1',
                         task='A', side=side, signal='position', stage='stage',
-                        mode='psm_stage', source=source)
+                        mode='PSM in stage', source=source)
             # Every curve has complete support, but all peaks are negative and
             # at a search boundary. Those outcomes must not remove the input.
             curve = dict(meta, lag_s=np.array([-2., 0., 2.]),

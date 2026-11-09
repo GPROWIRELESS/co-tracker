@@ -1,4 +1,4 @@
-"""Target locking v2: sampled probability mass, with separate point decoders.
+"""Target locking v3: coordinate-only gaze, with separate point decoders.
 
 Native-frame/time support is identical across all models and decoding branches.
 All pre-existing runs are preserved. A successful full run supersedes the
@@ -25,16 +25,15 @@ DECODERS = {'expectation':'expectedxy', 'argmax':'argmaxxy', 'sample':'sampledxy
 META = ('content_id','participant','task','task_num','attempt','round','score','status')
 # Radius stays 50/50 in the primary analysis; changed radii are sensitivities.
 SCENARIOS = {
-    'main':(50,50,(2,3),False), 'gaze3':(50,50,(3,),False),
-    'legacy123':(50,50,(1,2,3),False), 'r25':(25,25,(2,3),False),
-    'r100':(100,100,(2,3),False), 'gripper100':(50,100,(2,3),False),
-    'smooth':(50,50,(2,3),True),
+    'main':(50,50,None,False), 'r25':(25,25,None,False),
+    'r100':(100,100,None,False), 'gripper100':(50,100,None,False),
+    'smooth':(50,50,None,True),
 }
 DEFAULT_OLD = Path('D:/GitHub_Project/co-tracker/outputs/target_locking_analysis/20261105T033217114891Z_full')
 
 
 def prepare(rec,args):
-    d=inputs.read_record(rec,args.data_root,args.repo,gaze_allowed_codes=(2,3),audit_cache_dir=args.cache_dir)
+    d=inputs.read_record(rec,args.data_root,args.repo,gaze_allowed_codes=None,audit_cache_dir=args.cache_dir)
     d['z'],d['count'],d['slotmask']=geo.target_center(d['slots'],d['width'],d['height'])
     d['included']=np.isin(d['stage'],STAGES[rec['task']])
     d['gripper_ok']=in_image(d['left'],d['width'],d['height']) & in_image(d['right'],d['width'],d['height'])
@@ -49,8 +48,7 @@ def support(d,scenario):
     _,_,codes,smooth=SCENARIOS[scenario]
     xy=d['smooth_xy'] if smooth else d['gaze_unmasked']
     gaze_ok=np.isfinite(xy).all(axis=1)
-    if not smooth:
-        gaze_ok &= np.isin(d['valid_code'],codes)
+    gaze_ok &= (xy >= 0).all(axis=1) & (xy <= [d['width'],d['height']]).all(axis=1)
     return xy,d['included'] & (d['count']>0) & d['gripper_ok'] & gaze_ok
 
 
@@ -206,6 +204,7 @@ def analyze(out,args,rec,d,bundles,refs,trials,errors,confusions,coverage,diagno
     marks=dict(frame_number=d['frames'],timestamp_ns=d['timestamp_ns'],dt_s=d['dt'],stage=d['stage'],
         occurrence=d['occurrence'],valid_code=d['valid_code'],break_before=d['breaks'],
         gaze_xy=d['gaze'],gaze_unmasked=d['gaze_unmasked'],smooth_xy=d['smooth_xy'],
+        gaze_coordinate_valid=d['gaze_coordinate_valid'],model_common_valid=model_ok,
         interpolated=d['interpolated'],target_slots=d['slots'],target_xy=d['z'],target_count=d['count'],
         target_slotmask=d['slotmask'],slotmask=d['slotmask'],label_mode=d['label_mode'],
         identity_change=d['identity_change'],left_xy=d['left'],right_xy=d['right'],likelihood=d['likelihood'],
@@ -221,7 +220,7 @@ def analyze(out,args,rec,d,bundles,refs,trials,errors,confusions,coverage,diagno
         for stage,st in stage_masks(d):
             v=valid&st
             coverage.append(dict(meta,scenario=scenario,stage=stage,total_n=int(st.sum()),total_s=d['dt'][st].sum(),
-                target_n=int((st&(d['count']>0)).sum()),gaze_n=int((st&np.isfinite(xy).all(axis=1)&(np.isin(d['valid_code'],codes) if not smooth else True)).sum()),
+                target_n=int((st&(d['count']>0)).sum()),gaze_n=int((st&np.isfinite(xy).all(axis=1)&(xy>=0).all(axis=1)&(xy<=[d['width'],d['height']]).all(axis=1)).sum()),
                 dlc_geometry_n=int((st&d['gripper_ok']).sum()),valid_n=int(v.sum()),valid_s=d['dt'][v].sum(),
                 fraction=ratio(v.sum(),st.sum()),paired_n=int((pair&st).sum()),paired_s=d['dt'][pair&st].sum(),
                 paired_available=paired,interpolated_fraction=ratio(np.sum(v&d['interpolated']) if smooth else 0,v.sum()),
@@ -320,8 +319,8 @@ def semantic_flags(stage):
 
 
 def report(out,cfg,trials,errors,coverage):
-    text=['# Target Locking v2：概率质量主分析与独立解码分析','',
-        f'运行：`{out.name}`。主半径 target=gripper=50 px；主 gaze 状态为 2/3，3-only 与旧1/2/3规则另作敏感性。',
+    text=['# Target Locking v3：概率质量主分析与独立解码分析','',
+        f'运行：`{out.name}`。主半径 target=gripper=50 px；gaze 仅要求坐标有限且位于归一化闭区间 [0,1]，不限制 valid 取值。',
         '', '## 本次变化及评价边界','',
         '- 主分析直接统计每帧 K=64 个原始模型 samples 的四区域命中比例。它估计模型采样分布的质量，不将热图压成一个点。期望点和 argmax 来自保存的 probability；有限 K 样本的经验分布与保存的概率图不必完全一致，解码差异不能全部归因于点选择规则。',
         '- 期望点、argmax 和固定随机种子的逐帧采样点均在本次相同区域、相同共同有效帧上重算。旧运行数值没有拼入新表。',
@@ -383,6 +382,9 @@ def main():
     parser.add_argument('--data-root',type=Path,default=Path('D:/Dataset/dvss'))
     parser.add_argument('--logs',type=Path,default=Path('C:/Users/GT502/Desktop/JMRR2027/DVSS_Pytorch/logs'))
     parser.add_argument('--output-root',type=Path)
+    parser.add_argument('--output-dir',type=Path,help='Exact new output directory; must not exist')
+    parser.add_argument('--reference-run',type=Path,help='Pin recording selection and verify source hashes against a previous run')
+    parser.add_argument('--cache-from',type=Path,help='Reuse signature-verified input caches from a previous run')
     parser.add_argument('--content-id',action='append')
     parser.add_argument('--audit-only',action='store_true')
     parser.add_argument('--self-test',action='store_true')
@@ -408,31 +410,61 @@ def main():
     args.repo=args.repo.resolve()
     base=args.output_root or args.repo/'outputs'/'target_locking_analysis'
     mode='audit' if args.audit_only else ('subset' if args.content_id else 'full')
-    out=base/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')+'_v2_'+mode)
+    out=args.output_dir or base/(datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')+'_v3_'+mode)
+    reference_cfg=None
+    if args.reference_run:
+        reference_cfg=json.loads((args.reference_run/'run_config.json').read_text(encoding='utf-8-sig'))
+        old_audit=pd.read_csv(args.reference_run/'recording_audit.csv')
+        for row in old_audit.to_dict('records'):
+            for source in ('npy','video_ts','dlc'):
+                if inputs._sha256(Path(row[source+'_path'])) != row[source+'_sha256']:
+                    raise ValueError(f"Reference input changed: {row[source+'_path']}")
+        print(f'Reference input hashes verified: {len(old_audit)} recordings',flush=True)
     out.mkdir(parents=True,exist_ok=False)
     args.cache_dir=out/'cache';args.cache_dir.mkdir()
+    if args.cache_from:
+        for sub in ('gaze_state','prediction_bundle'):
+            source=args.cache_from/'cache'/sub
+            if source.is_dir():shutil.copytree(source,args.cache_dir/sub)
     if not args.audit_only:(out/'frames').mkdir()
     print(f'Output: {out}',flush=True)
     code=out/'code_snapshot';code.mkdir()
     hashes={}
-    for name in ['analyze_target_locking.py','tl_inputs.py','tl_geometry.py','tl_stats.py','tl_common.py','tl_regions.py','tl_report.py']:
+    for name in ['analyze_target_locking.py','tl_inputs.py','tl_geometry.py','tl_stats.py','tl_common.py','tl_regions.py','tl_report.py','validate_target_locking_v2.py']:
         file=Path(__file__).with_name(name)
         if file.is_file():shutil.copy2(file,code/name);hashes[name]=hashlib.sha256(file.read_bytes()).hexdigest()
     records=inputs.records(args.repo)
+    if reference_cfg:
+        wanted=set(reference_cfg['selected'])
+        records=[r for r in records if r['content_id'] in wanted]
+        if {r['content_id'] for r in records} != wanted:raise ValueError('Reference recording selection changed')
     selected=[r for r in records if not args.content_id or r['content_id'] in args.content_id]
     if not selected or (args.content_id and set(args.content_id)!={r['content_id'] for r in selected}):raise ValueError('Unknown content id')
     mapping=inputs.models(args.repo,args.logs,selected)
-    cfg=dict(version=2,status='running',run_id=out.name,selected=[r['content_id'] for r in selected],
+    if reference_cfg:
+        previous=pd.read_csv(args.reference_run/'prediction_audit.csv')
+        old_predictions={(r['content_id'],r['model']):r['observed_sha256'] for r in previous.to_dict('records')}
+        current={(cid,model):entry['prediction_sha256'] for cid,group in mapping.items() for model,entry in group.items()}
+        expected={k:v for k,v in old_predictions.items() if k[0] in {r['content_id'] for r in selected}}
+        if current != expected:raise ValueError('Pinned prediction selection or hashes changed')
+    cfg=dict(version=3,status='running',run_id=out.name,selected=[r['content_id'] for r in selected],
         stages=STAGES,scenarios=SCENARIOS,models=MODELS,bootstrap_seed=42,bootstrap_n=args.nboot,
         sample_decoder_seed=42,primary_analysis='probability_mc_from_64_unsmoothed_samples',
         decoder_rules=DECODERS,common_frame_rule='all five models all three decoders and all K samples valid',
         target_radius_px=50,psm_radius_px=50,psm_definition='DLC wrist/hinge neighborhood; not jaw tip',
         target_definition='arithmetic mean of existing valid slots; no unsupported semantic overrides',
-        gaze_allowed_codes=[2,3],gaze_sensitivity_codes=[[3],[1,2,3]],
+        gaze_allowed_codes=None,gaze_sensitivity_codes=[],
+        gaze_quality_policy='finite normalized xy in inclusive [0,1]; valid ignored',
+        removed_status_scenarios=['gaze3','legacy123'],
         clock='precise original-frame video_ts; not claimed hardware exposure time',
         probability_estimator='mean of exact disk membership across saved sample coordinates',
         grid_reference='area fractions on pixel-center Voronoi cells of inclusive endpoint grid nodes',
-        supersedes=str(args.supersedes),code_sha256=hashes,repo=str(args.repo),data_root=str(args.data_root))
+        supersedes=None if args.no_supersede else str(args.supersedes),code_sha256=hashes,repo=str(args.repo),data_root=str(args.data_root),
+        reference_run=str(args.reference_run) if args.reference_run else None,
+        reference_input_hashes_verified=bool(reference_cfg),
+        logs=str(args.logs),output_dir=str(out.resolve()),
+        inherited_report_revision=reference_cfg.get('report_revision') if reference_cfg else None,
+        decoder_inputs=reference_cfg.get('decoder_inputs') if reference_cfg else None)
     dump_json(out/'run_config.json',cfg)
     refs={};train={};problems=[]
     if not args.audit_only:

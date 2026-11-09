@@ -5,7 +5,7 @@ from gaze_psm_statistics_v2 import summarize_pairs, group_curves, exact_model_co
 
 
 def pair(user, stage='one', model='m1', value=.1, cid=None, common=True):
-    return dict(variant='primary',task='A',side='l',signal='position',stage=stage,mode='psm_stage',
+    return dict(variant='primary',task='A',side='l',signal='position',stage=stage,mode='PSM in stage',
         model=model,user=user,content_id=cid or user,curve_mae=value,delta_lag_s=value,
         abs_lag_difference_s=abs(value),input_eligible=common,common_input=common,
         gt_localizable=False,model_localizable=False,gt_status='broad_uncertainty',model_status='boundary_limited')
@@ -14,7 +14,7 @@ def pair(user, stage='one', model='m1', value=.1, cid=None, common=True):
 def curve(user, stage='one', source='gt', value=.1, finite=True):
     rr=np.array([value-.05,value,value-.03])
     if not finite: rr[0]=np.nan
-    return dict(variant='primary',task='A',side='l',signal='position',stage=stage,mode='psm_stage',
+    return dict(variant='primary',task='A',side='l',signal='position',stage=stage,mode='PSM in stage',
         user=user,content_id=user,source=source,lag_s=np.array([-1.,0.,1.]),r=rr)
 
 

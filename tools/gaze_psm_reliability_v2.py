@@ -15,7 +15,7 @@ from gaze_psm_core_legacy import _fft_statistics
 
 
 def occurrence_statistics(gaze, psm, occurrence_ids=None, hz=41., max_lag=2.,
-                          within_stage=False):
+                          both_in_stage=False):
     """Return terms[K,4,L] in count/covariance/gaze SS/PSM SS order.
 
     Every supplied nonnegative occurrence ID remains in the result, even if
@@ -45,7 +45,7 @@ def occurrence_statistics(gaze, psm, occurrence_ids=None, hz=41., max_lag=2.,
         local_ids = ids[start:end]
         pm = pf[start:end] & (local_ids == identity)
         gm = gf[start:end].copy()
-        if within_stage:
+        if both_in_stage:
             gm &= local_ids == identity
         if pm.sum() < 2 or gm.sum() < 2:
             continue
@@ -53,7 +53,7 @@ def occurrence_statistics(gaze, psm, occurrence_ids=None, hz=41., max_lag=2.,
         usable = raw[0] >= 2
         terms[j, :, usable] = raw[:, usable].T
     return {'lag_s': lags / hz, 'ids': identities.astype(np.int64),
-            'terms': terms, 'hz': float(hz), 'within_stage': bool(within_stage)}
+            'terms': terms, 'hz': float(hz), 'Both in stage': bool(both_in_stage)}
 
 
 def _from_totals(total, occurrence_counts, lags, hz, min_overlap, min_rms):

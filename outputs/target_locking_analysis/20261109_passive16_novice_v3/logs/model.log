@@ -1,0 +1,32 @@
+Model subset: 3 pairs, 3 contents, 2 source participants
+  Verify/load User12_3_1/all_ABCD
+  Verify/load User12_3_1/single_task
+  Verify/load User12_3_1/leave_out
+  Verify/load User12_3_1/spd_finetune
+  Verify/load User12_3_1/spd_zero_shot
+  Measure User2_6_User12_3_1/main
+  Measure User2_6_User12_3_1/r25
+  Measure User2_6_User12_3_1/r100
+  Measure User2_6_User12_3_1/gripper100
+  Measure User2_6_User12_3_1/smooth
+  Verify/load User12_5_2/all_ABCD
+  Verify/load User12_5_2/single_task
+  Verify/load User12_5_2/leave_out
+  Verify/load User12_5_2/spd_finetune
+  Verify/load User12_5_2/spd_zero_shot
+  Measure User3_4_User12_5_2/main
+  Measure User3_4_User12_5_2/r25
+  Measure User3_4_User12_5_2/r100
+  Measure User3_4_User12_5_2/gripper100
+  Measure User3_4_User12_5_2/smooth
+  Verify/load User7_1_1/all_ABCD
+  Verify/load User7_1_1/single_task
+  Verify/load User7_1_1/leave_out
+  Verify/load User7_1_1/spd_finetune
+  Verify/load User7_1_1/spd_zero_shot
+  Measure User10_2_User7_1_1/main
+  Measure User10_2_User7_1_1/r25
+  Measure User10_2_User7_1_1/r100
+  Measure User10_2_User7_1_1/gripper100
+  Measure User10_2_User7_1_1/smooth
+Completed 1500 model rows, 18000 confusion cells

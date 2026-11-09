@@ -4,6 +4,7 @@ All numerical dependencies live beside this file and are copied into each run.
 No raw data, predictions or previous results are modified. This is an exploratory
 reanalysis, not a prospectively registered confirmation study.
 """
+from gaze_psm_modes import mode_rows, normalize_modes, seed_identity
 import os
 for _key in ('OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS'):
     os.environ[_key] = '1'
@@ -68,7 +69,7 @@ def sha(path):
     return h.hexdigest()
 
 def seed_for(*parts):
-    return int.from_bytes(hashlib.sha256(repr(parts).encode()).digest()[:4],'little')
+    return int.from_bytes(hashlib.sha256(repr(seed_identity(parts)).encode()).digest()[:4],'little')
 
 def load_caches(source, cid):
     result={}
@@ -93,7 +94,7 @@ def audit_inputs(source, output, records, verify_predictions=True):
             rows.append(dict(content_id=cid,source=name,kind='cache',frame_match=True,time_match=True,
                              n_frames=len(d['frame_number']),gaze_raw_is_resampled=True))
     if verify_predictions:
-        with (Path(source)/'prediction_manifest.csv').open(encoding='utf-8-sig') as f: preds=list(csv.DictReader(f))
+        with (Path(source)/'prediction_manifest.csv').open(encoding='utf-8-sig') as f: preds=list(mode_rows(csv.DictReader(f)))
         for row in preds:
             if row['content_id'] not in records: continue
             path=Path(row['prediction_path']); digest=sha(path)
@@ -141,12 +142,12 @@ def analyze_record(job):
             stages=sorted(s for s in np.unique(d['stage']) if str(s).lower() not in ('','none','nan','null') and str(s) not in excluded)
             for stage in stages:
                 ids=np.where(d['stage']==stage,d['occurrence'],-1)
-                for mode in ['psm_stage','within_stage']:
+                for mode in ['PSM in stage','Both in stage']:
                     common_seed=seed_for(42,cid,signal,side,str(stage),mode,variant)
                     for name in SOURCES:
                         meta=dict(variant=variant,content_id=cid,user=cid.split('_')[0],task=task,
                                   side=side,signal=signal,stage=str(stage),mode=mode,source=name)
-                        stats=occurrence_statistics(d['gazes'][name],d['psm'],ids,config['hz'],config['max_lag'],mode=='within_stage')
+                        stats=occurrence_statistics(d['gazes'][name],d['psm'],ids,config['hz'],config['max_lag'],mode=='Both in stage')
                         curve=aggregate_statistics(stats,min_overlap=config['min_overlap'],min_rms=config['min_rms'])
                         feat=peak_features(curve)
                         rel=reliability(stats,bootstrap=reps,seed=common_seed,
@@ -263,7 +264,7 @@ def legacy_regression(source,curves,output):
     checks=[]
     for name in SOURCES:
         path=Path(source)/name/'results.json'
-        saved=json.loads(path.read_text(encoding='utf8'))['record_curves']
+        saved=normalize_modes(json.loads(path.read_text(encoding='utf8')))['record_curves']
         for old in saved:
             side=old.get('selected_side')
             if side not in ('l','r'):continue
@@ -288,7 +289,7 @@ def donor_reference(source,records,curves,output,count=1000):
     from gaze_psm_reliability_v2 import occurrence_statistics,aggregate_statistics
     pre={cid:prepare_signals(load_caches(source,cid),BASE)['signals']['position'] for cid in records}
     observed={(c['content_id'],c['source'],c['side'],c['stage']):c for c in curves
-              if c['variant']=='primary' and c['signal']=='position' and c['mode']=='psm_stage'}
+              if c['variant']=='primary' and c['signal']=='position' and c['mode']=='PSM in stage'}
     pair_cache={};pairings=[];group_rows=[];null_draws=[]
     for task in ['A','C']:
         ids=[c for c in TASKS[task] if c in pre]
@@ -312,7 +313,7 @@ def donor_reference(source,records,curves,output,count=1000):
         stages=sorted(set(k[3] for k in observed if k[0] in ids))
         for side,stage,name in itertools.product(['l','r'],stages,SOURCES):
             targets=[cid for cid in ids if (cid,name,side,stage) in observed and np.isfinite(observed[cid,name,side,stage]['r']).all()]
-            meta=dict(task=task,side=side,stage=stage,source=name,signal='position',mode='psm_stage',variant='primary',
+            meta=dict(task=task,side=side,stage=stage,source=name,signal='position',mode='PSM in stage',variant='primary',
                       n_target_users=len(targets),target_users=targets,n_requested=count,
                       support_policy='all observed complete-lag recipients retained',reference='different-user elapsed-time gaze')
             if len(targets)<3:
@@ -391,7 +392,7 @@ def direction_sensitivity(pairs):
     from collections import defaultdict
     groups=defaultdict(list)
     for r in pairs:
-        if r['variant']!='primary' or r['signal']!='position' or r['mode']!='psm_stage':continue
+        if r['variant']!='primary' or r['signal']!='position' or r['mode']!='PSM in stage':continue
         for stage in [r['stage'],'__observed_stage_average__']:
             groups[(r['task'],r['side'],stage,r['model'])].append(r)
     result=[]

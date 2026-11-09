@@ -41,7 +41,7 @@ bootstrap draws and 19,999 permutations with at least six qualifying users.
 
 ```bash
 export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MPLBACKEND=Agg
-python tools/gaze_psm_xcorr_dlc.py --within-stage --workers 8
+python tools/gaze_psm_xcorr_dlc.py --both-in-stage --workers 8
 python tools/gaze_psm_xcorr_max_dlc.py
 python tools/analyze_score_corr_dlc.py
 python tools/analyze_component_score_corr_dlc.py

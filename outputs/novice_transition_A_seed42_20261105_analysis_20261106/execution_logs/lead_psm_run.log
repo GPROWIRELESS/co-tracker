@@ -1,0 +1,46 @@
+Analyzed 5/200 record/view/config jobs, 900 curves, elapsed 28.3s
+Analyzed 10/200 record/view/config jobs, 1350 curves, elapsed 32.5s
+Analyzed 15/200 record/view/config jobs, 1800 curves, elapsed 41.2s
+Analyzed 20/200 record/view/config jobs, 2700 curves, elapsed 61.7s
+Analyzed 25/200 record/view/config jobs, 3600 curves, elapsed 81.6s
+Analyzed 30/200 record/view/config jobs, 4050 curves, elapsed 87.6s
+Analyzed 35/200 record/view/config jobs, 4500 curves, elapsed 94.7s
+Analyzed 40/200 record/view/config jobs, 4950 curves, elapsed 104.5s
+Analyzed 45/200 record/view/config jobs, 5310 curves, elapsed 111.2s
+Analyzed 50/200 record/view/config jobs, 5490 curves, elapsed 113.4s
+Analyzed 55/200 record/view/config jobs, 5670 curves, elapsed 117.5s
+Analyzed 60/200 record/view/config jobs, 6030 curves, elapsed 125.1s
+Analyzed 65/200 record/view/config jobs, 6390 curves, elapsed 133.0s
+Analyzed 70/200 record/view/config jobs, 6570 curves, elapsed 135.5s
+Analyzed 75/200 record/view/config jobs, 6750 curves, elapsed 138.4s
+Analyzed 80/200 record/view/config jobs, 6930 curves, elapsed 142.3s
+Analyzed 85/200 record/view/config jobs, 7290 curves, elapsed 151.6s
+Analyzed 90/200 record/view/config jobs, 7470 curves, elapsed 153.4s
+Analyzed 95/200 record/view/config jobs, 7650 curves, elapsed 156.1s
+Analyzed 100/200 record/view/config jobs, 8010 curves, elapsed 164.9s
+Analyzed 105/200 record/view/config jobs, 8370 curves, elapsed 172.4s
+Analyzed 110/200 record/view/config jobs, 8550 curves, elapsed 174.9s
+Analyzed 115/200 record/view/config jobs, 8730 curves, elapsed 178.2s
+Analyzed 120/200 record/view/config jobs, 8910 curves, elapsed 181.6s
+Analyzed 125/200 record/view/config jobs, 9270 curves, elapsed 190.3s
+Analyzed 130/200 record/view/config jobs, 9450 curves, elapsed 192.7s
+Analyzed 135/200 record/view/config jobs, 9630 curves, elapsed 195.3s
+Analyzed 140/200 record/view/config jobs, 9990 curves, elapsed 204.2s
+Analyzed 145/200 record/view/config jobs, 10350 curves, elapsed 211.5s
+Analyzed 150/200 record/view/config jobs, 10530 curves, elapsed 213.8s
+Analyzed 155/200 record/view/config jobs, 10710 curves, elapsed 217.5s
+Analyzed 160/200 record/view/config jobs, 10890 curves, elapsed 221.0s
+Analyzed 165/200 record/view/config jobs, 11250 curves, elapsed 229.6s
+Analyzed 170/200 record/view/config jobs, 11430 curves, elapsed 231.8s
+Analyzed 175/200 record/view/config jobs, 11610 curves, elapsed 234.8s
+Analyzed 180/200 record/view/config jobs, 11970 curves, elapsed 243.2s
+Analyzed 185/200 record/view/config jobs, 12330 curves, elapsed 250.9s
+Analyzed 190/200 record/view/config jobs, 12510 curves, elapsed 253.5s
+Analyzed 195/200 record/view/config jobs, 12690 curves, elapsed 256.5s
+Analyzed 200/200 record/view/config jobs, 12870 curves, elapsed 259.3s
+Building participant-level summaries and 5000-draw group curves...
+Checking leave-one-user-out primary results...
+Computing different-user gaze references...
+Rendering figures...
+{"n_record_curves": 12870, "n_pairs": 7920, "n_recordings": 5, "n_participants": 4, "direction_counts_primary_position": {"gt": {"undetermined": 10}, "current_transition": {"undetermined": 9, "synchronous": 1}, "future500_transition": {"undetermined": 10}, "future1000_transition": {"undetermined": 9, "lead": 1}, "future1500_transition": {"undetermined": 8, "lead": 2}}, "reference_valid_draw_range": [5000, 5000], "elapsed_seconds": 451.4775092601776}
+{"complete": true, "native_reference_curves": 180, "sampling_pairs": 36, "matched_sensitivity_rows": 2464, "elapsed_seconds": 60.76212525367737}

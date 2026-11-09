@@ -1,0 +1,76 @@
+{
+  "passed": true,
+  "complete": true,
+  "checks": [
+    {
+      "name": "TL_pairing_probability_conservation_differences",
+      "passed": true,
+      "trial_rows": 3600
+    },
+    {
+      "name": "TL_independent_native_mask_geometry_weights_and_Brier",
+      "passed": true,
+      "frame_rows": 212384,
+      "aggregate_checks": 600
+    },
+    {
+      "name": "TL_User5_equal_record_then_equal_participant_aggregation",
+      "passed": true
+    },
+    {
+      "name": "Lead_common_group_record_and_participant_support_and_paired_differences",
+      "passed": true
+    },
+    {
+      "name": "Lead_independent_Fisher_equal_record_within_user_then_user_group_curve",
+      "passed": true,
+      "curves": 180,
+      "max_abs_error": 2.220446049250313e-16
+    },
+    {
+      "name": "Lead_zero_horizon_record_curves_and_support_identical",
+      "passed": true,
+      "paired_curves": 1980
+    },
+    {
+      "name": "Lead_final_phase_average_and_reference_exact_observed_support",
+      "passed": true,
+      "reference_rows": 50
+    }
+  ],
+  "details": {
+    "tl_anchor_common_main": [
+      {
+        "content_id": "User1_6_1",
+        "participant": "User1",
+        "valid_n": 3491,
+        "valid_s": 168.8619912
+      },
+      {
+        "content_id": "User2_3_1",
+        "participant": "User2",
+        "valid_n": 6299,
+        "valid_s": 377.5571293
+      },
+      {
+        "content_id": "User5_2_1",
+        "participant": "User5",
+        "valid_n": 6289,
+        "valid_s": 342.4180336
+      },
+      {
+        "content_id": "User5_9_1",
+        "participant": "User5",
+        "valid_n": 3889,
+        "valid_s": 208.29798505
+      },
+      {
+        "content_id": "User11_2_1",
+        "participant": "User11",
+        "valid_n": 4152,
+        "valid_s": 136.87987945
+      }
+    ],
+    "lead_primary_group_rows": 180
+  }
+}

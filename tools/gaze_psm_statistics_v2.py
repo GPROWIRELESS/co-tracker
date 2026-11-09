@@ -5,6 +5,7 @@ technical comparison set. Resampling ranges are explicitly uncalibrated for
 small participant counts. All permutations act on complete participant blocks.
 """
 from __future__ import annotations
+from gaze_psm_modes import seed_identity
 import hashlib
 import itertools
 import json
@@ -36,7 +37,7 @@ def _mean(values):
 
 
 def _stable_seed(seed, key):
-    return int.from_bytes(hashlib.sha256(repr((int(seed), key)).encode()).digest()[:8], 'little')
+    return int.from_bytes(hashlib.sha256(repr(seed_identity((int(seed), key))).encode()).digest()[:8], 'little')
 
 
 def _eligible(row):
@@ -101,7 +102,7 @@ def summarize_pairs(rows, bootstrap=2000, seed=42):
                       n_both_localizable=sum(_truth(r.get('gt_localizable')) and _truth(r.get('model_localizable')) for r in good),
                       range_method='participant_percentile_resampling_uncalibrated',
                       resamples=int(bootstrap),
-                      weighting='record_equal_within_stage;observed_stage_equal_within_user;user_equal',
+                      weighting='record_equal_within_each_stage;observed_stage_equal_within_user;user_equal',
                       participants_json=json.dumps(users),
                       stage_coverage_json=json.dumps({u: sorted({r['stage'] for r in good if str(r['user']) == u}) for u in users}))
         result['gt_localizable_rate'] = result['n_gt_localizable'] / len(good) if good else np.nan
@@ -206,7 +207,7 @@ def exact_model_comparisons(paired_rows, primary_variant='primary'):
     """
     grouped = defaultdict(list)
     for r in paired_rows:
-        if r.get('variant', 'primary') != primary_variant or r.get('signal') != 'position' or r.get('mode') != 'psm_stage':
+        if r.get('variant', 'primary') != primary_variant or r.get('signal') != 'position' or r.get('mode') != 'PSM in stage':
             continue
         key = _key(r)
         grouped[key].append(r)
@@ -256,7 +257,7 @@ def identity_reference(curves, primary_variant='primary'):
     """
     grouped = defaultdict(list)
     for c in curves:
-        if c.get('variant', 'primary') == primary_variant and c.get('signal') == 'position' and c.get('mode') == 'psm_stage':
+        if c.get('variant', 'primary') == primary_variant and c.get('signal') == 'position' and c.get('mode') == 'PSM in stage':
             grouped[(c['task'], c['side'])].append(c)
     out = []
     for (task, side), data in sorted(grouped.items()):

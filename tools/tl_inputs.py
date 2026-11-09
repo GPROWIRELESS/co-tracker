@@ -25,7 +25,7 @@ CANONICAL_STAGES = {
     "wrap": "wrap around psm", "cinch": "pull through and cinch",
     "thread": "threading string through tower",
 }
-GAZE_ALLOWED_CODES = (2, 3)
+GAZE_ALLOWED_CODES = None
 STATE_AUDIT_VERSION = 2
 BUNDLE_VERSION = 2
 EYE_STATUS_MEANING = {"0": "not tracked", "1": "visible but not reliably tracked",
@@ -399,11 +399,13 @@ def read_record(rec, data_root, repo, *, gaze_allowed_codes=GAZE_ALLOWED_CODES, 
     names = set(source.dtype.names)
     gaze = np.column_stack((source["gaze_x"], source["gaze_y"])).astype(float)
     valid_code = np.asarray(source["valid"])
-    codes = tuple(int(c) for c in gaze_allowed_codes)
-    if not codes or len(set(codes)) != len(codes) or not set(codes) <= {1, 2, 3}:
-        raise ValueError("gaze_allowed_codes must be a nonempty unique subset of (1,2,3)")
+    # None means coordinate-only eligibility. Explicit codes support historical
+    # audits; v3 analysis never passes a status-code restriction.
+    codes = None if gaze_allowed_codes is None else tuple(gaze_allowed_codes)
+    if codes is not None and (not codes or len(set(codes)) != len(codes)):
+        raise ValueError("gaze_allowed_codes must be None or a nonempty unique sequence")
     coordinate_valid = np.isfinite(gaze).all(axis=1) & (gaze >= 0).all(axis=1) & (gaze <= 1).all(axis=1)
-    gaze_valid = np.isin(valid_code, codes) & coordinate_valid
+    gaze_valid = coordinate_valid.copy() if codes is None else np.isin(valid_code, codes) & coordinate_valid
     gaze *= (width, height)
     gaze_unmasked = gaze.copy()
     gaze_unmasked[~coordinate_valid] = np.nan
@@ -431,11 +433,12 @@ def read_record(rec, data_root, repo, *, gaze_allowed_codes=GAZE_ALLOWED_CODES, 
                  clock_source="video_ts.csv matched by original Frame_Number",
                  target_id_field=identity_col or "unavailable", video_nominal_fps=float(fps),
                  native_median_hz=float(1e9 / np.median(np.diff(ns))), width=width, height=height)
-    audit.update(gaze_allowed_codes=list(codes), valid_code_counts=_counts(valid_code),
+    audit.update(gaze_allowed_codes=None if codes is None else list(codes), valid_code_counts=_counts(valid_code),
                  gaze_coordinate_valid_n=int(coordinate_valid.sum()), gaze_valid_n=int(gaze_valid.sum()),
                  gaze_legacy123_coordinate_valid_n=int(np.sum(coordinate_valid & np.isin(valid_code,(1,2,3)))),
                  gaze_strict3_coordinate_valid_n=int(np.sum(coordinate_valid & (valid_code==3))),
-                 gaze_quality_policy="2/3 main; 3 strict sensitivity; 1/2/3 legacy audit; no raw-status replacement")
+                 gaze_quality_policy="finite normalized xy in inclusive [0,1]; valid ignored" if codes is None else "explicit historical code audit",
+                 status_counts_are_diagnostic_only=True)
     raw_state, state_audit = _raw_state_audit(base, cid, frames, ns,
                                             np.column_stack((source["gaze_x"],source["gaze_y"]))*[width,height],
                                             valid_code, width, height, audit["npy_sha256"], audit_cache_dir)

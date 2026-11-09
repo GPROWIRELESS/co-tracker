@@ -1,4 +1,5 @@
 """Build an evidence-linked Chinese interpretation of the fixed-side v2 results."""
+from gaze_psm_modes import normalize_frame
 from pathlib import Path
 import argparse
 import base64
@@ -30,13 +31,13 @@ def fig(root,name,caption):
 
 def main(outdir):
     root=Path(outdir).resolve()
-    read=lambda name:pd.read_csv(root/name)
+    read=lambda name:normalize_frame(pd.read_csv(root/name))
     groups=read('group_summary.csv');pairs=read('paired_metrics.csv');summaries=read('paired_summary.csv')
     records=read('record_summary.csv');direct=read('direct_model_delay.csv');identity=read('identity_reference.csv')
     comparisons=read('model_comparisons.csv');sens=read('sensitivity_summary.csv');pg=read('paired_group_summary.csv')
-    gt=select(groups,variant='primary',source='gt',signal='position',mode='psm_stage')
-    primary=select(summaries,variant='primary',signal='position',mode='psm_stage',stage=OBS)
-    p=select(pairs,variant='primary',signal='position',mode='psm_stage')
+    gt=select(groups,variant='primary',source='gt',signal='position',mode='PSM in stage')
+    primary=select(summaries,variant='primary',signal='position',mode='PSM in stage',stage=OBS)
+    p=select(pairs,variant='primary',signal='position',mode='PSM in stage')
     valid=p[p.common_input.astype(bool)]
     for frame in [groups,pairs,summaries,records,pg]:
         assert not frame.stage.eq('drop ring').any(), 'Excluded stage remains in current analysis'
@@ -57,7 +58,7 @@ def main(outdir):
         return x.reset_index().rename(columns={'model':'模型'})
     n_conditions=valid[['content_id','stage','side']].drop_duplicates().shape[0]
     both=int((valid.gt_localizable.astype(bool)&valid.model_localizable.astype(bool)).sum())
-    gt_recs=select(records,variant='primary',source='gt',signal='position',mode='psm_stage')
+    gt_recs=select(records,variant='primary',source='gt',signal='position',mode='PSM in stage')
     gt_complete=gt_recs[gt_recs.full_support.astype(bool)]
     gt_local=int(gt_complete.lag_identifiable.astype(bool).sum())
     scope=[]
@@ -65,10 +66,10 @@ def main(outdir):
         uq=q[['content_id','user','stage']].drop_duplicates()
         scope.append(dict(task=task,side=side,n_people=uq.user.nunique(),n_conditions=len(uq),stages='；'.join(sorted(uq.stage.unique()))))
     scope=pd.DataFrame(scope)
-    transfer=select(pg,variant='primary',signal='position',mode='psm_stage',stage='transfer ring')
+    transfer=select(pg,variant='primary',signal='position',mode='PSM in stage',stage='transfer ring')
     change=[]
     for signal in ['position','velocity']:
-        q=select(sens,signal=signal,mode='psm_stage',stage=OBS)
+        q=select(sens,signal=signal,mode='PSM in stage',stage=OBS)
         for branch in q.sensitivity_branch.unique():
             a=q[q.variant==branch];b=q[q.variant=='primary_matched_to_'+branch]
             if a.empty or b.empty:continue
@@ -83,7 +84,7 @@ def main(outdir):
       '<div class="lead"><p><strong>主要结论：</strong>本批数据支持某些阶段存在可复现的位置相关结构，最清楚的正向组峰出现在 Task A 的右侧 <em>transfer ring</em>。模型通常能复现部分曲线形状，但存在约数百毫秒的 GT–模型相对时序偏移；曲线相似不代表精确领先时间已经复现。当前样本不能支持五模型的显著优劣排名。</p></div>',
       '<p>这一判断来自固定物理器械、共同输入支持上的比较。DLC 低 likelihood 和跳变点均保留，仅采用轻度平滑；未用测试视频的最优时间平移校正模型。所有边界峰、非正峰和不可定位结果均保留在主分析中。</p>',
       '<h2>分析范围与统计单位</h2>',
-      f'<p>共10个视频，A/C各5个视频，每任务5名参与者，跨任务合计7名独立参与者。排除指定阶段后，主 position / psm_stage 分析共有 <strong>{n_conditions} 个 recording×stage×side 条件</strong>、{len(valid)}条五模型配对，均具有共同完整 lag 支持。条件数不能当作独立参与者数。</p>',
+      f'<p>共10个视频，A/C各5个视频，每任务5名参与者，跨任务合计7名独立参与者。排除指定阶段后，主 position / PSM in stage 分析共有 <strong>{n_conditions} 个 recording×stage×side 条件</strong>、{len(valid)}条五模型配对，均具有共同完整 lag 支持。条件数不能当作独立参与者数。</p>',
       table(scope,['task','side','n_people','n_conditions','stages'],{'task':'任务','side':'器械侧','n_people':'参与者','n_conditions':'主条件数','stages':'纳入阶段'}),
       '<p>位置采用3点居中平滑，采样率41 Hz，主搜索窗口±2秒。每个 occurrence 分别中心化后池化；参与者内录制等权、参与者之间等权的层级规则保持明确。跨阶段汇总为“每人实际可用阶段平均”，不代表各阶段具有相同的人群覆盖。数值和覆盖来源：'+link('paired_summary.csv')+'。</p>',
       '<p class="note">下文方括号内范围是参与者或 occurrence 重采样的2.5%–97.5%分位范围，未经覆盖率校准，不称为正式95%置信区间。正 lag 表示 gaze 领先 PSM；signed Δlag＝模型峰减GT峰。曲线 MAE 的单位是相关系数，不能换算成秒。</p>',

@@ -1,0 +1,10 @@
+Read native User1_6_1
+Read native User2_3_1
+Read native User5_2_1
+Read native User5_9_1
+Read native User11_2_1
+Prepared current_transition
+Prepared future500_transition
+Prepared future1000_transition
+Prepared future1500_transition
+{"records": 5, "coordinate_valid_rows": 50440, "valid_column_used_for_selection": false}

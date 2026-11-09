@@ -4,6 +4,7 @@ Run from the repo root. Only the explicitly named audit JSON is written.
 This verifies cached trajectories onward; it cannot authenticate source CSVs
 or re-decode original masks when those files are unavailable.
 """
+from gaze_psm_modes import mode_rows, normalize_modes
 import argparse
 import ast
 from collections import Counter, defaultdict
@@ -118,7 +119,7 @@ def _csv_check(path, expected):
     """Compare every exported cell to its JSON-derived value, including NaNs."""
     count = 0
     with path.open(encoding='utf-8-sig', newline='') as stream:
-        reader = csv.DictReader(stream)
+        reader = mode_rows(csv.DictReader(stream))
         for row in reader:
             item = next(expected)
             for key, text in row.items():
@@ -126,7 +127,7 @@ def _csv_check(path, expected):
                 if value is None:
                     assert text.lower() in {'', 'nan', 'none'}, (path.name, key, text)
                 elif isinstance(value, (list, dict, tuple)):
-                    assert json.loads(text) == value, (path.name, key)
+                    assert normalize_modes(json.loads(text)) == value, (path.name, key)
                 elif isinstance(value, (bool, str)):
                     assert text == str(value), (path.name, key, text, value)
                 else:
@@ -148,9 +149,9 @@ def main():
                         help='Replay this many initial unpaired replicates; 100 for the full run')
     opts = parser.parse_args()
     directory = opts.output
-    config = json.loads((directory/'config.json').read_text())
-    saved = json.loads((directory/'results.json').read_text())
-    qc = json.loads((directory/'quality.json').read_text())
+    config = normalize_modes(json.loads((directory/'config.json').read_text()))
+    saved = normalize_modes(json.loads((directory/'results.json').read_text()))
+    qc = normalize_modes(json.loads((directory/'quality.json').read_text()))
     records = {r['content_id']: {'content_id': r['content_id'], 'Task Name': r['task']}
                for r in qc if r['status'] == 'ok'}
     assert len(records) == len(qc), 'Extraction errors require individual review'
@@ -164,7 +165,7 @@ def main():
         for row in rows:
             for key in arrays & row.keys():
                 row[key] = np.asarray(row[key], dtype=float)
-    provenance = json.loads((directory/'rerun_provenance.json').read_text())
+    provenance = normalize_modes(json.loads((directory/'rerun_provenance.json').read_text()))
     hashes = {}
     plotting_changes = {}
     for name, expected in provenance['code_sha256'].items():
@@ -181,7 +182,7 @@ def main():
     direct_checks = 0
     for cid, record in records.items():
         data = _data(cid)
-        quality = json.loads(str(data['qc_json']))
+        quality = normalize_modes(json.loads(str(data['qc_json'])))
         assert quality == next(q for q in qc if q['content_id'] == cid)
         np.testing.assert_allclose(np.diff(data['time_s']), 1/config['hz'], atol=1e-12)
         for side in ('l', 'r'):
@@ -207,7 +208,7 @@ def main():
                        else np.where(data['stage'] == curve['stage'], data['occurrence'], -1))
                 for index, lag in enumerate(np.rint(curve['lag_s']*config['hz']).astype(int)):
                     result = _direct(data[f"gaze_{curve['side']}"], data[f"psm_{curve['side']}"],
-                                     ids, lag, curve['mode'] == 'within_stage', config,
+                                     ids, lag, curve['mode'] == 'Both in stage', config,
                                      config['min_overlap'] if curve['mode'] == 'whole'
                                      else config['stage_min_overlap'])
                     for key, value in result.items():

@@ -1,4 +1,4 @@
-"""Position/velocity cross-correlation with PSM-anchored stage pooling.
+"""Position/velocity cross-correlation with PSM in stage stage pooling.
 
 Positive lag compares gaze at ``u - lag`` with PSM at ``u``.  Stage
 occurrences select PSM samples; the gaze sample can precede the occurrence.
@@ -40,7 +40,7 @@ def _fft_statistics(gaze, psm, gaze_valid, psm_valid, lags):
 
 
 def analyze_curve(gaze, psm, hz, max_lag=2., min_overlap=5.,
-                  occurrence_ids=None, within_stage=False,
+                  occurrence_ids=None, both_in_stage=False,
                   min_gaze_rms=1., min_psm_rms=1., spatial_tolerance=50.,
                   compute_spatial=True):
     """Calculate a fixed-grid, overlap-normalized 2-D xcorr curve.
@@ -56,7 +56,7 @@ def analyze_curve(gaze, psm, hz, max_lag=2., min_overlap=5.,
         Unique nonnegative IDs of occurrences of the requested stage.  -1
         excludes samples.  Membership refers to PSM time.  None selects the
         complete recording as one occurrence.
-    within_stage : bool
+    both_in_stage : bool
         Require gaze and PSM samples to belong to the same occurrence.  False
         allows gaze outside the occurrence, including the preceding stage.
     min_overlap : float
@@ -113,7 +113,7 @@ def analyze_curve(gaze, psm, hz, max_lag=2., min_overlap=5.,
         local_ids = occurrence_ids[start:end]
         pm = psm_finite[start:end] & (local_ids == identity)
         gm = gaze_finite[start:end].copy()
-        if within_stage:
+        if both_in_stage:
             gm &= local_ids == identity
         if pm.sum() < 2 or gm.sum() < 2:
             continue
@@ -130,7 +130,7 @@ def analyze_curve(gaze, psm, hz, max_lag=2., min_overlap=5.,
                 inside = (shifted >= 0) & (shifted < n)
                 u, t = members[inside], shifted[inside]
                 valid = psm_finite[u] & gaze_finite[t]
-                if within_stage:
+                if both_in_stage:
                     valid &= occurrence_ids[t] == identity
                 if valid.sum() >= 2:
                     distance_lists[index].append(np.linalg.norm(psm[u[valid]]-gaze[t[valid]], axis=1))

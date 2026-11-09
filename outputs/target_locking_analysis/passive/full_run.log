@@ -1,0 +1,21 @@
+run_passive.log
+User1_4_User11_2_1__22e0c0f1cf69 accepted
+User1_6_User9_5_2__86b0ee04ecb0 accepted
+User2_2_User11_3_1__9217fa8ca08f accepted
+User2_6_User12_3_1__ed4da398a34d accepted
+User3_2_User6_3_1__68526aa9582b accepted
+User3_4_User12_5_2__9e4b9cdb6682 accepted
+User6_2_User1_3_1__209429fd7636 accepted
+User6_6_User2_2_1__b7ce89ea60a0 accepted
+User8_4_User10_1_1__89fd1d268c61 accepted
+User8_6_User5_3_1__266341b944be accepted
+User9_2_User8_6_1__0b3aafe72a2a accepted
+User9_6_User5_2_1__1bd326cdee8f accepted
+User10_2_User7_1_1__6155a0fca3e4 accepted
+User10_4_User2_2_2__8fa614e04422 accepted
+User12_2_User7_3_1__750f28b0d147 accepted
+User12_6_User9_2_1__3e5236f32f1e accepted
+
+
+report_passive.log
+{"figures": 11, "trial_rows": 400, "valid_seconds": 4096.2265969}

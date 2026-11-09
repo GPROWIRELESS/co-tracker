@@ -1,0 +1,8 @@
+Environment: C:\ProgramData\anaconda3\envs\sam3\python.exe
+Use a new writable OUTPUT directory. Original source paths are recorded in run_config.json.
+python -B code_snapshot/analyze_passive16.py --output OUTPUT
+python -B code_snapshot/model_passive16.py --output OUTPUT
+python -B code_snapshot/plot_examples.py --output OUTPUT
+python -B code_snapshot/model_supplement_report.py --output OUTPUT
+python -B code_snapshot/report_passive16.py --output-dir OUTPUT
+See validation scripts for their CLI. The packaging helper uses the staging workspace layout.

@@ -1,4 +1,5 @@
 """Create one all-user Task A/C conclusion figure from saved position estimates."""
+from gaze_psm_modes import normalize_modes
 import argparse
 import json
 from pathlib import Path
@@ -58,7 +59,7 @@ def generate_conclusion(output):
     from matplotlib.lines import Line2D
 
     output = Path(output)
-    results = json.loads((output/'results.json').read_text(encoding='utf-8'))
+    results = normalize_modes(json.loads((output/'results.json').read_text(encoding='utf-8')))
     positions = [g for g in results['group_curves']
                  if g['signal'] == 'position' and g['task'] in STAGES]
     whole = {(g['task'], g['side']): g for g in positions if g['mode'] == 'whole'}
@@ -66,7 +67,7 @@ def generate_conclusion(output):
     if any(key not in whole or whole[key].get('peak_lag_s') is None for key in order):
         raise ValueError('Supported whole-task position results are required for both tasks and instruments')
     staged = {(g['task'], g['stage'], g['side']): g
-              for g in positions if g['mode'] == 'psm_stage'}
+              for g in positions if g['mode'] == 'PSM in stage'}
     contrasts = {c['side']: c for c in results['contrasts']
                  if c.get('dimension') == 'task' and c.get('signal') == 'position'
                  and c.get('mode') == 'whole' and c.get('condition_a') == 'A'

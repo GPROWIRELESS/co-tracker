@@ -1,0 +1,45 @@
+User1_4_User11_2_1__22e0c0f1cf69 independent raw/smooth/occupancy/temporal checks passed
+User1_6_User9_5_2__86b0ee04ecb0 independent raw/smooth/occupancy/temporal checks passed
+User2_2_User11_3_1__9217fa8ca08f independent raw/smooth/occupancy/temporal checks passed
+User2_6_User12_3_1__ed4da398a34d independent raw/smooth/occupancy/temporal checks passed
+User3_2_User6_3_1__68526aa9582b independent raw/smooth/occupancy/temporal checks passed
+User3_4_User12_5_2__9e4b9cdb6682 independent raw/smooth/occupancy/temporal checks passed
+User6_2_User1_3_1__209429fd7636 independent raw/smooth/occupancy/temporal checks passed
+User6_6_User2_2_1__b7ce89ea60a0 independent raw/smooth/occupancy/temporal checks passed
+User8_4_User10_1_1__89fd1d268c61 independent raw/smooth/occupancy/temporal checks passed
+User8_6_User5_3_1__266341b944be independent raw/smooth/occupancy/temporal checks passed
+User9_2_User8_6_1__0b3aafe72a2a independent raw/smooth/occupancy/temporal checks passed
+User9_6_User5_2_1__1bd326cdee8f independent raw/smooth/occupancy/temporal checks passed
+User10_2_User7_1_1__6155a0fca3e4 independent raw/smooth/occupancy/temporal checks passed
+User10_4_User2_2_2__8fa614e04422 independent raw/smooth/occupancy/temporal checks passed
+User12_2_User7_3_1__750f28b0d147 independent raw/smooth/occupancy/temporal checks passed
+User12_6_User9_2_1__3e5236f32f1e independent raw/smooth/occupancy/temporal checks passed
+{
+  "status": "passed",
+  "canonical_native_frame_analysis": true,
+  "physical_presentation_clock_not_established": true,
+  "raw_npy_rows_reconstructed": 205023,
+  "raw_coordinate_valid_rows": 205023,
+  "inclusive_endpoint_rows_retained": 9049,
+  "recordings_checked": 16,
+  "trial_stage_rows_independently_reconstructed": 400,
+  "smooth_reconstructed_independently_for_all_records": true,
+  "native_dt_reconstructed_before_stage_splits": true,
+  "region_pixel_enumeration_cases": 255,
+  "max_area_absolute_error": 0.0,
+  "temporal_metric_comparisons": 11200,
+  "whole_equals_sum_included_stage_exposure": true,
+  "drop_ring_included_seconds": 0,
+  "zero_denominator_NA_verified": true,
+  "participant_rows_checked": 375,
+  "group_and_bootstrap_rows_checked": 1150,
+  "bootstrap_n": 10000,
+  "bootstrap_seed": 42,
+  "observer_and_recording_equal_weights_verified": true,
+  "per_metric_counts_verified": true,
+  "authoritative_JSON_and_original_Frame_Number_joins": true,
+  "mapping_audit_entries_compared_to_authoritative_JSON": 122,
+  "source_gaze_identity_score_round_not_used": true,
+  "input_files_unchanged": true,
+  "input_files_checked": 97
+}

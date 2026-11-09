@@ -1,0 +1,22 @@
+复现说明：坐标有效性修正版
+
+当前目录已按用户要求直接重算并覆盖，没有创建旧结果备份。GT坐标来自User/npy中的NPY，
+仅采用有限且归一化x、y均在闭区间[0,1]的点。valid/Status不参与筛选；NaN/Inf视为缺失。
+原始NPY、时间文件、DLC和训练模型预测保持不变。gaze3状态敏感性已删除，半径25/50/100 px保留。
+
+Python环境：C:\ProgramData\anaconda3\envs\sam3\python.exe
+以当前目录为ROOT，依次运行（将覆盖ROOT内相应结果）：
+python -B ROOT/code_snapshot/prepare_inputs.py --output ROOT
+python -B ROOT/code_snapshot/reproduce_target.py --inputs ROOT/input_audit --output ROOT/target_locking
+python -B ROOT/gaze_psm_lead/code_snapshot/reproduce_lead.py --root ROOT --workers 4
+python -B ROOT/code_snapshot/independent_validation.py
+python -B ROOT/code_snapshot/independent_result_validation.py
+
+然后运行冻结的build_audit_figure.py、render_decoding_occupancy_zh.py、build_lead_main_figure.py、build_report.py。
+报告脚本的ROOT指向本目录。build_report.py同步生成HTML/TXT、analysis.md与summary.md。
+数值参数保存在target_locking/run_config.json和gaze_psm_lead/run_manifest.json。
+原生输入在input_audit/native，模型概率缓存在input_audit/predictions。predictive target-time使用名义horizon。
+已保存的future_valid等训练字段仅为训练来源审计，不能重新作为本轮GT状态筛选规则。
+冻结gaze_psm_pipeline_dlc.py的旧extract/main建缓存入口已禁用；辅助函数保持原样。
+请通过prepare_inputs.py重建输入，避免旧raw gaze或状态筛选入口。
+最终用code_snapshot/finalize_package.py更新文件清单，verify_delivery.py核对当前目录指纹。

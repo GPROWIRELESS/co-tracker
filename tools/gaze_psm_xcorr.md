@@ -24,7 +24,7 @@ To parallelize extraction and correlation on a multicore machine:
 
 ```bash
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python tools/gaze_psm_xcorr.py \
-  --within-stage --workers 8
+  --both-in-stage --workers 8
 ```
 
 The random pairings are drawn in the parent process and results retain their
@@ -155,7 +155,7 @@ pairs; the minimum overlap applies to the pooled curve, not to each occurrence.
 The default pooled stage minimum is 2 seconds, versus 5 seconds for whole tasks.
 Pair counts and contributing occurrences are exported for every lag.
 
-`--within-stage` adds a sensitivity analysis requiring both samples to belong to
+`--both-in-stage` adds a sensitivity analysis requiring both samples to belong to
 the same contiguous occurrence. This helps identify how boundary-crossing pairs
 change the result. The lag range remains identical. Stage curves with too little
 pooled support or movement variation are missing rather than zero correlation.

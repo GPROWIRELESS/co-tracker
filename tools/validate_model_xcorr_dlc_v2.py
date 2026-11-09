@@ -103,7 +103,7 @@ def participant_simulations(count=100, seed=15237, bootstrap=500):
                     stats = occurrence_statistics(gaze, psm, ids, hz, max_lag)
                     curve = aggregate_statistics(stats, min_overlap=2, min_rms=1)
                     curves.append(dict(curve, variant='simulation', task='synthetic', side='l', signal='position',
-                                       stage=scenario, mode='psm_stage', source='gt', user=f'u{person}',
+                                       stage=scenario, mode='PSM in stage', source='gt', user=f'u{person}',
                                        content_id=f'u{person}'))
                 summary, _ = group_curves(curves, bootstrap=bootstrap,
                                          seed=int(rng.integers(2**31)), min_users=3)

@@ -1,4 +1,5 @@
 """Plot synchronized, smoothed gaze and PSM positions from trajectory caches."""
+from gaze_psm_modes import normalize_modes
 import argparse
 import json
 from pathlib import Path
@@ -23,7 +24,7 @@ def load_trajectory(path, *, include_stages=False):
     try:
         with np.load(path, allow_pickle=False) as cache:
             data = {key: cache[key] for key in keys}
-            qc = json.loads(str(cache['qc_json']))
+            qc = normalize_modes(json.loads(str(cache['qc_json'])))
         time = data['time_s']
         if (time.ndim != 1 or len(time) < 2 or not np.isfinite(time).all()
                 or not (np.diff(time) > 0).all()):
@@ -125,9 +126,9 @@ def stage_slug(stage):
     return re.sub(r'[^a-z0-9]+', '_', stage.lower()).strip('_') or 'stage'
 
 
-def load_position_lags(output, mode='psm_stage'):
+def load_position_lags(output, mode='PSM in stage'):
     """Select signed position-correlation maxima from the saved record curves."""
-    results = json.loads((Path(output)/'results.json').read_text(encoding='utf-8'))
+    results = normalize_modes(json.loads((Path(output)/'results.json').read_text(encoding='utf-8')))
     peaks = {}
     for curve in results['record_curves']:
         if curve.get('signal') != 'position' or curve.get('mode') != mode:
@@ -148,7 +149,7 @@ def load_position_lags(output, mode='psm_stage'):
     return peaks
 
 
-def align_gaze(data, peaks, *, mode='psm_stage'):
+def align_gaze(data, peaks, *, mode='PSM in stage'):
     """At PSM time t, show gaze(t-lag); never wrap or interpolate missing data."""
     time = data['time_s']
     step = float(np.median(np.diff(time)))
@@ -168,7 +169,7 @@ def align_gaze(data, peaks, *, mode='psm_stage'):
             inside = (source >= 0) & (source < len(time))
             destination = target[inside]
             origin = source[inside]
-            if mode == 'within_stage':
+            if mode == 'Both in stage':
                 same = ((data['occurrence'][destination] >= 0)
                         & (data['occurrence'][destination] == data['occurrence'][origin]))
                 destination, origin = destination[same], origin[same]
@@ -326,8 +327,8 @@ def _plot_trajectory(plt, output, path, config, data, qc, *, stage=None, compari
                       'Each occurrence has its own time scale; tick labels show original video start / end times. '
                       f'{smoothing}.')
         if comparison:
-            anchoring = ('PSM-stage anchored; shifted gaze may come from an adjacent stage.'
-                         if comparison['mode'] == 'psm_stage' else 'Gaze and PSM remain in the same stage occurrence.')
+            anchoring = ('PSM in stage anchored; shifted gaze may come from an adjacent stage.'
+                         if comparison['mode'] == 'PSM in stage' else 'Gaze and PSM remain in the same stage occurrence.')
             footer = ('Only valid gaze / PSM pairs; separate time scales per occurrence; labels = original video start / end times.\n'
                       'Positive lag = gaze leads; optimal alignment shows gaze(t - lag) versus PSM(t). '
                       'The saved 2D position lag is shared by X and Y.\n' + anchoring)
@@ -359,7 +360,7 @@ def plot_record(plt, output, path, config):
     return _plot_trajectory(plt, output, path, config, data, qc)
 
 
-def plot_positions(output, records=None, *, by_stage=False, compare_lags=False, lag_mode='psm_stage'):
+def plot_positions(output, records=None, *, by_stage=False, compare_lags=False, lag_mode='PSM in stage'):
     """Save four-panel PNG/PDF pairs for recordings or their labeled stages."""
     output = Path(output)
     if compare_lags and not by_stage:
@@ -372,7 +373,7 @@ def plot_positions(output, records=None, *, by_stage=False, compare_lags=False, 
     if missing:
         raise ValueError(f"Trajectory caches not found: {', '.join(missing)}")
     config_path = output/'config.json'
-    config = json.loads(config_path.read_text(encoding='utf-8')) if config_path.exists() else {}
+    config = normalize_modes(json.loads(config_path.read_text(encoding='utf-8'))) if config_path.exists() else {}
     if not isinstance(config, dict):
         raise ValueError(f'{config_path} must contain a JSON object')
 
@@ -387,11 +388,11 @@ def plot_positions(output, records=None, *, by_stage=False, compare_lags=False, 
         directory = lag_comparison_directory(output, lag_mode)
     directory.mkdir(parents=True, exist_ok=True)
     occurrence_manifest_path = directory/'occurrences.json'
-    occurrence_manifest = (json.loads(occurrence_manifest_path.read_text(encoding='utf-8'))
+    occurrence_manifest = (normalize_modes(json.loads(occurrence_manifest_path.read_text(encoding='utf-8')))
                            if by_stage and occurrence_manifest_path.exists() else {})
     peaks = load_position_lags(output, lag_mode) if compare_lags else {}
     lag_manifest_path = directory/'lag_comparisons.json'
-    lag_manifest = (json.loads(lag_manifest_path.read_text(encoding='utf-8'))
+    lag_manifest = (normalize_modes(json.loads(lag_manifest_path.read_text(encoding='utf-8')))
                     if compare_lags and lag_manifest_path.exists() else {})
     paths = []
     with plt.rc_context({'font.size': 10, 'axes.titlesize': 12, 'axes.labelsize': 10,
@@ -448,8 +449,8 @@ def main(argv=None):
                         help='Save each labeled stage separately in figures/position_traces_by_stage/')
     parser.add_argument('--compare-lags', action='store_true',
                         help='With --by-stage, save matching zero-lag and optimal-lag figures')
-    parser.add_argument('--lag-mode', choices=('psm_stage', 'within_stage'), default='psm_stage',
-                        help='Saved stage correlation mode supplying the optimal lag (default: psm_stage)')
+    parser.add_argument('--lag-mode', choices=('PSM in stage', 'Both in stage'), default='PSM in stage',
+                        help='Saved stage correlation mode supplying the optimal lag (default: PSM in stage)')
     args = parser.parse_args(argv)
     try:
         paths = plot_positions(args.output, args.records, by_stage=args.by_stage,

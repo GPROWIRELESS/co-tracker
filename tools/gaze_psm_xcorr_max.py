@@ -4,6 +4,7 @@
 Example: python tools/gaze_psm_xcorr_max.py --workers 8
 The source outputs and trajectory caches are read only.
 """
+from gaze_psm_modes import normalize_modes
 import argparse
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
@@ -25,7 +26,7 @@ from tools.gaze_psm_pipeline import _init_analysis_worker, _null_job, save_json
 from tools.gaze_psm_report import LAG_FIELDS, _write, generate_outputs
 
 SELECTION_FIELDS = ('content_id', 'user', 'task', 'signal', 'stage', 'mode')
-STAGE_MODES = {'psm_stage', 'within_stage'}
+STAGE_MODES = {'PSM in stage', 'Both in stage'}
 
 
 def select_sides(curves):
@@ -89,7 +90,7 @@ def _hashes(source):
 
 def _load_curves(source):
     # Only record curves are reused: all higher-level estimates are rebuilt.
-    results = json.loads((source/'results.json').read_text())
+    results = normalize_modes(json.loads((source/'results.json').read_text()))
     curves = results['record_curves']
     for curve in curves:
         for key in LAG_FIELDS:
@@ -106,7 +107,7 @@ def _load_caches(source, curves, config):
     # Retain recording order from the original observed results for RNG parity.
     for cid, record in records.items():
         with np.load(source/'cache'/f'{cid}.npz', allow_pickle=False) as z:
-            quality = json.loads(str(z['qc_json']))
+            quality = normalize_modes(json.loads(str(z['qc_json'])))
             if quality['content_id'] != cid or quality['task'] != record['Task Name']:
                 raise ValueError(f'Cache identity mismatch: {cid}')
             if quality['hz'] != config['hz'] or quality['cache_version'] != config['cache_version']:
@@ -225,7 +226,7 @@ def main(argv=None):
     if source == output or source in output.parents or output in source.parents:
         parser.error('source and output must be separate, non-nested directories')
     before = _hashes(source)
-    config = json.loads((source/'config.json').read_text())
+    config = normalize_modes(json.loads((source/'config.json').read_text()))
     curves = _load_curves(source)
     selected, details = select_sides(curves)
     if not selected:
@@ -263,7 +264,7 @@ def main(argv=None):
     save_json(output/'config.json', config)
     save_json(output/'results.json', dict(record_curves=selected, user_curves=users,
                                          group_curves=groups, contrasts=contrasts))
-    qc = json.loads((source/'quality.json').read_text())
+    qc = normalize_modes(json.loads((source/'quality.json').read_text()))
     save_json(output/'quality.json', qc)
     generate_outputs(output, selected, users, groups, contrasts, qc, make_plots=False)
     _write(output/'side_selection.csv', details)

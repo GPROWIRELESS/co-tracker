@@ -1,0 +1,5 @@
+# Python 3.12.12
+numpy==1.26.4
+scipy==1.17.0
+pandas==3.0.0
+matplotlib==3.10.8

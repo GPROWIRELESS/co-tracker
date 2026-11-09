@@ -1,0 +1,11 @@
+test_all_current_scenarios_ignore_status_and_keep_geometry_conditions (__main__.CoordinateOnlyTests.test_all_current_scenarios_ignore_status_and_keep_geometry_conditions) ... ok
+test_arbitrary_valid_values_and_inclusive_boundaries_are_accepted (__main__.CoordinateOnlyTests.test_arbitrary_valid_values_and_inclusive_boundaries_are_accepted) ... ok
+test_missing_or_duplicate_source_frames_raise (__main__.CoordinateOnlyTests.test_missing_or_duplicate_source_frames_raise) ... ok
+test_nonfinite_and_out_of_range_coordinates_are_rejected_for_every_code (__main__.CoordinateOnlyTests.test_nonfinite_and_out_of_range_coordinates_are_rejected_for_every_code) ... ok
+test_original_frame_numbers_match_unsorted_npy_and_keep_gaps (__main__.CoordinateOnlyTests.test_original_frame_numbers_match_unsorted_npy_and_keep_gaps) ... ok
+test_preparation_smooths_coordinate_valid_points_without_status_filter (__main__.CoordinateOnlyTests.test_preparation_smooths_coordinate_valid_points_without_status_filter) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.023s
+
+OK

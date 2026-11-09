@@ -6,6 +6,7 @@ Spearman inference is copied from the existing participant permutation tests;
 Pearson coefficients and plotted points are independently checked with SciPy.
 """
 from __future__ import annotations
+from gaze_psm_modes import mode_rows, normalize_modes
 
 import argparse
 import csv
@@ -77,7 +78,7 @@ def ci_display_summary(summary):
 
 def read_csv(path):
     with path.open(newline="", encoding="utf-8-sig") as stream:
-        return list(csv.DictReader(stream))
+        return list(mode_rows(csv.DictReader(stream)))
 
 
 def write_csv(path, rows):
@@ -160,13 +161,13 @@ def load_and_check(source, signal, outcome="Score", predictor="peak_r"):
     filenames, provenance_name = analysis_table_paths(source, signal, outcome)
     x_column = "score_x" if outcome == "Score" else f"{outcome}_x"
     hashes = {name: digest(source/name) for name in [*filenames, provenance_name]}
-    bootstrap_requested = json.loads((source/provenance_name).read_text())["settings"]["bootstrap"]
+    bootstrap_requested = normalize_modes(json.loads((source/provenance_name).read_text()))["settings"]["bootstrap"]
     people = [row for row in read_csv(source/filenames[0]) if row["scenario"] == scenario]
     results = [row for row in read_csv(source/filenames[1]) if row["scenario"] == scenario
                and row["method"] == "between_participants" and row["predictor"] == predictor]
     recordings = defaultdict(list)
     for row in read_csv(source/filenames[2]):
-        if row["eligible"] == "True" and row["signal"] == signal and row["mode"] in ("whole", "psm_stage"):
+        if row["eligible"] == "True" and row["signal"] == signal and row["mode"] in ("whole", "PSM in stage"):
             recordings[(group(row), row["user"])].append(row)
     if len({(group(row), row["user"]) for row in people}) != len(people):
         raise ValueError("Duplicate participant/condition summaries")
@@ -276,7 +277,7 @@ def comparison_limits(points, outcome, predictor):
 def figure_row_limits(rows, by_group, signal, outcome, predictor, whole_task=False):
     def selected(specs):
         return [p for task, stage, side in specs
-                for p in by_group.get((task, side, signal, stage, "whole" if stage == "__whole__" else "psm_stage"), [])]
+                for p in by_group.get((task, side, signal, stage, "whole" if stage == "__whole__" else "PSM in stage"), [])]
     if whole_task:
         bounds = comparison_limits(selected([spec for row in rows for spec in row]), outcome, predictor)
         return [bounds for _ in rows]
@@ -302,7 +303,7 @@ def make_figures(dest, signal, summary, points, outcome="Score", predictor="peak
     merged = sides == ['max']
 
     def panel(ax, task, stage, side, bounds):
-        k = (task, side, signal, stage, "whole" if stage == "__whole__" else "psm_stage")
+        k = (task, side, signal, stage, "whole" if stage == "__whole__" else "PSM in stage")
         result, pp = lookup.get(k), by_group[k]
         name = LABELS.get(stage, stage.title())
         instrument = 'Selected PSM' if side == 'max' else ('Left PSM' if side == 'l' else 'Right PSM')
@@ -344,7 +345,7 @@ def make_figures(dest, signal, summary, points, outcome="Score", predictor="peak
         plans.append(("whole_task", f"Whole-task {measurement} versus {x_label}",
                       [[(task, "__whole__", side) for side in sides] for task in ("A", "C")]))
     for task, phases in PHASES.items():
-        admitted = [stage for stage in phases if any((task, side, signal, stage, "psm_stage") in lookup
+        admitted = [stage for stage in phases if any((task, side, signal, stage, "PSM in stage") in lookup
                                                     for side in sides)]
         if admitted:
             plans.append((f"task_{task}_phases", f"Task {task}: valid-phase {measurement} versus {x_label}",
@@ -360,7 +361,7 @@ def make_figures(dest, signal, summary, points, outcome="Score", predictor="peak
                 for ax, spec in zip(axes_row, groups):
                     panel(ax, *spec, bounds)
                     task, stage, side = spec
-                    pp = by_group[(task, side, signal, stage, "whole" if stage == "__whole__" else "psm_stage")]
+                    pp = by_group[(task, side, signal, stage, "whole" if stage == "__whole__" else "PSM in stage")]
                     assert all(bounds["x"][0] <= p[x_column] <= bounds["x"][1] and
                                bounds["y"][0] <= p[y_column] <= bounds["y"][1] for p in pp)
                     axes_metadata.append({"figure": name, "row": row_index, "task": task, "stage": stage,

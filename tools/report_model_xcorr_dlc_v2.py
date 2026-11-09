@@ -4,6 +4,7 @@ Run: python report_model_xcorr_dlc_v2.py --output <run-directory>
 All plotted PNGs are embedded in the HTML; no remote scripts or styles are used.
 """
 from __future__ import annotations
+from gaze_psm_modes import normalize_frame, normalize_modes
 import argparse
 import base64
 import html
@@ -26,7 +27,7 @@ def _read(root, name):
     if not path.exists() or path.stat().st_size == 0:
         return pd.DataFrame()
     try:
-        return pd.read_csv(path)
+        return normalize_frame(pd.read_csv(path))
     except pd.errors.EmptyDataError:
         return pd.DataFrame()
 
@@ -65,7 +66,7 @@ def _finish(fig, path):
 
 
 def _plot_summary(df, root):
-    q = _select(df,variant='primary',signal='position',mode='psm_stage',stage=OBSERVED)
+    q = _select(df,variant='primary',signal='position',mode='PSM in stage',stage=OBSERVED)
     if q.empty:
         return None
     keys=sorted(q[['task','side']].drop_duplicates().itertuples(index=False,name=None))
@@ -96,7 +97,7 @@ def _plot_summary(df, root):
 
 
 def _plot_curves(df, root):
-    q=_select(df,variant='primary',signal='position',mode='psm_stage')
+    q=_select(df,variant='primary',signal='position',mode='PSM in stage')
     paths=[]
     if q.empty:return paths
     for (task,side),data in q.groupby(['task','side'],sort=True):
@@ -128,14 +129,14 @@ def _plot_curves(df, root):
         for ax in list(axes.flat)[len(stages):]:ax.axis('off')
         handles, labels=axes.flat[0].get_legend_handles_labels()
         fig.legend(handles,labels,ncol=3,loc='lower center',bbox_to_anchor=(.5,-.025),fontsize=9)
-        fig.suptitle(f'Task {task} | fixed {side.upper()} instrument | position / PSM-stage',fontsize=13)
+        fig.suptitle(f'Task {task} | fixed {side.upper()} instrument | position / PSM in stage',fontsize=13)
         fig.tight_layout(rect=(0,.035,1,.97))
         path=root/'figures'/f'curves_{task}_{side}.png';_finish(fig,path);paths.append(path)
     return paths
 
 
 def _plot_peak_distributions(records,root):
-    q=_select(records,variant='primary',source='gt',signal='position',mode='psm_stage')
+    q=_select(records,variant='primary',source='gt',signal='position',mode='PSM in stage')
     if q.empty or 'bootstrap_peak_distribution' not in q:return None
     examples=[('User1_1_1','transfer ring','r'),('User7_1_1','transfer ring','l'),
               ('User6_1_2','pull through and cinch','r'),('User1_5_2','pull through and cinch','l')]
@@ -146,7 +147,7 @@ def _plot_peak_distributions(records,root):
         ax.set_title(f'{cid} | {side.upper()} | {stage}',fontsize=10)
         if not cell.empty:
             row=cell.iloc[0]
-            try:values=np.array(json.loads(row.bootstrap_peak_distribution),float)
+            try:values=np.array(normalize_modes(json.loads(row.bootstrap_peak_distribution)),float)
             except (ValueError,TypeError):values=np.empty((0,2))
             if values.size:
                 ax.bar(values[:,0],values[:,1]/values[:,1].sum(),width=1/41,color='#2563eb',alpha=.8)
@@ -180,7 +181,7 @@ def generate_report(outdir):
     # Accept alternate names used by callers without losing any table.
     if exact.empty:exact=_read(root,'exact_model_comparisons.csv')
     if identity.empty:identity=_read(root,'identity_null.csv')
-    primary=_select(summary,variant='primary',signal='position',mode='psm_stage',stage=OBSERVED)
+    primary=_select(summary,variant='primary',signal='position',mode='PSM in stage',stage=OBSERVED)
     overview_cols=['task','side','model','n_total_users','n_users','n_total_conditions','n_conditions','participant_equal_curve_mae','participant_equal_delta_lag_s','participant_equal_abs_lag_difference_s','gt_localizable_rate','model_localizable_rate','model_boundary_rate']
     names={'task':'任务','side':'器械侧','model':'模型','n_total_users':'总人数','n_users':'可用人数','n_total_conditions':'总条件','n_conditions':'输入可用条件','participant_equal_curve_mae':'曲线MAE','participant_equal_delta_lag_s':'有符号Δlag(s)','participant_equal_abs_lag_difference_s':'绝对Δlag(s)','gt_localizable_rate':'GT可定位率','model_localizable_rate':'模型可定位率','model_boundary_rate':'模型边界率'}
     plots=[]
@@ -192,7 +193,7 @@ def generate_report(outdir):
     body=['<h1>Gaze–PSM 时序评价 v2</h1>',
       '<p class="subtitle">固定左右器械 · 保留低 likelihood DLC 点 · 轻度平滑 · 探索性重分析</p>',
       '<div class="notice"><strong>结果用途：</strong>评价相关曲线与峰位置的复现，不证明因果领先。每任务最多5名参与者；重采样范围未验证为具有95%覆盖率的置信区间。模型排列为固定名称顺序，不构成排名。</div>',
-      '<h2>主分析定义</h2><p>主分析为 position / psm_stage。GT与全部模型比较同一左或右器械，并使用共同技术支持。DLC likelihood、坐标跳变只记录作诊断，不触发删除。位置主配置为3点居中轻度平滑；模型原始时序保留，不用测试集最佳平移消除偏差。边界峰、多峰、非正峰和不可定位状态保留。</p>',
+      '<h2>主分析定义</h2><p>主分析为 position / PSM in stage。GT与全部模型比较同一左或右器械，并使用共同技术支持。DLC likelihood、坐标跳变只记录作诊断，不触发删除。位置主配置为3点居中轻度平滑；模型原始时序保留，不用测试集最佳平移消除偏差。边界峰、多峰、非正峰和不可定位状态保留。</p>',
       '<p>曲线MAE是固定lag网格上相关系数差的平均绝对值，单位不是秒；Δlag定义为模型峰位置减GT峰位置。跨阶段汇总先在参与者内对实际可用阶段等权，再对参与者等权，故称“可观测阶段平均”，不能外推到缺失阶段。</p>',
       '<h2>固定侧主结果</h2>',_table(primary,overview_cols,names),
       '<p class="muted">表内lag点值包括不可定位条件的描述性估计。这里的可定位率来自 lag_identifiable 操作性规则，尚未验证为确证判定。解释时间误差时必须同时查看该比例、边界率和逐条件状态；不可定位不能默认为零误差。曲线误差与各项范围的详细字段见CSV。</p>']
@@ -201,7 +202,7 @@ def generate_report(outdir):
     for p in curveplots:body.append(_image(p,p.stem))
     if peakplot:
         body.append(_image(peakplot,'四个GT条件示例：展示峰的重采样分布及重复不足的情况。窄分布不自动证明生理领先。'))
-    pg=_select(groups,variant='primary',signal='position',mode='psm_stage',source='gt')
+    pg=_select(groups,variant='primary',signal='position',mode='PSM in stage',source='gt')
     body.extend(['<details><summary>GT组峰与支持情况</summary>',_table(pg,['task','side','stage','n_stable_users','peak_lag_s','peak_r','peak_at_boundary','peak_lag_resample_low','peak_lag_resample_high','bootstrap_boundary_frequency','status']),'</details>'])
     body.append('<h2>直接GT–模型相对时序</h2><p>直接相关峰描述信号相对偏移，不自动等于时间戳错误或计算延迟。只有独立验证集校准才能作为预先冻结的校正；本分析保留原始模型时序。</p>')
     if not direct.empty:
@@ -226,18 +227,18 @@ def generate_report(outdir):
             _table(halves,['content_id','task','model','segment','peak_lag_s','peak_r','peak_at_boundary']),'</details>'])
     else:body.append('<p>直接时序审计结果见运行目录中的对应CSV。</p>')
     body.append('<h2>敏感性与不可估计情况</h2><p>敏感性分支检验不平滑、5点轻度平滑、边缘处理、±4秒窗口及速度滤波选择。不得根据结果选择最有利分支。分支间输入覆盖可能变化，应优先查阅固定共同条件的敏感性结果；以下各自支持汇总不能单独归因于参数变化。</p>')
-    ms=_select(matched_sensitivity,signal='position',mode='psm_stage',stage=OBSERVED)
+    ms=_select(matched_sensitivity,signal='position',mode='PSM in stage',stage=OBSERVED)
     body.extend(['<details><summary>共同条件上的敏感性比较（优先解读）</summary>',
         '<p>每个分支与其 primary_matched_to_* 配对行使用完全相同的条件keys。边缘处理可改变条件内部的时间支持；window4与±2秒主分析的lag域不同，应优先比较window4_restricted2分支。</p>',
         _table(ms,['sensitivity_branch','variant',*overview_cols],names),'</details>'])
-    sens=_select(summary,signal='position',mode='psm_stage',stage=OBSERVED)
+    sens=_select(summary,signal='position',mode='PSM in stage',stage=OBSERVED)
     if not sens.empty:sens=sens[sens.variant!='primary']
     body.extend(['<details><summary>敏感性分支各自支持汇总</summary>',_table(sens,['variant',*overview_cols],names),'</details>'])
     if not records.empty and 'lag_status' in records:
-        states=_select(records,variant='primary',signal='position',mode='psm_stage').groupby(['source','lag_status'],dropna=False).size().reset_index(name='conditions')
+        states=_select(records,variant='primary',signal='position',mode='PSM in stage').groupby(['source','lag_status'],dropna=False).size().reset_index(name='conditions')
         body.extend(['<details><summary>逐来源lag状态分布</summary>',_table(states,['source','lag_status','conditions']),'</details>'])
     body.append('<h2>参照与配对比较</h2><p>他人gaze参照、参与者身份重配参照和模型间配对比较回答不同问题。身份参照对曲线误差和绝对峰lag差使用相同的参与者整体映射，保留stage×side结构。峰lag参照未按可靠性筛选，因此只评价统计峰匹配，不能称为真实生理延迟的null。该参照依赖零假设下的交换性假设；不能把经验秩解释为普遍独立性或因果领先检验。每任务5人时，模型标签整体交换的双侧精确检验最小p值为0.0625。</p>')
-    pgd=_select(paired_group,variant='primary',signal='position',mode='psm_stage')
+    pgd=_select(paired_group,variant='primary',signal='position',mode='PSM in stage')
     body.extend(['<details><summary>共同参与者上的配对组峰差</summary>',
         '<p>这是两条参与者组曲线的峰位置之差，不是逐记录绝对lag误差的平均。各模型对可使用不同的共同完整参与者；配对重采样使用相同用户索引，范围仍属未校准的探索性范围。</p>',
         _table(pgd,['task','side','stage','model','n_shared_users','gt_peak_lag_s','model_peak_lag_s','delta_group_peak_lag_s','delta_group_peak_lag_resample_low','delta_group_peak_lag_resample_high','gt_boundary','model_boundary','status']),'</details>'])
@@ -250,7 +251,7 @@ def generate_report(outdir):
     for filename,title in [('validation.json','计算验证'),('simulation_validation.json','仿真验证'),('run_manifest.json','运行清单')]:
         path=root/filename
         if path.exists():
-            try:obj=json.loads(path.read_text(encoding='utf-8-sig'));content=json.dumps(obj,ensure_ascii=False,indent=2)
+            try:obj=normalize_modes(json.loads(path.read_text(encoding='utf-8-sig')));content=json.dumps(obj,ensure_ascii=False,indent=2)
             except Exception:content=path.read_text(encoding='utf-8',errors='replace')
             body.append('<details><summary>'+title+'</summary><pre>'+html.escape(content)+'</pre></details>')
     tables=sorted(p.name for p in root.glob('*.csv'))
@@ -262,7 +263,7 @@ def generate_report(outdir):
 
 打开 `report.html` 查看中文完整报告。图像内嵌，离线可用。
 
-- 主分析：position / psm_stage，左右器械分别固定。
+- 主分析：position / PSM in stage，左右器械分别固定。
 - DLC likelihood 和跳变只用于诊断；保留低 likelihood 点，采用轻度平滑。
 - 主比较集合仅按技术输入支持确定，不按峰正负、边界或模型可定位性删除条件。
 - 曲线 MAE 评价相关曲线复现；signed/absolute lag 差同时报告可定位覆盖及边界比例。

@@ -1,4 +1,4 @@
-"""Build the detailed Chinese narrative solely from one v2 result directory.
+"""Build the detailed Chinese narrative solely from one result directory.
 
 No model fitting, inference, new participant bootstrap or legacy-result numbers
 are performed here. Published intervals come from this run's statistics tables.
@@ -22,8 +22,8 @@ STAGES = {
 LABELS = {"gaze": "真实 gaze", "all_ABCD": "all_ABCD", "single_task": "single_task",
           "leave_out": "leave_out", "spd_finetune": "SPD fine-tune", "spd_zero_shot": "SPD zero-shot"}
 DECODERS = {"decoded_expectation": "期望点", "decoded_argmax": "argmax", "decoded_sample": "逐帧抽样"}
-SCENARIOS = {"main": "主分析 50/50, code 2/3", "r25": "半径 25/25", "r100": "半径 100/100",
-             "gripper100": "半径 50/100", "gaze3": "严格 code 3", "legacy123": "旧规则 code 1/2/3",
+SCENARIOS = {"main": "主分析 50/50，valid不限", "r25": "半径 25/25", "r100": "半径 100/100",
+             "gripper100": "半径 50/100",
              "smooth": "插值及三样本平滑"}
 REFS = {"train_heatmap": "训练平均热图", "center_point": "画面中心点", "uniform_area": "均匀面积", "train_rate": "训练事件频率"}
 
@@ -174,7 +174,7 @@ def _coverage_section(run, lines):
     c = _select(run.table("coverage.csv"),scenario="main")
     a = run.table("recording_audit.csv")
     lines += ["## 1. 分析对象、实际覆盖和计量单位", "",
-              "本报告只读取本次 v2 目录中的结果。主分析是保存的 K 个未平滑预测样本的区域概率估计；期望点、argmax 和逐帧抽样分别是独立的点解码分支。两类结果不能混称。",
+              f"本报告只读取本次 v{_int(run.config.get('version'))} 目录中的结果。主分析是保存的 K 个未平滑预测样本的区域概率估计；期望点、argmax 和逐帧抽样分别是独立的点解码分支。两类结果不能混称。",
               "", f"运行目录：{_link(run.out,run.out.name)}。统计 bootstrap 配置为 {_int(run.config.get('bootstrap_n'))} 次，seed={_int(run.config.get('bootstrap_seed'))}。", ""]
     rows=[]
     for task in TASKS:
@@ -218,7 +218,8 @@ def _definitions_and_quality(run,lines):
               "", "四种互斥状态为 T=target-only、P=PSM-only、O=两者重叠、N=other。`L_target=L_T+L_O`，`L_gripper=L_P+L_O`，`D=L_T+L_P`，`C=L_T/(L_T+L_P)`。C 描述可分辨区域内偏向 target 的比例；D 描述有多少时间/概率落入可分辨区域。D=0 时 C 为 NA，绝不能填成0；高 C 也不能单独等同于高 target 占用。",
               "", "真实 gaze 每帧是单点事件。主模型每帧 q 是 K 个保存样本中落入相应区域的比例，再按原生时间加权求占用。这是有限 K 的 Monte Carlo 概率估计，不是把热图期望点硬分类，也不是本次重新生成的平滑热图。有限 K 会带来采样误差；此处参与者 CI 不单独量化模型重新采样的不确定性。",
               "", "面积基线 a 是区域在画面中的面积比例。E_target=L_target−a_target，E_gripper=L_gripper−a_gripper；C_U=a_T/(a_T+a_P)，C_excess=C−C_U。面积修正控制的是 ROI 大小，不会自动修正器械遮挡、目标语义或追踪误差。", "",
-              "## 3. 有效码、时间轴和区域语义审计", ""]
+              "## 3. 坐标有效性、时间轴和区域语义审计", "",
+              "真实 gaze 直接读取 `UserN/npy/<ID>_gaze.npy` 的结构化字段 `gaze_x`、`gaze_y`，按原视频 `Frame_Number` 匹配。原始 gaze 的可用条件仅为两个坐标均有限且均位于闭区间 [0,1]；端点0和1保留，NaN、无穷值及越界坐标排除。`valid` 不设任何取值范围，也不参与纳入判定。坐标合格后仍须满足既定阶段、target和双侧DLC条件，模型比较还须满足五模型共同帧规则。", ""]
     a=run.table("recording_audit.csv")
     if len(a):
         compared=a.get("raw_left_status_compared_n",pd.Series(dtype=float)).sum()
@@ -229,11 +230,11 @@ def _definitions_and_quality(run,lines):
         for task in TASKS:
             q=_select(a,task=task)
             if len(q):
-                rows.append([task,_int(q.retained_frames.sum()),_int(q.gaze_valid_n.sum()),
-                             _int(q.gaze_strict3_coordinate_valid_n.sum()),_int(q.gaze_legacy123_coordinate_valid_n.sum()),
-                             _int((q.gaze_legacy123_coordinate_valid_n-q.gaze_valid_n).sum())])
-        lines += [_table(["任务","保留帧","2/3且画面内","严格3且画面内","1/2/3且画面内","旧规则额外纳入"],rows)]
-    lines += ["Varjo 单眼状态 1 表示可见但跟踪不可靠，2 表示跟踪但质量受影响，3 表示跟踪；主规则使用2/3，严格3为敏感性，1/2/3仅作为旧规则敏感性。原始 combined `Status=2` 是另一套枚举，不能直接替代 NPY 单眼 valid。来源：[Varjo eye-tracking documentation](https://developer.varjo.com/docs/native/eye-tracking)。", ""]
+                rows.append([task,_int(q.retained_frames.sum()),_int(q.gaze_coordinate_valid_n.sum()),
+                             _int((q.retained_frames-q.gaze_coordinate_valid_n).sum()),
+                             _int(q.gaze_valid_n.sum())])
+        lines += [_table(["任务","保留帧","坐标有限且在[0,1]内","坐标不合格","进入后续条件筛选的gaze帧"],rows)]
+    lines += ["上述gaze帧数尚未与阶段、目标和DLC条件取交集，因此不等于第1节最终有效帧数。NPY `valid` 及原始设备状态仅保留用于来源审计；状态码的解释、分布或匹配结果均不会重新筛掉坐标合格的帧。旧版按状态码筛选的条件不属于本次分析分支。", ""]
     if len(a):
         grid=[]
         for width,height in a[["width","height"]].drop_duplicates().itertuples(index=False,name=None):
@@ -504,8 +505,8 @@ def _decoders(run,lines,models):
 
 def _sensitivity_repetition(run,lines,models):
     scenarios=[s for s in SCENARIOS if s in run.config.get("scenarios",SCENARIOS)]
-    lines += ["## 13. 七种预设条件的敏感性", "",
-              "主定义保持50 px；25、100 px及单独扩大PSM用于判断几何依赖。严格3/旧123改变眼动质量支持，平滑分支改变位置与可填补的短缺口，因此它们不仅改变数值，也可能改变进入比较的帧和实际人数。没有把敏感性条件当作新的最优参数搜索。", ""]
+    lines += [f"## 13. {len(scenarios)}种预设条件的敏感性", "",
+              "主定义保持50 px；25、100 px及单独扩大PSM用于判断几何依赖。全部条件均取消valid取值限制，以坐标有限且在归一化范围[0,1]内的原始gaze为输入。平滑分支在该输入上执行原定的短缺口插值及三样本平滑，会改变位置和可用帧，因此仍可能改变实际人数；它是单独报告的敏感性条件，不会把插值帧计入未平滑主分析。没有把敏感性条件当作新的最优参数搜索。", ""]
     rows=[]
     for task in TASKS:
         for scope,sources in [("real_all",["gaze"]),("paired_test",["gaze",*models])]:
@@ -597,7 +598,7 @@ def _closing(run,lines):
 
 
 def build_detailed_report(out, destination=None):
-    """Write detailed_report_zh.md for a completed/available v2 run; return Path."""
+    """Write detailed_report_zh.md for a completed/available run; return Path."""
     run=Run(out)
     if run.table("group_stage_summary.csv","main_probability").empty:
         raise ValueError("main_probability/group_stage_summary.csv must exist before detailed report")
