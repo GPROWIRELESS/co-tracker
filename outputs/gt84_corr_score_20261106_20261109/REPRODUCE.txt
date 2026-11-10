@@ -1,0 +1,57 @@
+GT84 20261106 NPY gaze: correlation-strength versus Score
+Analysis date: 2026-11-09 (America/New_York)
+
+Open report.html for the Chinese analysis report.
+Open figures/all_figures.pdf for the 24-page figure collection.
+tables/associations.csv contains all prespecified conditions, including unavailable tests.
+tables/primary_peak_r_associations.csv is the primary results table.
+
+Scope
+  Fixed left/right PSM separately; existing GT84 primary-variant correlation metrics.
+  Task A/C, stages and sides are not pooled into pseudo-independent recordings.
+  Score is the whole-attempt score, not a stage-specific score.
+  Primary family: primary / peak_r / between_participants.
+  Secondary and sensitivity families are separate, not a global FDR claim.
+  No source scores, GT84 metrics, or historical score_corr_max_dlc outputs were changed.
+
+Reproduction (Python 3.11 with numpy 1.24.3, scipy 1.11.1,
+pandas 2.0.3, matplotlib 3.7.2; original run used C:/ProgramData/anaconda3/python.exe)
+  Use a NEW output directory for independent reruns.
+  python code/analyze_gt84_score.py --repo D:/GitHub_Project/co-tracker --output NEW_DIRECTORY --bootstrap 10000 --permutations 19999 --seed 20261109
+  python code/plot_results.py --root NEW_DIRECTORY
+  The report and independent validator have --help for their directory arguments.
+  Copy the code folder into NEW_DIRECTORY to keep the result self-contained.
+
+Audit
+  analysis_protocol.json: analysis rules saved before calculation.
+  provenance.json: consumed-input and protected historical-file hashes, software versions.
+  inputs/: snapshots of the consumed GT84 metric/metadata and score/index files.
+  validation/independent_validation.json: independent matching and statistical checks.
+  figure_manifest.json: figure descriptions, input table hashes and output paths.
+  artifact_manifest.json: SHA-256 inventory of delivered files.
+
+Key columns
+  scenario: primary, completed_only, both_in_stage, velocity, exclude_boundary,
+            lag_identifiable_exploratory.
+  predictor: peak_r (primary strength), r_zero (secondary strength),
+             signed_lag_s / absolute_lag_s (restricted exploratory timing).
+  method: between_participants (Spearman of participant summaries),
+          within_participant / within_adjusted_order (weighted rank fixed effects).
+  association: Spearman rho for between; within-person rank partial correlation for within.
+  n_recordings / n_users / n_informative_users: do not treat recordings as independent people.
+  p: participant-score permutation p for between, small-cluster CR1 t approximation for within.
+  q_bh: BH correction within scenario/predictor/method across tasks, stages and sides.
+  ci_low / ci_high: exploratory participant-bootstrap 2.5th/97.5th percentiles.
+  ci_reliable: >=97.5% bootstrap draws defined; this flag does NOT establish calibrated coverage.
+  status: unavailable results are explained explicitly and are not numerical zeros.
+  loo_min / loo_max: leave-one-participant-out coefficients; within ranks are recomputed.
+  eligible / exclusion_reasons: candidate-level inclusion audit in matched_record_metrics.csv.
+  Score blanks are missing; genuine zero scores and valid nonpositive correlations are retained.
+
+Inference caveats
+  Only 11 participants; Task C has many zero scores. Association is not causation.
+  Within bootstrap resamples users but holds the original full-sample ranks fixed.
+  Percentile intervals and permutation p values need not agree in discrete small samples.
+  Complete-stage, completed-only and boundary-excluded samples can differ.
+  The same association repeated across sensitivity families is not an independent discovery.
+  No timing inference is forced when too few participants have identifiable lag.

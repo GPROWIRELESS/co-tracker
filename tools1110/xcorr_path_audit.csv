@@ -1,0 +1,121 @@
+﻿record_id,task_name,gaze_npy_path,dlc_csv_path,gaze_rows,dlc_rows,status,error
+User1_3_1,C,D:\Dataset\dvss\Active_Data\User1\npy\User1_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_3_1\User1_3_1_DLC.csv,18001,18001,matched,
+User1_5_1,C,D:\Dataset\dvss\Active_Data\User1\npy\User1_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_5_1\User1_5_1_DLC.csv,13572,13572,matched,
+User1_5_2,C,D:\Dataset\dvss\Active_Data\User1\npy\User1_5_2_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_5_2\User1_5_2_DLC.csv,3552,3552,matched,
+User1_5_3,C,D:\Dataset\dvss\Active_Data\User1\npy\User1_5_3_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_5_3\User1_5_3_DLC.csv,15922,15922,matched,
+User1_7_1,C,D:\Dataset\dvss\Active_Data\User1\npy\User1_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_7_1\User1_7_1_DLC.csv,7399,7399,matched,
+User2_2_1,C,D:\Dataset\dvss\Active_Data\User2\npy\User2_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_2_1\User2_2_1_DLC.csv,6878,6878,matched,
+User2_2_2,C,D:\Dataset\dvss\Active_Data\User2\npy\User2_2_2_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_2_2\User2_2_2_DLC.csv,3898,3898,matched,
+User2_4_1,C,D:\Dataset\dvss\Active_Data\User2\npy\User2_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_4_1\User2_4_1_DLC.csv,9659,9659,matched,
+User2_9_1,C,D:\Dataset\dvss\Active_Data\User2\npy\User2_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_9_1\User2_9_1_DLC.csv,4809,4809,matched,
+User2_9_2,C,D:\Dataset\dvss\Active_Data\User2\npy\User2_9_2_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_9_2\User2_9_2_DLC.csv,3628,3628,matched,
+User3_1_1,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_1_1\User3_1_1_DLC.csv,16999,16999,matched,
+User3_1_2,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_1_2_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_1_2\User3_1_2_DLC.csv,11640,11640,matched,
+User3_6_1,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_6_1\User3_6_1_DLC.csv,14654,14654,matched,
+User3_6_2,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_6_2_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_6_2\User3_6_2_DLC.csv,12879,12879,matched,
+User3_8_1,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_8_1\User3_8_1_DLC.csv,8639,8639,matched,
+User3_8_2,C,D:\Dataset\dvss\Active_Data\User3\npy\User3_8_2_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_8_2\User3_8_2_DLC.csv,14999,14999,matched,
+User5_3_1,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_3_1\User5_3_1_DLC.csv,2741,2741,matched,
+User5_3_2,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_3_2_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_3_2\User5_3_2_DLC.csv,4829,4829,matched,
+User5_5_1,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_5_1\User5_5_1_DLC.csv,8719,8719,matched,
+User5_5_2,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_5_2_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_5_2\User5_5_2_DLC.csv,7419,7419,matched,
+User5_7_1,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_7_1\User5_7_1_DLC.csv,2859,2859,matched,
+User5_7_2,C,D:\Dataset\dvss\Active_Data\User5\npy\User5_7_2_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_7_2\User5_7_2_DLC.csv,6639,6639,matched,
+User6_1_1,C,D:\Dataset\dvss\Active_Data\User6\npy\User6_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_1_1\User6_1_1_DLC.csv,3387,3387,matched,
+User6_1_2,C,D:\Dataset\dvss\Active_Data\User6\npy\User6_1_2_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_1_2\User6_1_2_DLC.csv,13894,13894,matched,
+User6_6_1,C,D:\Dataset\dvss\Active_Data\User6\npy\User6_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_6_1\User6_6_1_DLC.csv,15799,15799,matched,
+User6_8_1,C,D:\Dataset\dvss\Active_Data\User6\npy\User6_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_8_1\User6_8_1_DLC.csv,9199,9199,matched,
+User7_3_1,C,D:\Dataset\dvss\Active_Data\User7\npy\User7_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_3_1\User7_3_1_DLC.csv,24811,24811,matched,
+User7_4_1,C,D:\Dataset\dvss\Active_Data\User7\npy\User7_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_4_1\User7_4_1_DLC.csv,12979,12979,matched,
+User7_4_2,C,D:\Dataset\dvss\Active_Data\User7\npy\User7_4_2_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_4_2\User7_4_2_DLC.csv,12439,12439,matched,
+User7_8_1,C,D:\Dataset\dvss\Active_Data\User7\npy\User7_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_8_1\User7_8_1_DLC.csv,10499,10499,matched,
+User8_2_1,C,D:\Dataset\dvss\Active_Data\User8\npy\User8_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_2_1\User8_2_1_DLC.csv,8900,8900,matched,
+User8_2_2,C,D:\Dataset\dvss\Active_Data\User8\npy\User8_2_2_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_2_2\User8_2_2_DLC.csv,6219,6219,matched,
+User8_6_1,C,D:\Dataset\dvss\Active_Data\User8\npy\User8_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_6_1\User8_6_1_DLC.csv,20137,20137,matched,
+User8_7_1,C,D:\Dataset\dvss\Active_Data\User8\npy\User8_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_7_1\User8_7_1_DLC.csv,6719,6719,matched,
+User8_7_2,C,D:\Dataset\dvss\Active_Data\User8\npy\User8_7_2_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_7_2\User8_7_2_DLC.csv,7979,7979,matched,
+User9_1_1,C,D:\Dataset\dvss\Active_Data\User9\npy\User9_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_1_1\User9_1_1_DLC.csv,4370,4370,matched,
+User9_1_2,C,D:\Dataset\dvss\Active_Data\User9\npy\User9_1_2_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_1_2\User9_1_2_DLC.csv,11092,11092,matched,
+User9_5_1,C,D:\Dataset\dvss\Active_Data\User9\npy\User9_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_5_1\User9_5_1_DLC.csv,4652,4652,matched,
+User9_5_2,C,D:\Dataset\dvss\Active_Data\User9\npy\User9_5_2_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_5_2\User9_5_2_DLC.csv,5436,5436,matched,
+User9_9_1,C,D:\Dataset\dvss\Active_Data\User9\npy\User9_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_9_1\User9_9_1_DLC.csv,12535,12535,matched,
+User10_2_1,C,D:\Dataset\dvss\Active_Data\User10\npy\User10_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_2_1\User10_2_1_DLC.csv,5232,5232,matched,
+User10_2_2,C,D:\Dataset\dvss\Active_Data\User10\npy\User10_2_2_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_2_2\User10_2_2_DLC.csv,3800,3800,matched,
+User10_6_1,C,D:\Dataset\dvss\Active_Data\User10\npy\User10_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_6_1\User10_6_1_DLC.csv,5385,5385,matched,
+User10_7_1,C,D:\Dataset\dvss\Active_Data\User10\npy\User10_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_7_1\User10_7_1_DLC.csv,7591,7591,matched,
+User11_3_1,C,D:\Dataset\dvss\Active_Data\User11\npy\User11_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_3_1\User11_3_1_DLC.csv,10442,10442,matched,
+User11_4_1,C,D:\Dataset\dvss\Active_Data\User11\npy\User11_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_4_1\User11_4_1_DLC.csv,10501,10501,matched,
+User11_8_1,C,D:\Dataset\dvss\Active_Data\User11\npy\User11_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_8_1\User11_8_1_DLC.csv,8687,8687,matched,
+User12_1_1,C,D:\Dataset\dvss\Active_Data\User12\npy\User12_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_1_1\User12_1_1_DLC.csv,11307,11307,matched,
+User12_5_1,C,D:\Dataset\dvss\Active_Data\User12\npy\User12_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_5_1\User12_5_1_DLC.csv,3822,3822,matched,
+User12_5_2,C,D:\Dataset\dvss\Active_Data\User12\npy\User12_5_2_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_5_2\User12_5_2_DLC.csv,11550,11550,matched,
+User12_9_1,C,D:\Dataset\dvss\Active_Data\User12\npy\User12_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_9_1\User12_9_1_DLC.csv,7480,7480,matched,
+User1_1_1,A,D:\Dataset\dvss\Active_Data\User1\npy\User1_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_1_1\User1_1_1_DLC.csv,12595,12595,matched,
+User1_6_1,A,D:\Dataset\dvss\Active_Data\User1\npy\User1_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_6_1\User1_6_1_DLC.csv,7327,7327,matched,
+User1_8_1,A,D:\Dataset\dvss\Active_Data\User1\npy\User1_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_8_1\User1_8_1_DLC.csv,5742,5742,matched,
+User2_3_1,A,D:\Dataset\dvss\Active_Data\User2\npy\User2_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_3_1\User2_3_1_DLC.csv,13731,13731,matched,
+User2_5_1,A,D:\Dataset\dvss\Active_Data\User2\npy\User2_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_5_1\User2_5_1_DLC.csv,10530,10530,matched,
+User2_7_1,A,D:\Dataset\dvss\Active_Data\User2\npy\User2_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_7_1\User2_7_1_DLC.csv,12970,12970,matched,
+User3_2_1,A,D:\Dataset\dvss\Active_Data\User3\npy\User3_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_2_1\User3_2_1_DLC.csv,22939,22939,matched,
+User3_4_1,A,D:\Dataset\dvss\Active_Data\User3\npy\User3_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_4_1\User3_4_1_DLC.csv,16939,16939,matched,
+User3_9_1,A,D:\Dataset\dvss\Active_Data\User3\npy\User3_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_9_1\User3_9_1_DLC.csv,10939,10939,matched,
+User5_2_1,A,D:\Dataset\dvss\Active_Data\User5\npy\User5_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_2_1\User5_2_1_DLC.csv,14729,14729,matched,
+User5_4_1,A,D:\Dataset\dvss\Active_Data\User5\npy\User5_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_4_1\User5_4_1_DLC.csv,12299,12299,matched,
+User5_9_1,A,D:\Dataset\dvss\Active_Data\User5\npy\User5_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_9_1\User5_9_1_DLC.csv,7939,7939,matched,
+User6_3_1,A,D:\Dataset\dvss\Active_Data\User6\npy\User6_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_3_1\User6_3_1_DLC.csv,13808,13808,matched,
+User6_5_1,A,D:\Dataset\dvss\Active_Data\User6\npy\User6_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_5_1\User6_5_1_DLC.csv,9719,9719,matched,
+User6_7_1,A,D:\Dataset\dvss\Active_Data\User6\npy\User6_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_7_1\User6_7_1_DLC.csv,6659,6659,matched,
+User7_1_1,A,D:\Dataset\dvss\Active_Data\User7\npy\User7_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_1_1\User7_1_1_DLC.csv,18525,18525,matched,
+User7_5_1,A,D:\Dataset\dvss\Active_Data\User7\npy\User7_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_5_1\User7_5_1_DLC.csv,10899,10899,matched,
+User7_9_1,A,D:\Dataset\dvss\Active_Data\User7\npy\User7_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_9_1\User7_9_1_DLC.csv,11799,11799,matched,
+User8_3_1,A,D:\Dataset\dvss\Active_Data\User8\npy\User8_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_3_1\User8_3_1_DLC.csv,15379,15379,matched,
+User8_4_1,A,D:\Dataset\dvss\Active_Data\User8\npy\User8_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_4_1\User8_4_1_DLC.csv,11539,11539,matched,
+User8_8_1,A,D:\Dataset\dvss\Active_Data\User8\npy\User8_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_8_1\User8_8_1_DLC.csv,14692,14692,matched,
+User9_2_1,A,D:\Dataset\dvss\Active_Data\User9\npy\User9_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_2_1\User9_2_1_DLC.csv,14705,14705,matched,
+User9_6_1,A,D:\Dataset\dvss\Active_Data\User9\npy\User9_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_6_1\User9_6_1_DLC.csv,9553,9553,matched,
+User9_7_1,A,D:\Dataset\dvss\Active_Data\User9\npy\User9_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_7_1\User9_7_1_DLC.csv,7948,7948,matched,
+User10_1_1,A,D:\Dataset\dvss\Active_Data\User10\npy\User10_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_1_1\User10_1_1_DLC.csv,17081,17081,matched,
+User10_5_1,A,D:\Dataset\dvss\Active_Data\User10\npy\User10_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_5_1\User10_5_1_DLC.csv,12655,12655,matched,
+User10_9_1,A,D:\Dataset\dvss\Active_Data\User10\npy\User10_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_9_1\User10_9_1_DLC.csv,7096,7096,matched,
+User11_2_1,A,D:\Dataset\dvss\Active_Data\User11\npy\User11_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_2_1\User11_2_1_DLC.csv,9365,9365,matched,
+User11_6_1,A,D:\Dataset\dvss\Active_Data\User11\npy\User11_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_6_1\User11_6_1_DLC.csv,12073,12073,matched,
+User11_7_1,A,D:\Dataset\dvss\Active_Data\User11\npy\User11_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_7_1\User11_7_1_DLC.csv,10610,10610,matched,
+User12_3_1,A,D:\Dataset\dvss\Active_Data\User12\npy\User12_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_3_1\User12_3_1_DLC.csv,12916,12916,matched,
+User12_4_1,A,D:\Dataset\dvss\Active_Data\User12\npy\User12_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_4_1\User12_4_1_DLC.csv,11001,11001,matched,
+User12_8_1,A,D:\Dataset\dvss\Active_Data\User12\npy\User12_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_8_1\User12_8_1_DLC.csv,10752,10752,matched,
+User1_2_1,B,D:\Dataset\dvss\Active_Data\User1\npy\User1_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_2_1\User1_2_1_DLC.csv,9369,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User1\sam\User1_2_1\User1_2_1_DLC.csv
+User1_4_1,B,D:\Dataset\dvss\Active_Data\User1\npy\User1_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_4_1\User1_4_1_DLC.csv,7429,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User1\sam\User1_4_1\User1_4_1_DLC.csv
+User1_9_1,B,D:\Dataset\dvss\Active_Data\User1\npy\User1_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User1\sam\User1_9_1\User1_9_1_DLC.csv,5369,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User1\sam\User1_9_1\User1_9_1_DLC.csv
+User2_6_1,B,D:\Dataset\dvss\Active_Data\User2\npy\User2_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_6_1\User2_6_1_DLC.csv,8059,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User2\sam\User2_6_1\User2_6_1_DLC.csv
+User2_6_2,B,D:\Dataset\dvss\Active_Data\User2\npy\User2_6_2_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_6_2\User2_6_2_DLC.csv,8719,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User2\sam\User2_6_2\User2_6_2_DLC.csv
+User2_8_1,B,D:\Dataset\dvss\Active_Data\User2\npy\User2_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_8_1\User2_8_1_DLC.csv,10619,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User2\sam\User2_8_1\User2_8_1_DLC.csv
+User3_3_1,B,D:\Dataset\dvss\Active_Data\User3\npy\User3_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_3_1\User3_3_1_DLC.csv,42578,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User3\sam\User3_3_1\User3_3_1_DLC.csv
+User3_5_1,B,D:\Dataset\dvss\Active_Data\User3\npy\User3_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_5_1\User3_5_1_DLC.csv,31279,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User3\sam\User3_5_1\User3_5_1_DLC.csv
+User3_7_1,B,D:\Dataset\dvss\Active_Data\User3\npy\User3_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User3\sam\User3_7_1\User3_7_1_DLC.csv,24439,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User3\sam\User3_7_1\User3_7_1_DLC.csv
+User5_1_1,B,D:\Dataset\dvss\Active_Data\User5\npy\User5_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_1_1\User5_1_1_DLC.csv,14106,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User5\sam\User5_1_1\User5_1_1_DLC.csv
+User5_6_1,B,D:\Dataset\dvss\Active_Data\User5\npy\User5_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_6_1\User5_6_1_DLC.csv,10039,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User5\sam\User5_6_1\User5_6_1_DLC.csv
+User5_8_1,B,D:\Dataset\dvss\Active_Data\User5\npy\User5_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User5\sam\User5_8_1\User5_8_1_DLC.csv,10759,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User5\sam\User5_8_1\User5_8_1_DLC.csv
+User6_2_1,B,D:\Dataset\dvss\Active_Data\User6\npy\User6_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_2_1\User6_2_1_DLC.csv,12391,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User6\sam\User6_2_1\User6_2_1_DLC.csv
+User6_4_1,B,D:\Dataset\dvss\Active_Data\User6\npy\User6_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_4_1\User6_4_1_DLC.csv,9539,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User6\sam\User6_4_1\User6_4_1_DLC.csv
+User6_9_1,B,D:\Dataset\dvss\Active_Data\User6\npy\User6_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User6\sam\User6_9_1\User6_9_1_DLC.csv,7079,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User6\sam\User6_9_1\User6_9_1_DLC.csv
+User7_2_1,B,D:\Dataset\dvss\Active_Data\User7\npy\User7_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_2_1\User7_2_1_DLC.csv,15158,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User7\sam\User7_2_1\User7_2_1_DLC.csv
+User7_6_1,B,D:\Dataset\dvss\Active_Data\User7\npy\User7_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_6_1\User7_6_1_DLC.csv,10839,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User7\sam\User7_6_1\User7_6_1_DLC.csv
+User7_7_1,B,D:\Dataset\dvss\Active_Data\User7\npy\User7_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User7\sam\User7_7_1\User7_7_1_DLC.csv,12059,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User7\sam\User7_7_1\User7_7_1_DLC.csv
+User8_1_1,B,D:\Dataset\dvss\Active_Data\User8\npy\User8_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_1_1\User8_1_1_DLC.csv,10404,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User8\sam\User8_1_1\User8_1_1_DLC.csv
+User8_5_1,B,D:\Dataset\dvss\Active_Data\User8\npy\User8_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_5_1\User8_5_1_DLC.csv,9739,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User8\sam\User8_5_1\User8_5_1_DLC.csv
+User8_9_1,B,D:\Dataset\dvss\Active_Data\User8\npy\User8_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_9_1\User8_9_1_DLC.csv,13096,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User8\sam\User8_9_1\User8_9_1_DLC.csv
+User9_3_1,B,D:\Dataset\dvss\Active_Data\User9\npy\User9_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_3_1\User9_3_1_DLC.csv,10377,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User9\sam\User9_3_1\User9_3_1_DLC.csv
+User9_4_1,B,D:\Dataset\dvss\Active_Data\User9\npy\User9_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_4_1\User9_4_1_DLC.csv,11394,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User9\sam\User9_4_1\User9_4_1_DLC.csv
+User9_8_1,B,D:\Dataset\dvss\Active_Data\User9\npy\User9_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User9\sam\User9_8_1\User9_8_1_DLC.csv,7091,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User9\sam\User9_8_1\User9_8_1_DLC.csv
+User10_3_1,B,D:\Dataset\dvss\Active_Data\User10\npy\User10_3_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_3_1\User10_3_1_DLC.csv,9268,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User10\sam\User10_3_1\User10_3_1_DLC.csv
+User10_4_1,B,D:\Dataset\dvss\Active_Data\User10\npy\User10_4_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_4_1\User10_4_1_DLC.csv,9292,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User10\sam\User10_4_1\User10_4_1_DLC.csv
+User10_8_1,B,D:\Dataset\dvss\Active_Data\User10\npy\User10_8_1_gaze.npy,D:\Dataset\dvss\Active_Data\User10\sam\User10_8_1\User10_8_1_DLC.csv,5901,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User10\sam\User10_8_1\User10_8_1_DLC.csv
+User11_1_1,B,D:\Dataset\dvss\Active_Data\User11\npy\User11_1_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_1_1\User11_1_1_DLC.csv,22003,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User11\sam\User11_1_1\User11_1_1_DLC.csv
+User11_5_1,B,D:\Dataset\dvss\Active_Data\User11\npy\User11_5_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_5_1\User11_5_1_DLC.csv,16664,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User11\sam\User11_5_1\User11_5_1_DLC.csv
+User11_9_1,B,D:\Dataset\dvss\Active_Data\User11\npy\User11_9_1_gaze.npy,D:\Dataset\dvss\Active_Data\User11\sam\User11_9_1\User11_9_1_DLC.csv,11087,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User11\sam\User11_9_1\User11_9_1_DLC.csv
+User12_2_1,B,D:\Dataset\dvss\Active_Data\User12\npy\User12_2_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_2_1\User12_2_1_DLC.csv,12489,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User12\sam\User12_2_1\User12_2_1_DLC.csv
+User12_6_1,B,D:\Dataset\dvss\Active_Data\User12\npy\User12_6_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_6_1\User12_6_1_DLC.csv,8845,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User12\sam\User12_6_1\User12_6_1_DLC.csv
+User12_7_1,B,D:\Dataset\dvss\Active_Data\User12\npy\User12_7_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_7_1\User12_7_1_DLC.csv,7519,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User12\sam\User12_7_1\User12_7_1_DLC.csv
+User2_10_1,D,D:\Dataset\dvss\Active_Data\User2\npy\User2_10_1_gaze.npy,D:\Dataset\dvss\Active_Data\User2\sam\User2_10_1\User2_10_1_DLC.csv,8682,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User2\sam\User2_10_1\User2_10_1_DLC.csv
+User8_10_1,D,D:\Dataset\dvss\Active_Data\User8\npy\User8_10_1_gaze.npy,D:\Dataset\dvss\Active_Data\User8\sam\User8_10_1\User8_10_1_DLC.csv,20961,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User8\sam\User8_10_1\User8_10_1_DLC.csv
+User12_10_1,D,D:\Dataset\dvss\Active_Data\User12\npy\User12_10_1_gaze.npy,D:\Dataset\dvss\Active_Data\User12\sam\User12_10_1\User12_10_1_DLC.csv,24929,,error,dlc: FileNotFoundError: D:\Dataset\dvss\Active_Data\User12\sam\User12_10_1\User12_10_1_DLC.csv

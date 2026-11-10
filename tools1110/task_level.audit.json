@@ -1,0 +1,1980 @@
+{
+  "level": "task",
+  "index": "C:\\Users\\GT502\\Desktop\\JMRR2027\\DVSS_Pytorch\\dvss_pytorch\\Index\\index_novice_active.json",
+  "data_root": "D:\\Dataset\\dvss",
+  "output": "D:\\GitHub_Project\\co-tracker\\tools1110\\task_level.csv",
+  "output_rows": 2,
+  "hz": 60,
+  "width": 1280,
+  "height": 1024,
+  "formula": "sqrt(sum(dx**2 + dy**2) / n_valid_pairs)",
+  "point_units": "pixel",
+  "center_units": "pixel",
+  "likelihood_min": 0.2,
+  "gaze_valid_code_filter": false,
+  "smoothing": false,
+  "alignment": "original row position; reject unequal lengths",
+  "included_tasks": [
+    "A",
+    "C"
+  ],
+  "stage_whitelist": [
+    "grab ring",
+    "transfer ring",
+    "place ring",
+    "reach ring",
+    "reach string",
+    "wrap around psm",
+    "pull through and cinch",
+    "threading string through tower"
+  ],
+  "stage_aliases": {
+    "transport ring": "transfer ring"
+  },
+  "record_task_include_all_stages": true,
+  "pair_validity": "independent mask for each gaze-reference pair",
+  "target_rule": "valid knot center first; otherwise mean of strictly inside finite points",
+  "skipped_index_records": [
+    {
+      "record_id": "User1_2_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User1_4_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User1_9_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User2_6_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User2_6_2",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User2_8_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User3_3_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User3_5_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User3_7_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User5_1_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User5_6_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User5_8_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User6_2_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User6_4_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User6_9_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User7_2_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User7_6_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User7_7_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User8_1_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User8_5_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User8_9_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User9_3_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User9_4_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User9_8_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User10_3_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User10_4_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User10_8_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User11_1_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User11_5_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User11_9_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User12_2_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User12_6_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User12_7_1",
+      "task_name": "B",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User2_10_1",
+      "task_name": "D",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User8_10_1",
+      "task_name": "D",
+      "reason": "only_A_C_requested"
+    },
+    {
+      "record_id": "User12_10_1",
+      "task_name": "D",
+      "reason": "only_A_C_requested"
+    }
+  ],
+  "records": [
+    {
+      "user": 1,
+      "record_id": "User1_3_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_3_1\\User1_3_1_DLC.csv",
+      "n_frames": 18001,
+      "stage_counts": {
+        "none": 299,
+        "pull through and cinch": 2123,
+        "reach string": 4655,
+        "threading string through tower": 3121,
+        "wrap around psm": 7803
+      },
+      "gaze_valid_frames": 17769,
+      "psm_l_valid_frames": 17189,
+      "psm_r_valid_frames": 17642,
+      "target_valid_frames": 13644,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 381,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_5_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_5_1\\User1_5_1_DLC.csv",
+      "n_frames": 13572,
+      "stage_counts": {
+        "none": 35,
+        "pull through and cinch": 2066,
+        "reach string": 4398,
+        "threading string through tower": 745,
+        "wrap around psm": 6328
+      },
+      "gaze_valid_frames": 13463,
+      "psm_l_valid_frames": 13295,
+      "psm_r_valid_frames": 13334,
+      "target_valid_frames": 9992,
+      "target_point_pairs_rejected_boundary_or_outside": 5,
+      "target_knot_center_frames": 389,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_5_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_5_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_5_2\\User1_5_2_DLC.csv",
+      "n_frames": 3552,
+      "stage_counts": {
+        "none": 41,
+        "pull through and cinch": 1057,
+        "reach string": 746,
+        "threading string through tower": 384,
+        "wrap around psm": 1324
+      },
+      "gaze_valid_frames": 3549,
+      "psm_l_valid_frames": 3469,
+      "psm_r_valid_frames": 3472,
+      "target_valid_frames": 2671,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 217,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_5_3",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_5_3_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_5_3\\User1_5_3_DLC.csv",
+      "n_frames": 15922,
+      "stage_counts": {
+        "pull through and cinch": 2726,
+        "reach string": 7504,
+        "threading string through tower": 143,
+        "wrap around psm": 5549
+      },
+      "gaze_valid_frames": 15877,
+      "psm_l_valid_frames": 15392,
+      "psm_r_valid_frames": 15718,
+      "target_valid_frames": 12914,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1210,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_7_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_7_1\\User1_7_1_DLC.csv",
+      "n_frames": 7399,
+      "stage_counts": {
+        "pull through and cinch": 989,
+        "reach string": 2040,
+        "wrap around psm": 4370
+      },
+      "gaze_valid_frames": 7395,
+      "psm_l_valid_frames": 7295,
+      "psm_r_valid_frames": 6619,
+      "target_valid_frames": 6472,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 62,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_2_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_2_1\\User2_2_1_DLC.csv",
+      "n_frames": 6878,
+      "stage_counts": {
+        "none": 230,
+        "reach string": 3074,
+        "threading string through tower": 166,
+        "wrap around psm": 3408
+      },
+      "gaze_valid_frames": 6408,
+      "psm_l_valid_frames": 6878,
+      "psm_r_valid_frames": 6868,
+      "target_valid_frames": 6048,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_2_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_2_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_2_2\\User2_2_2_DLC.csv",
+      "n_frames": 3898,
+      "stage_counts": {
+        "none": 230,
+        "pull through and cinch": 454,
+        "reach string": 2160,
+        "wrap around psm": 1054
+      },
+      "gaze_valid_frames": 3582,
+      "psm_l_valid_frames": 3871,
+      "psm_r_valid_frames": 3155,
+      "target_valid_frames": 3138,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_4_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_4_1\\User2_4_1_DLC.csv",
+      "n_frames": 9659,
+      "stage_counts": {
+        "pull through and cinch": 2185,
+        "reach string": 3939,
+        "wrap around psm": 3535
+      },
+      "gaze_valid_frames": 8896,
+      "psm_l_valid_frames": 9659,
+      "psm_r_valid_frames": 9602,
+      "target_valid_frames": 8183,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1234,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_9_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_9_1\\User2_9_1_DLC.csv",
+      "n_frames": 4809,
+      "stage_counts": {
+        "reach string": 1899,
+        "threading string through tower": 327,
+        "wrap around psm": 2583
+      },
+      "gaze_valid_frames": 4262,
+      "psm_l_valid_frames": 4513,
+      "psm_r_valid_frames": 4785,
+      "target_valid_frames": 4507,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_9_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_9_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_9_2\\User2_9_2_DLC.csv",
+      "n_frames": 3628,
+      "stage_counts": {
+        "reach string": 1696,
+        "threading string through tower": 152,
+        "wrap around psm": 1780
+      },
+      "gaze_valid_frames": 3153,
+      "psm_l_valid_frames": 3595,
+      "psm_r_valid_frames": 3538,
+      "target_valid_frames": 3628,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_1_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_1_1\\User3_1_1_DLC.csv",
+      "n_frames": 16999,
+      "stage_counts": {
+        "none": 181,
+        "reach string": 4053,
+        "threading string through tower": 1720,
+        "wrap around psm": 11045
+      },
+      "gaze_valid_frames": 16555,
+      "psm_l_valid_frames": 16994,
+      "psm_r_valid_frames": 16845,
+      "target_valid_frames": 15962,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_1_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_1_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_1_2\\User3_1_2_DLC.csv",
+      "n_frames": 11640,
+      "stage_counts": {
+        "none": 25,
+        "pull through and cinch": 3313,
+        "reach string": 3349,
+        "threading string through tower": 830,
+        "wrap around psm": 4123
+      },
+      "gaze_valid_frames": 11403,
+      "psm_l_valid_frames": 11623,
+      "psm_r_valid_frames": 11418,
+      "target_valid_frames": 8937,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 801,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_6_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_6_1\\User3_6_1_DLC.csv",
+      "n_frames": 14654,
+      "stage_counts": {
+        "pull through and cinch": 6962,
+        "reach string": 4395,
+        "wrap around psm": 3297
+      },
+      "gaze_valid_frames": 14249,
+      "psm_l_valid_frames": 14654,
+      "psm_r_valid_frames": 13891,
+      "target_valid_frames": 6819,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_6_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_6_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_6_2\\User3_6_2_DLC.csv",
+      "n_frames": 12879,
+      "stage_counts": {
+        "pull through and cinch": 4905,
+        "reach string": 3886,
+        "wrap around psm": 4088
+      },
+      "gaze_valid_frames": 12534,
+      "psm_l_valid_frames": 12879,
+      "psm_r_valid_frames": 12222,
+      "target_valid_frames": 7614,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_8_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_8_1\\User3_8_1_DLC.csv",
+      "n_frames": 8639,
+      "stage_counts": {
+        "pull through and cinch": 3163,
+        "reach string": 2247,
+        "threading string through tower": 354,
+        "wrap around psm": 2875
+      },
+      "gaze_valid_frames": 8484,
+      "psm_l_valid_frames": 8639,
+      "psm_r_valid_frames": 7940,
+      "target_valid_frames": 5476,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_8_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_8_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_8_2\\User3_8_2_DLC.csv",
+      "n_frames": 14999,
+      "stage_counts": {
+        "pull through and cinch": 5766,
+        "reach string": 5355,
+        "wrap around psm": 3878
+      },
+      "gaze_valid_frames": 14691,
+      "psm_l_valid_frames": 14999,
+      "psm_r_valid_frames": 14331,
+      "target_valid_frames": 8666,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_3_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_3_1\\User5_3_1_DLC.csv",
+      "n_frames": 2741,
+      "stage_counts": {
+        "none": 406,
+        "pull through and cinch": 449,
+        "reach string": 941,
+        "wrap around psm": 945
+      },
+      "gaze_valid_frames": 2668,
+      "psm_l_valid_frames": 2722,
+      "psm_r_valid_frames": 2682,
+      "target_valid_frames": 1886,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_3_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_3_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_3_2\\User5_3_2_DLC.csv",
+      "n_frames": 4829,
+      "stage_counts": {
+        "reach string": 1451,
+        "threading string through tower": 163,
+        "wrap around psm": 3215
+      },
+      "gaze_valid_frames": 4430,
+      "psm_l_valid_frames": 4829,
+      "psm_r_valid_frames": 4456,
+      "target_valid_frames": 4304,
+      "target_point_pairs_rejected_boundary_or_outside": 162,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_5_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_5_1\\User5_5_1_DLC.csv",
+      "n_frames": 8719,
+      "stage_counts": {
+        "pull through and cinch": 995,
+        "reach string": 3359,
+        "threading string through tower": 442,
+        "wrap around psm": 3923
+      },
+      "gaze_valid_frames": 8198,
+      "psm_l_valid_frames": 8719,
+      "psm_r_valid_frames": 8338,
+      "target_valid_frames": 7476,
+      "target_point_pairs_rejected_boundary_or_outside": 220,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_5_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_5_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_5_2\\User5_5_2_DLC.csv",
+      "n_frames": 7419,
+      "stage_counts": {
+        "pull through and cinch": 1947,
+        "reach string": 2838,
+        "threading string through tower": 103,
+        "wrap around psm": 2531
+      },
+      "gaze_valid_frames": 7316,
+      "psm_l_valid_frames": 7406,
+      "psm_r_valid_frames": 7179,
+      "target_valid_frames": 5472,
+      "target_point_pairs_rejected_boundary_or_outside": 292,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_7_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_7_1\\User5_7_1_DLC.csv",
+      "n_frames": 2859,
+      "stage_counts": {
+        "pull through and cinch": 528,
+        "reach string": 950,
+        "wrap around psm": 1381
+      },
+      "gaze_valid_frames": 2380,
+      "psm_l_valid_frames": 2859,
+      "psm_r_valid_frames": 2284,
+      "target_valid_frames": 2331,
+      "target_point_pairs_rejected_boundary_or_outside": 95,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_7_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_7_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_7_2\\User5_7_2_DLC.csv",
+      "n_frames": 6639,
+      "stage_counts": {
+        "pull through and cinch": 1631,
+        "reach string": 2978,
+        "wrap around psm": 2030
+      },
+      "gaze_valid_frames": 6427,
+      "psm_l_valid_frames": 6639,
+      "psm_r_valid_frames": 6169,
+      "target_valid_frames": 5008,
+      "target_point_pairs_rejected_boundary_or_outside": 427,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_1_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_1_1\\User6_1_1_DLC.csv",
+      "n_frames": 3387,
+      "stage_counts": {
+        "reach string": 962,
+        "wrap around psm": 2425
+      },
+      "gaze_valid_frames": 3199,
+      "psm_l_valid_frames": 3387,
+      "psm_r_valid_frames": 3381,
+      "target_valid_frames": 3387,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_1_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_1_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_1_2\\User6_1_2_DLC.csv",
+      "n_frames": 13894,
+      "stage_counts": {
+        "none": 121,
+        "pull through and cinch": 3941,
+        "reach string": 5490,
+        "wrap around psm": 4342
+      },
+      "gaze_valid_frames": 12956,
+      "psm_l_valid_frames": 13844,
+      "psm_r_valid_frames": 13868,
+      "target_valid_frames": 9515,
+      "target_point_pairs_rejected_boundary_or_outside": 39,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_6_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_6_1\\User6_6_1_DLC.csv",
+      "n_frames": 15799,
+      "stage_counts": {
+        "pull through and cinch": 2003,
+        "reach string": 4236,
+        "threading string through tower": 389,
+        "wrap around psm": 9171
+      },
+      "gaze_valid_frames": 14064,
+      "psm_l_valid_frames": 15799,
+      "psm_r_valid_frames": 15643,
+      "target_valid_frames": 13796,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_8_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_8_1\\User6_8_1_DLC.csv",
+      "n_frames": 9199,
+      "stage_counts": {
+        "pull through and cinch": 2509,
+        "reach string": 2810,
+        "threading string through tower": 65,
+        "wrap around psm": 3815
+      },
+      "gaze_valid_frames": 8311,
+      "psm_l_valid_frames": 9199,
+      "psm_r_valid_frames": 8835,
+      "target_valid_frames": 6690,
+      "target_point_pairs_rejected_boundary_or_outside": 288,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_3_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_3_1\\User7_3_1_DLC.csv",
+      "n_frames": 24811,
+      "stage_counts": {
+        "none": 2700,
+        "pull through and cinch": 5546,
+        "reach string": 5664,
+        "wrap around psm": 10901
+      },
+      "gaze_valid_frames": 24241,
+      "psm_l_valid_frames": 22581,
+      "psm_r_valid_frames": 22806,
+      "target_valid_frames": 15056,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_4_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_4_1\\User7_4_1_DLC.csv",
+      "n_frames": 12979,
+      "stage_counts": {
+        "pull through and cinch": 1452,
+        "reach string": 3375,
+        "threading string through tower": 283,
+        "wrap around psm": 7869
+      },
+      "gaze_valid_frames": 12631,
+      "psm_l_valid_frames": 12805,
+      "psm_r_valid_frames": 12819,
+      "target_valid_frames": 10402,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_4_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_4_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_4_2\\User7_4_2_DLC.csv",
+      "n_frames": 12439,
+      "stage_counts": {
+        "pull through and cinch": 4016,
+        "reach string": 3979,
+        "wrap around psm": 4444
+      },
+      "gaze_valid_frames": 11368,
+      "psm_l_valid_frames": 12374,
+      "psm_r_valid_frames": 12318,
+      "target_valid_frames": 8423,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_8_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_8_1\\User7_8_1_DLC.csv",
+      "n_frames": 10499,
+      "stage_counts": {
+        "pull through and cinch": 2905,
+        "reach string": 3207,
+        "wrap around psm": 4387
+      },
+      "gaze_valid_frames": 10222,
+      "psm_l_valid_frames": 10499,
+      "psm_r_valid_frames": 10405,
+      "target_valid_frames": 6855,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_2_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_2_1\\User8_2_1_DLC.csv",
+      "n_frames": 8900,
+      "stage_counts": {
+        "reach string": 729,
+        "wrap around psm": 8171
+      },
+      "gaze_valid_frames": 3584,
+      "psm_l_valid_frames": 8795,
+      "psm_r_valid_frames": 8459,
+      "target_valid_frames": 8836,
+      "target_point_pairs_rejected_boundary_or_outside": 280,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_2_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_2_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_2_2\\User8_2_2_DLC.csv",
+      "n_frames": 6219,
+      "stage_counts": {
+        "reach string": 3316,
+        "wrap around psm": 2903
+      },
+      "gaze_valid_frames": 3552,
+      "psm_l_valid_frames": 6114,
+      "psm_r_valid_frames": 6204,
+      "target_valid_frames": 6219,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_6_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_6_1\\User8_6_1_DLC.csv",
+      "n_frames": 20137,
+      "stage_counts": {
+        "none": 479,
+        "pull through and cinch": 2562,
+        "reach string": 5656,
+        "wrap around psm": 11440
+      },
+      "gaze_valid_frames": 5920,
+      "psm_l_valid_frames": 19893,
+      "psm_r_valid_frames": 18272,
+      "target_valid_frames": 16999,
+      "target_point_pairs_rejected_boundary_or_outside": 711,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_7_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_7_1\\User8_7_1_DLC.csv",
+      "n_frames": 6719,
+      "stage_counts": {
+        "pull through and cinch": 618,
+        "reach string": 2561,
+        "wrap around psm": 3540
+      },
+      "gaze_valid_frames": 6330,
+      "psm_l_valid_frames": 6719,
+      "psm_r_valid_frames": 6601,
+      "target_valid_frames": 6101,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_7_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_7_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_7_2\\User8_7_2_DLC.csv",
+      "n_frames": 7979,
+      "stage_counts": {
+        "pull through and cinch": 1460,
+        "reach string": 2669,
+        "wrap around psm": 3850
+      },
+      "gaze_valid_frames": 6344,
+      "psm_l_valid_frames": 7979,
+      "psm_r_valid_frames": 7758,
+      "target_valid_frames": 6519,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_1_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_1_1\\User9_1_1_DLC.csv",
+      "n_frames": 4370,
+      "stage_counts": {
+        "reach string": 961,
+        "wrap around psm": 3409
+      },
+      "gaze_valid_frames": 3630,
+      "psm_l_valid_frames": 4370,
+      "psm_r_valid_frames": 4241,
+      "target_valid_frames": 3843,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_1_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_1_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_1_2\\User9_1_2_DLC.csv",
+      "n_frames": 11092,
+      "stage_counts": {
+        "reach string": 4554,
+        "threading string through tower": 503,
+        "wrap around psm": 6035
+      },
+      "gaze_valid_frames": 8122,
+      "psm_l_valid_frames": 11092,
+      "psm_r_valid_frames": 10936,
+      "target_valid_frames": 10415,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_5_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_5_1\\User9_5_1_DLC.csv",
+      "n_frames": 4652,
+      "stage_counts": {
+        "reach string": 1746,
+        "wrap around psm": 2906
+      },
+      "gaze_valid_frames": 4020,
+      "psm_l_valid_frames": 4645,
+      "psm_r_valid_frames": 4624,
+      "target_valid_frames": 4070,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_5_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_5_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_5_2\\User9_5_2_DLC.csv",
+      "n_frames": 5436,
+      "stage_counts": {
+        "none": 236,
+        "reach string": 1431,
+        "wrap around psm": 3769
+      },
+      "gaze_valid_frames": 4657,
+      "psm_l_valid_frames": 5433,
+      "psm_r_valid_frames": 5352,
+      "target_valid_frames": 4501,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_9_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_9_1\\User9_9_1_DLC.csv",
+      "n_frames": 12535,
+      "stage_counts": {
+        "pull through and cinch": 2312,
+        "reach string": 5356,
+        "threading string through tower": 214,
+        "wrap around psm": 4653
+      },
+      "gaze_valid_frames": 10365,
+      "psm_l_valid_frames": 12471,
+      "psm_r_valid_frames": 12053,
+      "target_valid_frames": 10223,
+      "target_point_pairs_rejected_boundary_or_outside": 23,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_2_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_2_1\\User10_2_1_DLC.csv",
+      "n_frames": 5232,
+      "stage_counts": {
+        "none": 98,
+        "pull through and cinch": 559,
+        "reach string": 1882,
+        "wrap around psm": 2693
+      },
+      "gaze_valid_frames": 4728,
+      "psm_l_valid_frames": 5170,
+      "psm_r_valid_frames": 5039,
+      "target_valid_frames": 4771,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 196,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_2_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_2_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_2_2\\User10_2_2_DLC.csv",
+      "n_frames": 3800,
+      "stage_counts": {
+        "reach string": 1781,
+        "threading string through tower": 146,
+        "wrap around psm": 1873
+      },
+      "gaze_valid_frames": 3695,
+      "psm_l_valid_frames": 3800,
+      "psm_r_valid_frames": 3687,
+      "target_valid_frames": 3046,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_6_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_6_1\\User10_6_1_DLC.csv",
+      "n_frames": 5385,
+      "stage_counts": {
+        "pull through and cinch": 1057,
+        "reach string": 2502,
+        "wrap around psm": 1826
+      },
+      "gaze_valid_frames": 4963,
+      "psm_l_valid_frames": 5385,
+      "psm_r_valid_frames": 4953,
+      "target_valid_frames": 4279,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 192,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_7_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_7_1\\User10_7_1_DLC.csv",
+      "n_frames": 7591,
+      "stage_counts": {
+        "pull through and cinch": 3097,
+        "reach string": 3415,
+        "wrap around psm": 1079
+      },
+      "gaze_valid_frames": 7356,
+      "psm_l_valid_frames": 7587,
+      "psm_r_valid_frames": 6159,
+      "target_valid_frames": 5446,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1022,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_3_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_3_1\\User11_3_1_DLC.csv",
+      "n_frames": 10442,
+      "stage_counts": {
+        "none": 502,
+        "pull through and cinch": 2759,
+        "reach string": 3366,
+        "wrap around psm": 3815
+      },
+      "gaze_valid_frames": 9964,
+      "psm_l_valid_frames": 10403,
+      "psm_r_valid_frames": 10264,
+      "target_valid_frames": 8040,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1376,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_4_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_4_1\\User11_4_1_DLC.csv",
+      "n_frames": 10501,
+      "stage_counts": {
+        "pull through and cinch": 2812,
+        "reach string": 3616,
+        "wrap around psm": 4073
+      },
+      "gaze_valid_frames": 10277,
+      "psm_l_valid_frames": 10501,
+      "psm_r_valid_frames": 10090,
+      "target_valid_frames": 8204,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 515,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_8_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_8_1\\User11_8_1_DLC.csv",
+      "n_frames": 8687,
+      "stage_counts": {
+        "pull through and cinch": 2562,
+        "reach string": 3054,
+        "wrap around psm": 3071
+      },
+      "gaze_valid_frames": 8465,
+      "psm_l_valid_frames": 8687,
+      "psm_r_valid_frames": 8385,
+      "target_valid_frames": 6714,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1301,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_1_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_1_1\\User12_1_1_DLC.csv",
+      "n_frames": 11307,
+      "stage_counts": {
+        "pull through and cinch": 5969,
+        "reach string": 1712,
+        "wrap around psm": 3626
+      },
+      "gaze_valid_frames": 9932,
+      "psm_l_valid_frames": 11295,
+      "psm_r_valid_frames": 11295,
+      "target_valid_frames": 5982,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 824,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_5_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_5_1\\User12_5_1_DLC.csv",
+      "n_frames": 3822,
+      "stage_counts": {
+        "reach string": 1272,
+        "wrap around psm": 2550
+      },
+      "gaze_valid_frames": 3663,
+      "psm_l_valid_frames": 3817,
+      "psm_r_valid_frames": 3822,
+      "target_valid_frames": 3822,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_5_2",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_5_2_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_5_2\\User12_5_2_DLC.csv",
+      "n_frames": 11550,
+      "stage_counts": {
+        "none": 374,
+        "pull through and cinch": 2173,
+        "reach string": 3970,
+        "wrap around psm": 5033
+      },
+      "gaze_valid_frames": 11404,
+      "psm_l_valid_frames": 11455,
+      "psm_r_valid_frames": 11091,
+      "target_valid_frames": 10232,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 1424,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_9_1",
+      "task_name": "C",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_9_1\\User12_9_1_DLC.csv",
+      "n_frames": 7480,
+      "stage_counts": {
+        "pull through and cinch": 2181,
+        "reach string": 2931,
+        "wrap around psm": 2368
+      },
+      "gaze_valid_frames": 7461,
+      "psm_l_valid_frames": 7480,
+      "psm_r_valid_frames": 7480,
+      "target_valid_frames": 5836,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 537,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_1_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_1_1\\User1_1_1_DLC.csv",
+      "n_frames": 12595,
+      "stage_counts": {
+        "drop ring": 30,
+        "grab ring": 1668,
+        "none": 842,
+        "place ring": 1869,
+        "reach ring": 3162,
+        "transfer ring": 5024
+      },
+      "gaze_valid_frames": 11806,
+      "psm_l_valid_frames": 12064,
+      "psm_r_valid_frames": 12488,
+      "target_valid_frames": 10978,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_6_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_6_1\\User1_6_1_DLC.csv",
+      "n_frames": 7327,
+      "stage_counts": {
+        "grab ring": 914,
+        "none": 264,
+        "place ring": 1396,
+        "reach ring": 1916,
+        "transfer ring": 2837
+      },
+      "gaze_valid_frames": 7304,
+      "psm_l_valid_frames": 7292,
+      "psm_r_valid_frames": 7294,
+      "target_valid_frames": 6985,
+      "target_point_pairs_rejected_boundary_or_outside": 1157,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 1,
+      "record_id": "User1_8_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\npy\\User1_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User1\\sam\\User1_8_1\\User1_8_1_DLC.csv",
+      "n_frames": 5742,
+      "stage_counts": {
+        "grab ring": 1317,
+        "none": 597,
+        "place ring": 1267,
+        "reach ring": 968,
+        "transfer ring": 1593
+      },
+      "gaze_valid_frames": 5733,
+      "psm_l_valid_frames": 5647,
+      "psm_r_valid_frames": 5655,
+      "target_valid_frames": 5107,
+      "target_point_pairs_rejected_boundary_or_outside": 204,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_3_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_3_1\\User2_3_1_DLC.csv",
+      "n_frames": 13731,
+      "stage_counts": {
+        "grab ring": 2130,
+        "none": 135,
+        "place ring": 2716,
+        "reach ring": 5255,
+        "transfer ring": 3495
+      },
+      "gaze_valid_frames": 12326,
+      "psm_l_valid_frames": 11831,
+      "psm_r_valid_frames": 13691,
+      "target_valid_frames": 13473,
+      "target_point_pairs_rejected_boundary_or_outside": 736,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_5_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_5_1\\User2_5_1_DLC.csv",
+      "n_frames": 10530,
+      "stage_counts": {
+        "grab ring": 1816,
+        "none": 100,
+        "place ring": 1396,
+        "reach ring": 3842,
+        "transfer ring": 3376
+      },
+      "gaze_valid_frames": 8957,
+      "psm_l_valid_frames": 10427,
+      "psm_r_valid_frames": 10353,
+      "target_valid_frames": 10413,
+      "target_point_pairs_rejected_boundary_or_outside": 925,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 2,
+      "record_id": "User2_7_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\npy\\User2_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User2\\sam\\User2_7_1\\User2_7_1_DLC.csv",
+      "n_frames": 12970,
+      "stage_counts": {
+        "grab ring": 1458,
+        "none": 8,
+        "place ring": 1997,
+        "reach ring": 3453,
+        "transfer ring": 6054
+      },
+      "gaze_valid_frames": 10992,
+      "psm_l_valid_frames": 12751,
+      "psm_r_valid_frames": 12960,
+      "target_valid_frames": 12962,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_2_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_2_1\\User3_2_1_DLC.csv",
+      "n_frames": 22939,
+      "stage_counts": {
+        "grab ring": 6791,
+        "none": 38,
+        "place ring": 3303,
+        "reach ring": 4903,
+        "transfer ring": 7904
+      },
+      "gaze_valid_frames": 22435,
+      "psm_l_valid_frames": 22261,
+      "psm_r_valid_frames": 22938,
+      "target_valid_frames": 22901,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_4_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_4_1\\User3_4_1_DLC.csv",
+      "n_frames": 16939,
+      "stage_counts": {
+        "grab ring": 4094,
+        "place ring": 2456,
+        "reach ring": 4478,
+        "transfer ring": 5911
+      },
+      "gaze_valid_frames": 16482,
+      "psm_l_valid_frames": 15705,
+      "psm_r_valid_frames": 16939,
+      "target_valid_frames": 16939,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 3,
+      "record_id": "User3_9_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\npy\\User3_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User3\\sam\\User3_9_1\\User3_9_1_DLC.csv",
+      "n_frames": 10939,
+      "stage_counts": {
+        "grab ring": 1695,
+        "place ring": 2527,
+        "reach ring": 3174,
+        "transfer ring": 3543
+      },
+      "gaze_valid_frames": 10811,
+      "psm_l_valid_frames": 8835,
+      "psm_r_valid_frames": 10939,
+      "target_valid_frames": 10939,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_2_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_2_1\\User5_2_1_DLC.csv",
+      "n_frames": 14729,
+      "stage_counts": {
+        "grab ring": 2828,
+        "none": 1236,
+        "place ring": 1915,
+        "reach ring": 3395,
+        "transfer ring": 5355
+      },
+      "gaze_valid_frames": 13322,
+      "psm_l_valid_frames": 12292,
+      "psm_r_valid_frames": 14450,
+      "target_valid_frames": 13230,
+      "target_point_pairs_rejected_boundary_or_outside": 1993,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_4_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_4_1\\User5_4_1_DLC.csv",
+      "n_frames": 12299,
+      "stage_counts": {
+        "grab ring": 2941,
+        "place ring": 3076,
+        "reach ring": 2867,
+        "transfer ring": 3415
+      },
+      "gaze_valid_frames": 11864,
+      "psm_l_valid_frames": 12088,
+      "psm_r_valid_frames": 12247,
+      "target_valid_frames": 12299,
+      "target_point_pairs_rejected_boundary_or_outside": 4,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 5,
+      "record_id": "User5_9_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\npy\\User5_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User5\\sam\\User5_9_1\\User5_9_1_DLC.csv",
+      "n_frames": 7939,
+      "stage_counts": {
+        "grab ring": 1806,
+        "place ring": 1488,
+        "reach ring": 2550,
+        "transfer ring": 2095
+      },
+      "gaze_valid_frames": 7600,
+      "psm_l_valid_frames": 7593,
+      "psm_r_valid_frames": 7867,
+      "target_valid_frames": 7939,
+      "target_point_pairs_rejected_boundary_or_outside": 87,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_3_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_3_1\\User6_3_1_DLC.csv",
+      "n_frames": 13808,
+      "stage_counts": {
+        "": 180,
+        "grab ring": 2128,
+        "none": 135,
+        "place ring": 1236,
+        "reach ring": 4677,
+        "transfer ring": 5452
+      },
+      "gaze_valid_frames": 12886,
+      "psm_l_valid_frames": 13618,
+      "psm_r_valid_frames": 13808,
+      "target_valid_frames": 13493,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_5_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_5_1\\User6_5_1_DLC.csv",
+      "n_frames": 9719,
+      "stage_counts": {
+        "grab ring": 1542,
+        "place ring": 2036,
+        "reach ring": 3661,
+        "transfer ring": 2480
+      },
+      "gaze_valid_frames": 7957,
+      "psm_l_valid_frames": 9362,
+      "psm_r_valid_frames": 9719,
+      "target_valid_frames": 9719,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 6,
+      "record_id": "User6_7_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\npy\\User6_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User6\\sam\\User6_7_1\\User6_7_1_DLC.csv",
+      "n_frames": 6659,
+      "stage_counts": {
+        "grab ring": 1057,
+        "place ring": 1895,
+        "reach ring": 1839,
+        "transfer ring": 1868
+      },
+      "gaze_valid_frames": 6176,
+      "psm_l_valid_frames": 6578,
+      "psm_r_valid_frames": 6659,
+      "target_valid_frames": 6659,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_1_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_1_1\\User7_1_1_DLC.csv",
+      "n_frames": 18525,
+      "stage_counts": {
+        "": 367,
+        "grab ring": 3062,
+        "none": 145,
+        "place ring": 3154,
+        "reach ring": 7141,
+        "transfer ring": 4656
+      },
+      "gaze_valid_frames": 18279,
+      "psm_l_valid_frames": 18495,
+      "psm_r_valid_frames": 18495,
+      "target_valid_frames": 17834,
+      "target_point_pairs_rejected_boundary_or_outside": 916,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_5_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_5_1\\User7_5_1_DLC.csv",
+      "n_frames": 10899,
+      "stage_counts": {
+        "grab ring": 838,
+        "place ring": 2555,
+        "reach ring": 4133,
+        "transfer ring": 3373
+      },
+      "gaze_valid_frames": 10396,
+      "psm_l_valid_frames": 10899,
+      "psm_r_valid_frames": 10807,
+      "target_valid_frames": 10899,
+      "target_point_pairs_rejected_boundary_or_outside": 233,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 7,
+      "record_id": "User7_9_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\npy\\User7_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User7\\sam\\User7_9_1\\User7_9_1_DLC.csv",
+      "n_frames": 11799,
+      "stage_counts": {
+        "grab ring": 2037,
+        "none": 105,
+        "place ring": 2786,
+        "reach ring": 3270,
+        "transfer ring": 3601
+      },
+      "gaze_valid_frames": 11380,
+      "psm_l_valid_frames": 11799,
+      "psm_r_valid_frames": 11724,
+      "target_valid_frames": 11694,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_3_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_3_1\\User8_3_1_DLC.csv",
+      "n_frames": 15379,
+      "stage_counts": {
+        "grab ring": 3148,
+        "none": 192,
+        "place ring": 2779,
+        "reach ring": 4879,
+        "transfer ring": 4381
+      },
+      "gaze_valid_frames": 13643,
+      "psm_l_valid_frames": 13744,
+      "psm_r_valid_frames": 15025,
+      "target_valid_frames": 14983,
+      "target_point_pairs_rejected_boundary_or_outside": 1130,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_4_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_4_1\\User8_4_1_DLC.csv",
+      "n_frames": 11539,
+      "stage_counts": {
+        "grab ring": 2785,
+        "place ring": 1754,
+        "reach ring": 2723,
+        "transfer ring": 4277
+      },
+      "gaze_valid_frames": 8537,
+      "psm_l_valid_frames": 11458,
+      "psm_r_valid_frames": 11487,
+      "target_valid_frames": 11539,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 8,
+      "record_id": "User8_8_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\npy\\User8_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User8\\sam\\User8_8_1\\User8_8_1_DLC.csv",
+      "n_frames": 14692,
+      "stage_counts": {
+        "grab ring": 1598,
+        "place ring": 2141,
+        "reach ring": 3878,
+        "transfer ring": 7075
+      },
+      "gaze_valid_frames": 13130,
+      "psm_l_valid_frames": 14442,
+      "psm_r_valid_frames": 14572,
+      "target_valid_frames": 14641,
+      "target_point_pairs_rejected_boundary_or_outside": 363,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_2_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_2_1\\User9_2_1_DLC.csv",
+      "n_frames": 14705,
+      "stage_counts": {
+        "": 806,
+        "grab ring": 1208,
+        "none": 190,
+        "place ring": 2152,
+        "reach ring": 6272,
+        "transfer ring": 4077
+      },
+      "gaze_valid_frames": 11978,
+      "psm_l_valid_frames": 14406,
+      "psm_r_valid_frames": 14557,
+      "target_valid_frames": 13663,
+      "target_point_pairs_rejected_boundary_or_outside": 643,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_6_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_6_1\\User9_6_1_DLC.csv",
+      "n_frames": 9553,
+      "stage_counts": {
+        "grab ring": 1123,
+        "none": 153,
+        "place ring": 1361,
+        "reach ring": 4046,
+        "transfer ring": 2870
+      },
+      "gaze_valid_frames": 6717,
+      "psm_l_valid_frames": 9332,
+      "psm_r_valid_frames": 9462,
+      "target_valid_frames": 9400,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 9,
+      "record_id": "User9_7_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\npy\\User9_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User9\\sam\\User9_7_1\\User9_7_1_DLC.csv",
+      "n_frames": 7948,
+      "stage_counts": {
+        "grab ring": 1145,
+        "place ring": 1627,
+        "reach ring": 2414,
+        "transfer ring": 2762
+      },
+      "gaze_valid_frames": 4740,
+      "psm_l_valid_frames": 7598,
+      "psm_r_valid_frames": 7948,
+      "target_valid_frames": 7948,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_1_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_1_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_1_1\\User10_1_1_DLC.csv",
+      "n_frames": 17081,
+      "stage_counts": {
+        "": 202,
+        "grab ring": 1560,
+        "none": 177,
+        "place ring": 2769,
+        "reach ring": 8095,
+        "transfer ring": 4278
+      },
+      "gaze_valid_frames": 16305,
+      "psm_l_valid_frames": 16309,
+      "psm_r_valid_frames": 16195,
+      "target_valid_frames": 16698,
+      "target_point_pairs_rejected_boundary_or_outside": 414,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_5_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_5_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_5_1\\User10_5_1_DLC.csv",
+      "n_frames": 12655,
+      "stage_counts": {
+        "grab ring": 2367,
+        "none": 33,
+        "place ring": 2682,
+        "reach ring": 3474,
+        "transfer ring": 4099
+      },
+      "gaze_valid_frames": 11501,
+      "psm_l_valid_frames": 12478,
+      "psm_r_valid_frames": 12491,
+      "target_valid_frames": 12622,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 10,
+      "record_id": "User10_9_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\npy\\User10_9_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User10\\sam\\User10_9_1\\User10_9_1_DLC.csv",
+      "n_frames": 7096,
+      "stage_counts": {
+        "grab ring": 1144,
+        "none": 43,
+        "place ring": 1818,
+        "reach ring": 2167,
+        "transfer ring": 1924
+      },
+      "gaze_valid_frames": 6597,
+      "psm_l_valid_frames": 5603,
+      "psm_r_valid_frames": 7096,
+      "target_valid_frames": 7053,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_2_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_2_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_2_1\\User11_2_1_DLC.csv",
+      "n_frames": 9365,
+      "stage_counts": {
+        "": 287,
+        "grab ring": 1071,
+        "place ring": 1923,
+        "reach ring": 3034,
+        "transfer ring": 3050
+      },
+      "gaze_valid_frames": 8455,
+      "psm_l_valid_frames": 8823,
+      "psm_r_valid_frames": 9164,
+      "target_valid_frames": 9078,
+      "target_point_pairs_rejected_boundary_or_outside": 320,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_6_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_6_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_6_1\\User11_6_1_DLC.csv",
+      "n_frames": 12073,
+      "stage_counts": {
+        "grab ring": 1028,
+        "place ring": 2630,
+        "reach ring": 3877,
+        "transfer ring": 4538
+      },
+      "gaze_valid_frames": 10715,
+      "psm_l_valid_frames": 11858,
+      "psm_r_valid_frames": 12059,
+      "target_valid_frames": 12073,
+      "target_point_pairs_rejected_boundary_or_outside": 290,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 11,
+      "record_id": "User11_7_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\npy\\User11_7_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User11\\sam\\User11_7_1\\User11_7_1_DLC.csv",
+      "n_frames": 10610,
+      "stage_counts": {
+        "grab ring": 1759,
+        "place ring": 2155,
+        "reach ring": 2534,
+        "transfer ring": 4162
+      },
+      "gaze_valid_frames": 9632,
+      "psm_l_valid_frames": 10140,
+      "psm_r_valid_frames": 10610,
+      "target_valid_frames": 10391,
+      "target_point_pairs_rejected_boundary_or_outside": 2133,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_3_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_3_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_3_1\\User12_3_1_DLC.csv",
+      "n_frames": 12916,
+      "stage_counts": {
+        "": 189,
+        "grab ring": 1216,
+        "none": 437,
+        "place ring": 2486,
+        "reach ring": 4032,
+        "transfer ring": 4556
+      },
+      "gaze_valid_frames": 12304,
+      "psm_l_valid_frames": 12886,
+      "psm_r_valid_frames": 12875,
+      "target_valid_frames": 12290,
+      "target_point_pairs_rejected_boundary_or_outside": 334,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_4_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_4_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_4_1\\User12_4_1_DLC.csv",
+      "n_frames": 11001,
+      "stage_counts": {
+        "grab ring": 1452,
+        "place ring": 2446,
+        "reach ring": 3476,
+        "transfer ring": 3627
+      },
+      "gaze_valid_frames": 10783,
+      "psm_l_valid_frames": 10999,
+      "psm_r_valid_frames": 11001,
+      "target_valid_frames": 11001,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    },
+    {
+      "user": 12,
+      "record_id": "User12_8_1",
+      "task_name": "A",
+      "gaze_npy_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\npy\\User12_8_1_gaze.npy",
+      "dlc_csv_path": "D:\\Dataset\\dvss\\Active_Data\\User12\\sam\\User12_8_1\\User12_8_1_DLC.csv",
+      "n_frames": 10752,
+      "stage_counts": {
+        "grab ring": 1922,
+        "none": 326,
+        "place ring": 2399,
+        "reach ring": 3139,
+        "transfer ring": 2966
+      },
+      "gaze_valid_frames": 10740,
+      "psm_l_valid_frames": 10752,
+      "psm_r_valid_frames": 10752,
+      "target_valid_frames": 10426,
+      "target_point_pairs_rejected_boundary_or_outside": 0,
+      "target_knot_center_frames": 0,
+      "target_invalid_nonempty_centers": 0
+    }
+  ]
+}

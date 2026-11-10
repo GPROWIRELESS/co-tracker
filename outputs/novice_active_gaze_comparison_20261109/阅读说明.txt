@@ -1,0 +1,76 @@
+Novice active gaze：五模型对比
+分析日期：2026-11-09
+
+建议先打开 report.html 查看完整中文报告，或打开 comparison_tables.xlsx 查看对比表。
+所有 PNG 图均另附可编辑的 SVG 矢量版本。
+
+分析范围
+1. 当前 index.json 中 domain=active、meta.split=test、meta.src_skill=novice。
+2. 逐帧距离：15 个视频、10 位用户，147,454 个共同有效帧。
+3. stage JSD：A/C 的 10 个视频，共 9 个语义 stage，104,966 个共同有效标注帧。
+4. B/D 没有 stage 字段，本次不计算其 stage JSD。none 和空 stage 不参与 JSD。
+5. 所有结果使用当前 NPY GT。输入文件路径、大小、修改时间和 GT 哈希见 input_manifest.csv。
+
+主要结果
+平均逐帧距离（画面对角线百分比；每个视频等权；越小越好）：
+all_ABCD       9.634241%
+single_task    9.630422%
+leave_out     12.604218%
+spd_finetune   9.824389%
+spd_zero_shot 11.737706%
+all_ABCD 和 single_task 几乎持平。二者配对差值的 95% 用户聚类 bootstrap 区间包含 0。
+stage JSD 中 single_task 在 6/9 个 stage 的数值最低。drop ring 只有 1 个视频、30 帧，不能据此泛化。
+这些指标描述接近 GT 的程度，没有设定“成功复现”的绝对阈值。
+
+汇总表
+model_comparison.csv：五模型总体距离、95% 用户聚类 bootstrap 区间。
+stage_jsd_comparison.csv：按 task/stage 展开的五模型 JSD 对照表。
+video_distance.csv：全部 15 视频、五模型的距离明细。
+stage_jsd_video.csv：视频×stage×模型的 JSD 明细。
+video_distance_by_seed.csv / stage_jsd_by_seed.csv：保留各 seed 结果。
+pairwise_distance.csv：配对距离差值（model_a 减 model_b，单位：百分点）及未作多重比较校正的 95% bootstrap 区间；未执行显著性检验。
+stage_coverage.csv：含零帧缺失阶段的覆盖情况。缺失 stage 不作为 JSD=0 纳入平均。
+audit_clips.csv / audit_predictions.csv / audit.json：对齐、有效性、GT 版本差异等核查信息。
+
+计算方法
+prediction probability 的尺寸为 N×32×40，采用完整概率图的概率加权均值转换坐标：
+x_hat = sum(P[r,c] * c/39)，y_hat = sum(P[r,c] * r/31)。
+不重新 softmax，不使用 argmax，不从随机样本中选取最接近 GT 的坐标。
+按 frame_index 索引当前 GT 行，并核验原始 frame_number；不按时间戳连接。
+当前 GT 有效规则：坐标有限且在 [0,1] 内，并且所有模型/seed 均有有效预测。
+距离使用原始视频宽高 1280×1024：
+d_px = sqrt((1279*(x_hat-x_gt))^2 + (1023*(y_hat-y_gt))^2)
+d_pct = 100*d_px/sqrt(1279^2+1023^2)
+先平均视频内的逐帧距离，再对视频等权平均。
+95% 区间：固定随机种子 20261109，10,000 次用户聚类 bootstrap，每次保留被抽中用户的全部视频。
+区间描述用户样本的不确定性，不描述不同训练 seed 的不确定性。
+
+stage JSD：同一视频同一 stage 内，分别平均完整预测概率图和 GT 高斯概率图。
+GT 高斯图与预测在同一个 32×40 网格，sigma=1 网格单位，每帧先归一化再平均。
+JSD 使用 log2，范围 0–1。先逐视频、stage、seed 计算，再在同一 task/stage 内对视频等权平均。
+spd_finetune 使用 seed 42、43、44，先平均 seed 级指标；没有将其变成概率图集成。
+
+逐帧与分布结果
+per_frame/<ID>_distances.npz：
+  frame_index/frame_number：共同有效帧索引和采集帧号。
+  gt_xy[N,2]：当前 NPY GT 的归一化坐标。
+  stage[N]：当前 NPY stage，B/D 为空字符串。
+  model_names[5]、distance_pct_diagonal[5,N]：五类模型逐帧误差。
+  run_names[7]、run_pred_xy[7,N,2]、run_distance_pct_diagonal[7,N]：七个实际 run 的坐标和误差。
+  finetune 家族逐帧误差为三个 seed 误差的均值，不是平均坐标的误差。
+stage_distributions/<ID>_stage_distributions.npz：
+  stage_names[S]、run_names[7]、n_frames[S]。
+  gt_probability[S,32,40]、pred_probability[7,S,32,40]：用于计算 JSD 的原始平均分布。
+
+核查结果
+全部预测的原始帧号与当前 GT 在 frame_index 处一致；没有无效概率图。
+154,296 个 GT 帧中有 6,842 个无效坐标帧，剩余 147,454 帧均被所有模型覆盖。
+User7_1_1、User9_7_1、User11_6_1、User12_3_1 当前坐标与 prediction 缓存 target 不同。
+User1_1_1 当前时间戳与缓存不一致；计算没有依赖该时间戳。
+独立重算源概率图与当前 GT 的坐标、距离和一个 stage JSD 均通过；汇总与 finetune seed 聚合一致。
+
+复算
+reproduce_analysis.py：读取原始输入文件，重新计算数据表、逐帧误差和 stage 分布。
+reproduce_figures_report.py：读取输出 CSV，重新生成图表与 HTML 报告。
+两个脚本支持指定输出目录。运行分析脚本时使用 --out 指定目录；图表脚本使用位置参数指定目录。
+原始输入数据未被修改。

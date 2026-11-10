@@ -1,0 +1,26 @@
+{
+  "status": "passed",
+  "checked_rmse_values": 1152,
+  "max_absolute_difference_px": 1.3642420526593924e-12,
+  "outputs": {
+    "record_level": {
+      "rows": 84,
+      "blank_rmse_cells_by_metric": {}
+    },
+    "task_level": {
+      "rows": 2,
+      "blank_rmse_cells_by_metric": {}
+    },
+    "user_stage_arrange": {
+      "rows": 290,
+      "blank_rmse_cells_by_metric": {
+        "gaze_target": 21
+      }
+    },
+    "all_stage_arrange": {
+      "rows": 8,
+      "blank_rmse_cells_by_metric": {}
+    }
+  },
+  "method": "Independent raw NPY and np.loadtxt DLC loading; direct squared-error sums for every group, compared with exported CSVs"
+}

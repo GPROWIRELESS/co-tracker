@@ -1,0 +1,12 @@
+﻿raw_stage,normalized_stage,canonical_stage,handling,record_count,row_count,continuous_runs
+,,,ignore,6,2031,6
+drop ring,drop ring,,ignore,1,30,1
+grab ring,grab ring,grab ring,include,33,64648,423
+none,none,,ignore,34,11113,51
+place ring,place ring,place ring,include,33,72190,407
+pull through and cinch,pull through and cinch,pull through and cinch,include,37,93752,112
+reach ring,reach ring,reach ring,include,33,122724,423
+reach string,reach string,reach string,include,51,156116,346
+threading string through tower,threading string through tower,threading string through tower,include,19,10250,43
+transfer ring,transfer ring,transfer ring,include,33,130674,418
+wrap around psm,wrap around psm,wrap around psm,include,51,211102,196

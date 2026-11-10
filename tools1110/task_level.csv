@@ -1,0 +1,3 @@
+﻿task_name,n_users,n_records,n_frames,duration_seconds,gaze_psm_l_rmse_px,gaze_psm_l_n_pairs,gaze_psm_l_valid_seconds,gaze_psm_r_rmse_px,gaze_psm_r_n_pairs,gaze_psm_r_valid_seconds,gaze_target_rmse_px,gaze_target_n_pairs,gaze_target_valid_seconds
+C,11,51,477177,7952.95,329.9882744284442,424122,7068.7,265.14227106273756,413466,6891.1,204.37194153398636,330091,5501.516666666666
+A,11,33,397453,6624.216666666666,535.5862733115225,346505,5775.083333333333,367.4286872977281,359534,5992.233333333334,268.1587296063995,354117,5901.95
